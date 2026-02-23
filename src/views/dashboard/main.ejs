@@ -127,14 +127,13 @@ function copyRefLink() {
           <tr class="border-b border-gray-200 dark:border-gray-800">
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Agent</th>
-            <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Status</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Tarikh</th>
             <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
           </tr>
         </thead>
         <tbody>
           <% if (recentCases.length === 0) { %>
-            <tr><td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
+            <tr><td colspan="4" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
           <% } %>
           <% recentCases.forEach(s => { %>
             <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
@@ -143,14 +142,6 @@ function copyRefLink() {
                 <div class="text-xs text-gray-400 sm:hidden"><%= s.applicant_ic !== '-' ? s.applicant_ic : '' %></div>
               </td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.agent_name %></td>
-              <td class="px-3 sm:px-6 py-3">
-                <span class="px-2 py-0.5 rounded-lg text-xs font-medium capitalize
-                  <% if (s.status === 'pending') { %>bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300
-                  <% } else if (s.status === 'reviewed') { %>bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300
-                  <% } else if (s.status === 'approved') { %>bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300
-                  <% } else if (s.status === 'rejected') { %>bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300
-                  <% } else { %>bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400<% } %>"><%= s.status %></span>
-              </td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell"><%= new Date(s.created_at).toLocaleDateString('ms-MY') %></td>
               <td class="px-3 sm:px-6 py-3 text-center">
                 <a href="/dashboard/cases/<%= s.id %>" class="px-2.5 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg text-xs font-medium hover:bg-primary-200 dark:hover:bg-primary-900/50 transition-colors">View</a>
