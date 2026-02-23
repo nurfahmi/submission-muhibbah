@@ -217,8 +217,15 @@ const Submission = {
 
   async findRecent(userId, role, limit = 10) {
     let where = { status: { not: 'draft' } };
-    if (role === 'masteragent') where.masteragent_id = userId;
-    else if (role === 'subagent') where.subagent_id = userId;
+    if (role === 'superadmin' || role === 'admin') {
+      // Admin sees only untaken pending cases (new cases notification)
+      where.status = 'pending';
+      where.taken_by = null;
+    } else if (role === 'masteragent') {
+      where.masteragent_id = userId;
+    } else if (role === 'subagent') {
+      where.subagent_id = userId;
+    }
 
     const rows = await prisma.submission.findMany({
       where,

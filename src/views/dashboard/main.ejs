@@ -118,7 +118,16 @@ function copyRefLink() {
   <!-- Recent Cases (2/3 width) -->
   <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
     <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
-      <h3 class="text-base font-semibold">Kes Terbaru</h3>
+      <h3 class="text-base font-semibold">
+        <% if (user.role === 'superadmin' || user.role === 'admin') { %>
+          Kes Belum Diambil
+          <% if (recentCases.length > 0) { %>
+            <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"><%= recentCases.length %></span>
+          <% } %>
+        <% } else { %>
+          Kes Terbaru
+        <% } %>
+      </h3>
       <a href="/dashboard/cases" class="text-xs text-primary-600 dark:text-primary-400 hover:underline font-medium">Lihat Semua →</a>
     </div>
     <div class="overflow-x-auto">
