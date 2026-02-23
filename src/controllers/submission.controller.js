@@ -102,7 +102,6 @@ const SubmissionController = {
           ['job_position', 'Jawatan'],
           ['job_tarikh_mula', 'Tarikh Mula Berkhidmat'],
           ['job_tel_pejabat', 'No Tel Pejabat'],
-          ['job_salary', 'Gaji Bersih'],
           ['ref_name', 'Nama Rujukan'],
           ['ref_ic', 'No IC Rujukan'],
           ['ref_address', 'Alamat Rujukan'],
@@ -149,7 +148,6 @@ const SubmissionController = {
         jenis_kediaman: req.body.applicant_jenis_kediaman,
         tempoh_menetap: req.body.applicant_tempoh_menetap,
         nama_ibu: req.body.applicant_nama_ibu,
-        ic_ibu: req.body.applicant_ic_ibu,
         alamat_ibu: req.body.applicant_alamat_ibu
       };
 
@@ -169,7 +167,6 @@ const SubmissionController = {
         position: req.body.job_position,
         tarikh_mula: req.body.job_tarikh_mula,
         tel_pejabat: req.body.job_tel_pejabat,
-        salary: req.body.job_salary,
         payslip_link: req.body.job_payslip_link,
         payslip_password: req.body.job_payslip_password,
         hrmis_password: req.body.job_hrmis_password

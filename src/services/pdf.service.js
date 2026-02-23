@@ -27,7 +27,7 @@ const STANDARD_FIELDS = {
   pemohon_jenis_kediaman:{ label: 'Jenis Kediaman',         group: 'Pemohon' },
   pemohon_tempoh_menetap:{ label: 'Tempoh Menetap',         group: 'Pemohon' },
   pemohon_nama_ibu:      { label: 'Nama Ibu',              group: 'Pemohon' },
-  pemohon_ic_ibu:        { label: 'No KP Ibu',             group: 'Pemohon' },
+
   pemohon_alamat_ibu:    { label: 'Alamat Ibu',            group: 'Pemohon' },
 
   // PASANGAN (Spouse)
@@ -116,7 +116,7 @@ function resolveFieldValue(standardKey, submission) {
     pemohon_jenis_kediaman: a.jenis_kediaman,
     pemohon_tempoh_menetap: a.tempoh_menetap,
     pemohon_nama_ibu:       a.nama_ibu,
-    pemohon_ic_ibu:         a.ic_ibu,
+
     pemohon_alamat_ibu:     a.alamat_ibu,
     pasangan_nama:          s.name,
     pasangan_ic:            s.ic,
@@ -132,7 +132,7 @@ function resolveFieldValue(standardKey, submission) {
     pekerjaan_jawatan:      j.position,
     pekerjaan_tarikh_mula:  j.tarikh_mula,
     pekerjaan_tel:          j.tel_pejabat,
-    pekerjaan_gaji:         j.salary,
+
     pekerjaan_payslip_password: j.payslip_password,
     pekerjaan_hrmis_password:   j.hrmis_password,
     saudara_nama:           r.name,
