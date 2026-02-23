@@ -108,6 +108,58 @@ const UserController = {
     }
   },
 
+  async editUser(req, res) {
+    try {
+      const currentUser = req.session.user;
+      const { id } = req.params;
+      const { name, email, role, parent_id } = req.body;
+
+      if (currentUser.role !== 'superadmin' && currentUser.role !== 'admin') {
+        req.flash('error', 'Not authorized.');
+        return res.redirect('/dashboard/users');
+      }
+
+      if (id === currentUser.id) {
+        req.flash('error', 'Cannot edit your own account from here.');
+        return res.redirect('/dashboard/users');
+      }
+
+      const allowed = ROLE_HIERARCHY[currentUser.role] || [];
+      if (!allowed.includes(role)) {
+        req.flash('error', 'You are not allowed to assign this role.');
+        return res.redirect('/dashboard/users');
+      }
+
+      // Check email uniqueness (exclude current user)
+      const existing = await User.findByEmail(email.trim().toLowerCase());
+      if (existing && existing.id !== id) {
+        req.flash('error', 'A user with this email already exists.');
+        return res.redirect('/dashboard/users');
+      }
+
+      await User.update(id, {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        role,
+        parent_id: role === 'subagent' ? (parent_id || null) : null
+      });
+
+      await Activity.log({
+        user_id: currentUser.id,
+        action: 'EDIT_USER',
+        target_id: id,
+        description: `Updated user: ${name} (${role})`
+      });
+
+      req.flash('success', 'User updated successfully.');
+      res.redirect('/dashboard/users');
+    } catch (err) {
+      console.error('Edit user error:', err);
+      req.flash('error', 'Failed to update user.');
+      res.redirect('/dashboard/users');
+    }
+  },
+
   async impersonate(req, res) {
     try {
       const currentUser = req.session.user;

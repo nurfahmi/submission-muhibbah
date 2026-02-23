@@ -48,6 +48,8 @@
             <% if (user.role === 'superadmin' || user.role === 'admin') { %>
             <td class="px-3 sm:px-6 py-3 text-center flex items-center justify-center gap-2">
               <% if (u.id !== user.id) { %>
+              <button type="button" onclick="openEditModal('<%= u.id %>', '<%= u.name.replace(/'/g, "\\'") %>', '<%= u.email %>', '<%= u.role %>', '<%= u.parent_id || '' %>')"
+                class="text-amber-600 dark:text-amber-400 hover:underline text-xs font-medium">Edit</button>
               <% if (user.role === 'superadmin') { %>
               <form method="POST" action="/dashboard/users/impersonate/<%= u.id %>" class="inline">
                 <button type="submit" class="text-primary-600 dark:text-primary-400 hover:underline text-xs font-medium">Impersonate</button>
@@ -69,10 +71,7 @@
 <!-- Create User Modal -->
 <% if (creatableRoles.length > 0) { %>
 <div id="createUserModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
-  <!-- Backdrop -->
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('createUserModal').classList.add('hidden')"></div>
-  
-  <!-- Modal Content -->
   <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-full max-w-md mx-4 p-6 transform transition-all">
     <div class="flex items-center justify-between mb-5">
       <h3 class="text-base font-semibold">Create New User</h3>
@@ -136,7 +135,71 @@
 </div>
 <% } %>
 
+<!-- Edit User Modal -->
+<% if (user.role === 'superadmin' || user.role === 'admin') { %>
+<div id="editUserModal" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('editUserModal').classList.add('hidden')"></div>
+  <div class="relative bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800 w-full max-w-md mx-4 p-6 transform transition-all">
+    <div class="flex items-center justify-between mb-5">
+      <h3 class="text-base font-semibold">Edit User</h3>
+      <button onclick="document.getElementById('editUserModal').classList.add('hidden')"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <form id="editUserForm" method="POST" action="" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+        <input type="text" name="name" id="editName" required
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+        <input type="email" name="email" id="editEmail" required
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
+        <select name="role" id="editRoleSelect" onchange="handleEditRoleChange()"
+          class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <% creatableRoles.forEach(r => { %>
+            <option value="<%= r %>"><%= r.charAt(0).toUpperCase() + r.slice(1) %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div id="editParentField">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Master Agent</label>
+        <div class="relative">
+          <input type="hidden" name="parent_id" id="editParentIdHidden">
+          <input type="text" id="editMaSearch" autocomplete="off" placeholder="Search master agent..."
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <div id="editMaDropdown" class="hidden absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+            <% if (typeof masterAgents !== 'undefined') { masterAgents.forEach(ma => { %>
+              <div class="edit-ma-option px-4 py-2.5 text-sm hover:bg-primary-50 dark:hover:bg-primary-900/30 cursor-pointer transition-colors"
+                data-id="<%= ma.id %>" data-name="<%= ma.name %>" data-ref="<%= ma.referral_code || '' %>">
+                <span class="font-medium"><%= ma.name %></span>
+                <% if (ma.referral_code) { %>
+                  <span class="text-xs text-gray-400 ml-2"><%= ma.referral_code %></span>
+                <% } %>
+              </div>
+            <% })} %>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-2.5 rounded-xl text-sm transition-colors">
+        Update User
+      </button>
+    </form>
+  </div>
+</div>
+<% } %>
+
 <script>
+// --- Create Modal ---
 function handleRoleChange() {
   const role = document.getElementById('roleSelect')?.value;
   const parentField = document.getElementById('parentField');
@@ -150,7 +213,7 @@ function handleRoleChange() {
 }
 document.addEventListener('DOMContentLoaded', handleRoleChange);
 
-// Searchable master agent dropdown
+// Searchable master agent dropdown (Create)
 (function() {
   const search = document.getElementById('maSearch');
   const dropdown = document.getElementById('maDropdown');
@@ -172,13 +235,11 @@ document.addEventListener('DOMContentLoaded', handleRoleChange);
 
   function filterOptions() {
     const q = search.value.toLowerCase();
-    let visible = 0;
     options.forEach(opt => {
       const name = opt.dataset.name.toLowerCase();
       const ref = opt.dataset.ref.toLowerCase();
       const match = name.includes(q) || ref.includes(q);
       opt.style.display = match ? '' : 'none';
-      if (match) visible++;
     });
   }
 
@@ -197,10 +258,93 @@ document.addEventListener('DOMContentLoaded', handleRoleChange);
   });
 })();
 
-// Close modal on Escape key
+// --- Edit Modal ---
+function handleEditRoleChange() {
+  const role = document.getElementById('editRoleSelect')?.value;
+  const parentField = document.getElementById('editParentField');
+  if (parentField) {
+    parentField.style.display = role === 'subagent' ? 'block' : 'none';
+    if (role !== 'subagent') {
+      document.getElementById('editParentIdHidden').value = '';
+      document.getElementById('editMaSearch').value = '';
+    }
+  }
+}
+
+function openEditModal(id, name, email, role, parentId) {
+  document.getElementById('editUserForm').action = '/dashboard/users/edit/' + id;
+  document.getElementById('editName').value = name;
+  document.getElementById('editEmail').value = email;
+
+  const roleSelect = document.getElementById('editRoleSelect');
+  if (roleSelect) {
+    roleSelect.value = role;
+  }
+
+  // Set parent agent
+  document.getElementById('editParentIdHidden').value = parentId;
+  const editSearch = document.getElementById('editMaSearch');
+  if (parentId && editSearch) {
+    const opt = document.querySelector('.edit-ma-option[data-id="' + parentId + '"]');
+    editSearch.value = opt ? opt.dataset.name : '';
+  } else if (editSearch) {
+    editSearch.value = '';
+  }
+
+  handleEditRoleChange();
+  document.getElementById('editUserModal').classList.remove('hidden');
+}
+
+// Searchable master agent dropdown (Edit)
+(function() {
+  const search = document.getElementById('editMaSearch');
+  const dropdown = document.getElementById('editMaDropdown');
+  const hidden = document.getElementById('editParentIdHidden');
+  if (!search || !dropdown) return;
+
+  const options = dropdown.querySelectorAll('.edit-ma-option');
+
+  search.addEventListener('focus', function() {
+    dropdown.classList.remove('hidden');
+    filterOptions();
+  });
+
+  search.addEventListener('input', function() {
+    dropdown.classList.remove('hidden');
+    hidden.value = '';
+    filterOptions();
+  });
+
+  function filterOptions() {
+    const q = search.value.toLowerCase();
+    options.forEach(opt => {
+      const name = opt.dataset.name.toLowerCase();
+      const ref = opt.dataset.ref.toLowerCase();
+      const match = name.includes(q) || ref.includes(q);
+      opt.style.display = match ? '' : 'none';
+    });
+  }
+
+  options.forEach(opt => {
+    opt.addEventListener('click', function() {
+      hidden.value = this.dataset.id;
+      search.value = this.dataset.name;
+      dropdown.classList.add('hidden');
+    });
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!search.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add('hidden');
+    }
+  });
+})();
+
+// Close modals on Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.getElementById('createUserModal')?.classList.add('hidden');
+    document.getElementById('editUserModal')?.classList.add('hidden');
   }
 });
 </script>

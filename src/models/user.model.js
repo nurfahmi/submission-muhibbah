@@ -54,6 +54,17 @@ const User = {
     return [await prisma.user.findUnique({ where: { id: user.id } })];
   },
 
+  async findAgents() {
+    return prisma.user.findMany({
+      where: { role: { in: ['masteragent', 'subagent'] } },
+      orderBy: [{ role: 'asc' }, { name: 'asc' }]
+    });
+  },
+
+  async update(id, data) {
+    return prisma.user.update({ where: { id }, data });
+  },
+
   async delete(id) {
     return prisma.user.delete({ where: { id } });
   }

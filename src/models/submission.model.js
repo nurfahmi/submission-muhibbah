@@ -60,13 +60,22 @@ const Submission = {
   async _withNames(rows) {
     return rows.map(row => {
       let applicant_name = '-';
+      let applicant_ic = '-';
+      let employer_name = '-';
       try {
         const data = JSON.parse(encryption.decrypt(row.details?.applicant_data));
         applicant_name = data.name || '-';
+        applicant_ic = data.ic || '-';
+      } catch {}
+      try {
+        const jobData = JSON.parse(encryption.decrypt(row.details?.job_data));
+        employer_name = jobData.employer || '-';
       } catch {}
       return {
         ...row,
         applicant_name,
+        applicant_ic,
+        employer_name,
         agent_name: row.subagent?.name || row.masteragent?.name || '-',
         taken_by_name: row.taker?.name || null
       };
@@ -81,7 +90,7 @@ const Submission = {
       include: {
         subagent: { select: { name: true } },
         masteragent: { select: { name: true } },
-        details: { select: { applicant_data: true } }
+        details: { select: { applicant_data: true, job_data: true } }
       }
     });
     return this._withNames(rows);
@@ -101,7 +110,7 @@ const Submission = {
       include: {
         subagent: { select: { name: true } },
         masteragent: { select: { name: true } },
-        details: { select: { applicant_data: true } }
+        details: { select: { applicant_data: true, job_data: true } }
       }
     });
     return this._withNames(rows);
@@ -119,7 +128,7 @@ const Submission = {
         subagent: { select: { name: true } },
         masteragent: { select: { name: true } },
         taker: { select: { name: true } },
-        details: { select: { applicant_data: true } }
+        details: { select: { applicant_data: true, job_data: true } }
       }
     });
     return this._withNames(rows);

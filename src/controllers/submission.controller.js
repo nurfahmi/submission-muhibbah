@@ -47,11 +47,16 @@ const SubmissionController = {
       const fullUser = await User.findById(currentUser.id);
       const ref = fullUser?.referral_code || '';
 
+      // Fetch agents list for admin/superadmin to assign referer
+      const isAdmin = currentUser.role === 'superadmin' || currentUser.role === 'admin';
+      const agents = isAdmin ? await User.findAgents() : [];
+
       res.render('dashboard/submit', {
         layout: 'layouts/main',
         title: 'New Submission',
         user: currentUser,
         ref,
+        agents,
         page: 'submit',
         success: req.flash('success'),
         error: req.flash('error')
@@ -113,7 +118,25 @@ const SubmissionController = {
         }
       }
 
-      const { subagent_id, masteragent_id } = await ReferralService.resolve(referral_code);
+      const { subagent_id, masteragent_id } = await (async () => {
+        // If admin/superadmin assigned an agent directly
+        if (req.body.assign_agent && req.session && req.session.user) {
+          const role = req.session.user.role;
+          if (role === 'superadmin' || role === 'admin') {
+            const User = require('../models/user.model');
+            const agent = await User.findById(req.body.assign_agent);
+            if (agent) {
+              if (agent.role === 'subagent') {
+                return { subagent_id: agent.id, masteragent_id: agent.parent_id };
+              }
+              if (agent.role === 'masteragent') {
+                return { subagent_id: null, masteragent_id: agent.id };
+              }
+            }
+          }
+        }
+        return ReferralService.resolve(referral_code);
+      })();
 
       const applicant_data = {
         name: req.body.applicant_name,
@@ -409,11 +432,15 @@ const SubmissionController = {
       const fullUser = await User.findById(currentUser.id);
       const ref = fullUser?.referral_code || '';
 
+      const isAdmin = currentUser.role === 'superadmin' || currentUser.role === 'admin';
+      const agents = isAdmin ? await User.findAgents() : [];
+
       res.render('dashboard/submit', {
         layout: 'layouts/main',
         title: 'Edit Draft',
         user: currentUser,
         ref,
+        agents,
         page: 'drafts',
         draft: submission,
         success: req.flash('success'),
