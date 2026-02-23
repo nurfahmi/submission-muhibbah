@@ -50,7 +50,22 @@ const DashboardController = {
       req.flash('error', 'Failed to load dashboard.');
       res.redirect('/auth/login');
     }
+  },
+
+  async newCasesCount(req, res) {
+    try {
+      const currentUser = req.session.user;
+      if (currentUser.role !== 'superadmin' && currentUser.role !== 'admin') {
+        return res.json({ count: 0 });
+      }
+      const prisma = require('../config/db');
+      const count = await prisma.submission.count({
+        where: { status: 'pending', taken_by: null }
+      });
+      res.json({ count });
+    } catch (err) {
+      res.json({ count: 0 });
+    }
   }
 };
-
 module.exports = DashboardController;

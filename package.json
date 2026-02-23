@@ -28,7 +28,8 @@
     "pdf-lib": "^1.17.1",
     "pdf-poppler": "^0.2.3",
     "pdf-to-img": "^5.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2",

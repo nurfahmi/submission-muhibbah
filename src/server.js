@@ -1,6 +1,8 @@
 require('dotenv').config();
 const { execSync } = require('child_process');
+const http = require('http');
 const app = require('./app');
+const WsService = require('./services/ws.service');
 const PORT = process.env.PORT || 3001;
 
 // Auto-create database tables on first run
@@ -13,6 +15,9 @@ try {
   process.exit(1);
 }
 
-app.listen(PORT, () => {
+const server = http.createServer(app);
+WsService.init(server);
+
+server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

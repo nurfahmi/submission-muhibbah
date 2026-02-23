@@ -3,6 +3,7 @@ const FileModel = require('../models/file.model');
 const Activity = require('../models/activity.model');
 const ReferralService = require('../services/referral.service');
 const PdfService = require('../services/pdf.service');
+const WsService = require('../services/ws.service');
 const path = require('path');
 const fs = require('fs');
 
@@ -229,6 +230,8 @@ const SubmissionController = {
         req.flash('success', 'Draft saved.');
         res.redirect('/dashboard/drafts');
       } else {
+        // Notify admins via WebSocket
+        WsService.notifyNewCase(submission.id, applicant_data.name);
         req.flash('success', 'Application submitted successfully!');
         res.redirect(redirectUrl);
       }
