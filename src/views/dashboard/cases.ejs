@@ -59,20 +59,93 @@
   const searchInput = document.getElementById('caseSearch');
   const rows = document.querySelectorAll('.case-row');
   const noResults = document.getElementById('noResults');
-  if (!searchInput || rows.length === 0) return;
-
-  searchInput.addEventListener('input', function() {
-    const q = this.value.toLowerCase().trim();
-    let visible = 0;
-    rows.forEach(row => {
-      const name = row.dataset.name || '';
-      const ic = row.dataset.ic || '';
-      const employer = row.dataset.employer || '';
-      const match = !q || name.includes(q) || ic.includes(q) || employer.includes(q);
-      row.style.display = match ? '' : 'none';
-      if (match) visible++;
+  if (searchInput && rows.length > 0) {
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase().trim();
+      let visible = 0;
+      document.querySelectorAll('.case-row').forEach(row => {
+        const name = row.dataset.name || '';
+        const ic = row.dataset.ic || '';
+        const employer = row.dataset.employer || '';
+        const match = !q || name.includes(q) || ic.includes(q) || employer.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      noResults.classList.toggle('hidden', visible > 0);
     });
-    noResults.classList.toggle('hidden', visible > 0);
-  });
+  }
 })();
 </script>
+
+<% if (typeof user !== 'undefined' && user && (user.role === 'superadmin' || user.role === 'admin')) { %>
+<style>
+  @keyframes highlightRow { from { background: rgba(14,165,233,0.15); } to { background: transparent; } }
+</style>
+<script>
+(function() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  let ws;
+
+  function connect() {
+    ws = new WebSocket(proto + '//' + location.host + '/ws/notifications');
+    ws.onmessage = function(event) {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === 'NEW_CASE') addCaseRow(data);
+        else if (data.type === 'CASE_TAKEN') removeCaseRow(data.caseId);
+      } catch(e) {}
+    };
+    ws.onclose = function() { setTimeout(connect, 5000); };
+    ws.onerror = function() { ws.close(); };
+  }
+
+  function addCaseRow(data) {
+    const tbody = document.getElementById('caseTableBody');
+    if (!tbody) return;
+    const emptyRow = tbody.querySelector('td[colspan]');
+    if (emptyRow) emptyRow.closest('tr').remove();
+
+    const tr = document.createElement('tr');
+    tr.className = 'case-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors';
+    tr.dataset.name = (data.applicantName || '').toLowerCase();
+    tr.dataset.caseId = data.caseId;
+    tr.style.animation = 'highlightRow 3s ease-out';
+    tr.innerHTML = `
+      <td class="px-3 sm:px-6 py-3 font-medium"><div>${data.applicantName}</div></td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${data.agentName}</td>
+      <td class="px-3 sm:px-6 py-3 font-mono text-xs hidden sm:table-cell">-</td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell">${data.date}</td>
+      <td class="px-3 sm:px-6 py-3 text-center">
+        <form method="POST" action="/dashboard/cases/${data.caseId}/take" class="inline">
+          <button type="submit" class="px-3 py-1.5 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-xs font-medium transition-colors">Ambil Kes</button>
+        </form>
+      </td>`;
+    tbody.appendChild(tr);
+  }
+
+  function removeCaseRow(caseId) {
+    const tbody = document.getElementById('caseTableBody');
+    if (!tbody) return;
+    let row = tbody.querySelector('tr[data-case-id="' + caseId + '"]');
+    if (!row) {
+      const form = tbody.querySelector('form[action="/dashboard/cases/' + caseId + '/take"]');
+      if (form) row = form.closest('tr');
+    }
+    if (row) {
+      row.style.transition = 'opacity 0.5s';
+      row.style.opacity = '0';
+      setTimeout(() => {
+        row.remove();
+        if (!tbody.querySelector('tr')) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">No pending cases</td>';
+          tbody.appendChild(tr);
+        }
+      }, 500);
+    }
+  }
+
+  connect();
+})();
+</script>
+<% } %>
