@@ -197,15 +197,22 @@ const Submission = {
     if (role === 'masteragent') where = { masteragent_id: userId };
     else if (role === 'subagent') where = { subagent_id: userId };
 
-    const [total, pending, approved, reviewed, rejected] = await Promise.all([
-      prisma.submission.count({ where: { ...where, status: { not: 'draft' } } }),
-      prisma.submission.count({ where: { ...where, status: 'pending' } }),
-      prisma.submission.count({ where: { ...where, status: 'approved' } }),
-      prisma.submission.count({ where: { ...where, status: 'reviewed' } }),
-      prisma.submission.count({ where: { ...where, status: 'rejected' } })
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayOfWeek = now.getDay() || 7; // Make Sunday = 7
+    const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const base = { ...where, status: { not: 'draft' } };
+
+    const [total, today, thisWeek, thisMonth] = await Promise.all([
+      prisma.submission.count({ where: base }),
+      prisma.submission.count({ where: { ...base, created_at: { gte: startOfDay } } }),
+      prisma.submission.count({ where: { ...base, created_at: { gte: startOfWeek } } }),
+      prisma.submission.count({ where: { ...base, created_at: { gte: startOfMonth } } })
     ]);
 
-    return { total, pending, approved, reviewed, rejected };
+    return { total, today, thisWeek, thisMonth };
   },
 
   async findRecent(userId, role, limit = 10) {
