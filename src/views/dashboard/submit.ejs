@@ -110,25 +110,11 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Pendidikan</label>
-          <select name="applicant_pendidikan" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-            <option value="">-- Pilih --</option>
-            <option value="SPM" <%= a.pendidikan === 'SPM' ? 'selected' : '' %>>SPM</option>
-            <option value="STPM/Diploma" <%= a.pendidikan === 'STPM/Diploma' ? 'selected' : '' %>>STPM / Diploma</option>
-            <option value="Ijazah" <%= a.pendidikan === 'Ijazah' ? 'selected' : '' %>>Ijazah / Degree</option>
-            <option value="Sarjana" <%= a.pendidikan === 'Sarjana' ? 'selected' : '' %>>Sarjana / Master</option>
-            <option value="PhD" <%= a.pendidikan === 'PhD' ? 'selected' : '' %>>PhD</option>
-            <option value="Lain-lain" <%= a.pendidikan === 'Lain-lain' ? 'selected' : '' %>>Lain-lain</option>
-          </select>
+          <input type="text" name="applicant_pendidikan" value="<%= a.pendidikan || '' %>" required placeholder="cth: SPM" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis Kediaman</label>
-          <select name="applicant_jenis_kediaman" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-            <option value="">-- Pilih --</option>
-            <option value="Sendiri" <%= a.jenis_kediaman === 'Sendiri' ? 'selected' : '' %>>Sendiri</option>
-            <option value="Sewa" <%= a.jenis_kediaman === 'Sewa' ? 'selected' : '' %>>Sewa</option>
-            <option value="Keluarga" <%= a.jenis_kediaman === 'Keluarga' ? 'selected' : '' %>>Keluarga</option>
-            <option value="Lain-lain" <%= a.jenis_kediaman === 'Lain-lain' ? 'selected' : '' %>>Lain-lain</option>
-          </select>
+          <input type="text" name="applicant_jenis_kediaman" value="<%= a.jenis_kediaman || '' %>" required placeholder="cth: Rumah Sendiri" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tempoh Menetap</label>
@@ -198,7 +184,7 @@
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarikh Mula Berkhidmat</label>
-          <input type="date" name="job_tarikh_mula" value="<%= j.tarikh_mula || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_tarikh_mula" value="<%= j.tarikh_mula || '' %>" required placeholder="cth: 20/09/2014" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Pejabat</label>
