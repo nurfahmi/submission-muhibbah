@@ -5,7 +5,7 @@
 <% } %>
 
 <!-- Stats Cards -->
-<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
   <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
     <div class="flex items-center gap-3 mb-3">
       <div class="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
@@ -14,46 +14,6 @@
     </div>
     <p class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= stats.total %></p>
     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Kes</p>
-  </div>
-
-  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-        <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-    </div>
-    <p class="text-2xl font-bold text-amber-600 dark:text-amber-400"><%= stats.pending %></p>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</p>
-  </div>
-
-  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-        <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-      </div>
-    </div>
-    <p class="text-2xl font-bold text-blue-600 dark:text-blue-400"><%= stats.reviewed %></p>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Reviewed</p>
-  </div>
-
-  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-9 h-9 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-        <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-    </div>
-    <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= stats.approved %></p>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approved</p>
-  </div>
-
-  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-5">
-    <div class="flex items-center gap-3 mb-3">
-      <div class="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-        <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-      </div>
-    </div>
-    <p class="text-2xl font-bold text-red-600 dark:text-red-400"><%= stats.rejected %></p>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Rejected</p>
   </div>
 </div>
 
