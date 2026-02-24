@@ -56,9 +56,35 @@
     </div>
     <% } %>
 
+    <%
+    const hasIqWarning = typeof iq_warning !== 'undefined' && iq_warning && iq_warning.length > 0;
+    const iqMsg = hasIqWarning ? (Array.isArray(iq_warning) ? iq_warning[0] : iq_warning) : '';
+    %>
+    <% if (hasIqWarning) { %>
+    <div id="iqModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 p-8 max-w-md w-full mx-4 text-center animate-[fadeIn_0.3s_ease-out]">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+          <svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-amber-600 dark:text-amber-400 mb-2">Masalah Kualiti Gambar</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Gambar yang dimuat naik mungkin ada masalah:</p>
+        <div class="text-xs text-left bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-3 mb-4 space-y-1">
+          <% iqMsg.split(' | ').forEach(function(part) { %>
+            <div class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">⚠️</span><span><%= part %></span></div>
+          <% }) %>
+        </div>
+        <p class="text-xs text-gray-400 mb-4">Sila muat naik semula gambar yang lebih jelas, atau teruskan jika gambar sudah betul.</p>
+        <div class="flex gap-3">
+          <button onclick="document.getElementById('iqModal').remove()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">Tukar Gambar</button>
+          <button onclick="document.getElementById('iqOverride').value='1'; document.getElementById('iqModal').remove()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold py-2.5 rounded-xl text-sm transition-colors">Teruskan</button>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
     <form method="POST" action="/submit" enctype="multipart/form-data" class="space-y-6">
       <input type="hidden" name="referral_code" value="<%= ref %>">
-
+      <input type="hidden" name="iq_override" id="iqOverride" value="">
       <!-- Section 1: Maklumat Pemohon -->
       <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
         <h2 class="text-lg font-semibold mb-4">1. Maklumat Pemohon</h2>
@@ -102,6 +128,14 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Ibu</label>
             <input type="text" name="applicant_nama_ibu" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No IC Ibu</label>
+            <input type="text" name="applicant_ic_ibu" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No HP Ibu</label>
+            <input type="tel" name="applicant_hp_ibu" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
           </div>
 
           <div class="sm:col-span-2">

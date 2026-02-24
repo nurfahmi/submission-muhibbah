@@ -4,6 +4,7 @@ const Activity = require('../models/activity.model');
 const ReferralService = require('../services/referral.service');
 const PdfService = require('../services/pdf.service');
 const WsService = require('../services/ws.service');
+const ImageQualityService = require('../services/image-quality.service');
 const path = require('path');
 const fs = require('fs');
 
@@ -37,7 +38,9 @@ const SubmissionController = {
       ref,
       agentName,
       success: req.flash ? req.flash('success') : null,
-      error: req.flash ? req.flash('error') : null
+      error: req.flash ? req.flash('error') : null,
+      iq_warning: req.flash ? req.flash('iq_warning') : null,
+      iq_files: req.flash ? req.flash('iq_files') : null
     });
   },
 
@@ -58,7 +61,9 @@ const SubmissionController = {
         user: currentUser,
         ref,
         agents,
-        page: 'submit'
+        page: 'submit',
+        iq_warning: req.flash ? req.flash('iq_warning') : null,
+        iq_files: req.flash ? req.flash('iq_files') : null
       });
     } catch (err) {
       console.error('Private submit page error:', err);
@@ -88,6 +93,8 @@ const SubmissionController = {
           ['applicant_jenis_kediaman', 'Jenis Kediaman'],
           ['applicant_tempoh_menetap', 'Tempoh Menetap'],
           ['applicant_nama_ibu', 'Nama Ibu'],
+          ['applicant_ic_ibu', 'No IC Ibu'],
+          ['applicant_hp_ibu', 'No HP Ibu'],
           ['applicant_alamat_ibu', 'Alamat Ibu'],
           ['spouse_name', 'Nama Pasangan'],
           ['spouse_ic', 'No IC Pasangan'],
@@ -112,6 +119,18 @@ const SubmissionController = {
         if (missing.length > 0) {
           const names = missing.map(([, label]) => label).join(', ');
           req.flash('error', `Sila isi semua maklumat yang diperlukan: ${names}`);
+          return res.redirect(redirectUrl);
+        }
+      }
+
+      // Server-side image quality check (skip if user acknowledged warnings)
+      if (!isDraft && !req.body.iq_override) {
+        const { warnings, hasIssues } = await ImageQualityService.analyzeAll(req.files);
+        if (hasIssues) {
+          const msg = ImageQualityService.formatWarnings(warnings);
+          req.flash('iq_warning', msg);
+          req.flash('iq_files', JSON.stringify(warnings));
+          // Keep uploaded files in temp for re-submission
           return res.redirect(redirectUrl);
         }
       }
@@ -147,6 +166,8 @@ const SubmissionController = {
         jenis_kediaman: req.body.applicant_jenis_kediaman,
         tempoh_menetap: req.body.applicant_tempoh_menetap,
         nama_ibu: req.body.applicant_nama_ibu,
+        ic_ibu: req.body.applicant_ic_ibu,
+        hp_ibu: req.body.applicant_hp_ibu,
         alamat_ibu: req.body.applicant_alamat_ibu
       };
 
