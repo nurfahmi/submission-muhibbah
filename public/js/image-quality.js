@@ -10,9 +10,9 @@
   const cfg = cfgEl ? cfgEl.dataset : {};
 
   const ENABLED = (cfg.enabled || 'true') === 'true';
-  const BLUR_THRESHOLD = parseInt(cfg.blur || '50', 10);
-  const OVEREXPOSE_BRIGHTNESS = parseInt(cfg.bright || '245', 10);
-  const OVEREXPOSE_PERCENT = parseInt(cfg.brightPct || '40', 10) / 100;
+  const BLUR_THRESHOLD = parseInt(cfg.blur || '100', 10);
+  const OVEREXPOSE_BRIGHTNESS = parseInt(cfg.bright || '240', 10);
+  const OVEREXPOSE_PERCENT = parseInt(cfg.brightPct || '35', 10) / 100;
   const BLOCK_UPLOAD = (cfg.block || 'false') === 'true';
   const MAX_ANALYZE_SIZE = 512;
 
@@ -51,11 +51,11 @@
         }
 
         // Local glare detection — check grid cells for concentrated bright spots
-        const GRID = 10;
+        const GRID = 8;
         const cellW = Math.floor(w / GRID);
         const cellH = Math.floor(h / GRID);
-        const GLARE_CELL_THRESHOLD = 0.40;
-        const GLARE_BRIGHTNESS = Math.min(OVEREXPOSE_BRIGHTNESS, 230);
+        const GLARE_CELL_THRESHOLD = 0.30;
+        const GLARE_BRIGHTNESS = Math.min(OVEREXPOSE_BRIGHTNESS, 200);
         let hasGlare = false;
         for (let gy = 0; gy < GRID && !hasGlare; gy++) {
           for (let gx = 0; gx < GRID && !hasGlare; gx++) {
