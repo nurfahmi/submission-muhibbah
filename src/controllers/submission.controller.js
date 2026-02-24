@@ -537,7 +537,8 @@ const SubmissionController = {
         blurry: 'Gambar kabur (blurry)',
         overexposed: 'Gambar terlalu terang (overexposed/flash)',
         glare: 'Ada pantulan cahaya (glare/flash)',
-        too_dark: 'Gambar terlalu gelap'
+        too_dark: 'Gambar terlalu gelap',
+        low_contrast: 'Gambar pudar / kurang jelas'
       };
 
       const messages = result.issues.map(i => issueLabels[i] || i);

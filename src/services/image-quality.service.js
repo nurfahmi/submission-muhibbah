@@ -5,12 +5,13 @@
 const sharp = require('sharp');
 
 // Thresholds
-const BLUR_THRESHOLD = 120;          // Laplacian variance below this = blurry
-const OVEREXPOSE_BRIGHTNESS = 240;   // Pixel brightness above this = "bright"
-const OVEREXPOSE_PERCENT = 0.35;     // >35% bright pixels = overexposed
-const GLARE_GRID = 8;               // 8×8 grid for local glare
-const GLARE_CELL_BRIGHT = 220;      // Lower threshold for glare cells
-const GLARE_CELL_PERCENT = 0.45;    // >45% bright pixels in a cell = glare
+const BLUR_THRESHOLD = 200;          // Laplacian variance below this = blurry
+const LOW_CONTRAST_THRESHOLD = 35;   // Std dev below this = low contrast / washed out
+const OVEREXPOSE_BRIGHTNESS = 235;   // Pixel brightness above this = "bright"
+const OVEREXPOSE_PERCENT = 0.30;     // >30% bright pixels = overexposed
+const GLARE_GRID = 6;               // 6×6 grid for local glare (larger cells)
+const GLARE_CELL_BRIGHT = 190;      // Lower threshold to catch laminated surface shine
+const GLARE_CELL_PERCENT = 0.35;    // >35% bright pixels in a cell = glare
 
 const ANALYZE_SIZE = 512;           // Resize for performance
 
@@ -62,6 +63,21 @@ const ImageQualityService = {
         issues.push('blurry');
       }
 
+      // --- 1b. Low contrast check (std deviation of pixels) ---
+      let pixSum = 0;
+      let pixSumSq = 0;
+      for (let i = 0; i < totalPixels; i++) {
+        pixSum += data[i];
+        pixSumSq += data[i] * data[i];
+      }
+      const pixMean = pixSum / totalPixels;
+      const pixStdDev = Math.sqrt((pixSumSq / totalPixels) - (pixMean * pixMean));
+      scores.contrast = Math.round(pixStdDev);
+
+      if (pixStdDev < LOW_CONTRAST_THRESHOLD && !issues.includes('blurry')) {
+        issues.push('low_contrast');
+      }
+
       // --- 2. Overall overexposure ---
       let brightCount = 0;
       for (let i = 0; i < totalPixels; i++) {
@@ -75,22 +91,30 @@ const ImageQualityService = {
         issues.push('overexposed');
       }
 
-      // --- 3. Local glare detection (grid-based) ---
+      // --- 3. Local glare detection (grid-based with relative brightness) ---
       const cellW = Math.floor(width / GLARE_GRID);
       const cellH = Math.floor(height / GLARE_GRID);
       let glareCount = 0;
 
+      // Calculate average brightness per cell
+      const cellAvgs = [];
       for (let gy = 0; gy < GLARE_GRID; gy++) {
         for (let gx = 0; gx < GLARE_GRID; gx++) {
+          let cellSum = 0;
           let cellBright = 0;
           let cellTotal = 0;
 
           for (let y = gy * cellH; y < (gy + 1) * cellH; y++) {
             for (let x = gx * cellW; x < (gx + 1) * cellW; x++) {
+              const val = data[y * width + x];
+              cellSum += val;
               cellTotal++;
-              if (data[y * width + x] > GLARE_CELL_BRIGHT) cellBright++;
+              if (val > GLARE_CELL_BRIGHT) cellBright++;
             }
           }
+
+          const cellAvg = cellTotal > 0 ? cellSum / cellTotal : 0;
+          cellAvgs.push(cellAvg);
 
           if (cellTotal > 0 && (cellBright / cellTotal) > GLARE_CELL_PERCENT) {
             glareCount++;
@@ -98,10 +122,16 @@ const ImageQualityService = {
         }
       }
 
-      scores.glareCells = glareCount;
+      // Check if glare cells are significantly brighter than the overall average
+      const overallAvg = cellAvgs.reduce((a, b) => a + b, 0) / cellAvgs.length;
+      const brightCells = cellAvgs.filter(avg => avg > overallAvg + 30).length;
 
-      // Flag glare if at least 1 cell has concentrated brightness (but not already flagged as overexposed)
-      if (glareCount >= 1 && !issues.includes('overexposed')) {
+      scores.glareCells = glareCount;
+      scores.brightCellsAboveAvg = brightCells;
+      scores.avgBrightness = Math.round(overallAvg);
+
+      // Flag glare if bright spot cells exist AND they are above average
+      if (glareCount >= 1 && brightCells >= 1 && !issues.includes('overexposed')) {
         issues.push('glare');
       }
 
@@ -178,7 +208,8 @@ const ImageQualityService = {
       blurry: 'kabur (blurry)',
       overexposed: 'terlalu terang (overexposed)',
       glare: 'ada pantulan cahaya (glare)',
-      too_dark: 'terlalu gelap'
+      too_dark: 'terlalu gelap',
+      low_contrast: 'gambar pudar / kurang jelas'
     };
 
     const parts = [];
