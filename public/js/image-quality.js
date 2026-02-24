@@ -35,6 +35,22 @@
     });
 
     wrap.querySelector('.iq-keep').addEventListener('click', () => {
+      // Track this file as having acknowledged quality issues
+      const fieldName = input.name;
+      let tracker = document.getElementById('iq_warned_files');
+      if (!tracker) {
+        tracker = document.createElement('input');
+        tracker.type = 'hidden';
+        tracker.name = 'iq_warned_files';
+        tracker.id = 'iq_warned_files';
+        tracker.value = '';
+        input.closest('form').appendChild(tracker);
+      }
+      const current = tracker.value ? tracker.value.split(',') : [];
+      if (!current.includes(fieldName)) {
+        current.push(fieldName);
+        tracker.value = current.join(',');
+      }
       removeWarning(input);
     });
   }

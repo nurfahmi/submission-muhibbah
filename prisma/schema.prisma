@@ -40,8 +40,9 @@ model Submission {
   taken_by        String?          @db.VarChar(36)
   taken_at        DateTime?
   released_at     DateTime?
-  release_reason  String?          @db.Text
-  created_at      DateTime         @default(now())
+  release_reason      String?          @db.Text
+  needs_image_review  Boolean          @default(false)
+  created_at          DateTime         @default(now())
 
   subagent    User? @relation("SubagentSubmissions", fields: [subagent_id], references: [id], onDelete: SetNull)
   masteragent User? @relation("MasteragentSubmissions", fields: [masteragent_id], references: [id], onDelete: SetNull)

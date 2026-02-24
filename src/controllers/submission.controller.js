@@ -24,6 +24,16 @@ const FILE_FIELDS = [
 const SubmissionController = {
   FILE_FIELDS,
 
+  // Files that MUST be uploaded for a valid submission
+  REQUIRED_FILES: ['ic', 'payslip1', 'payslip2', 'payslip3', 'bank_page'],
+  REQUIRED_FILE_LABELS: {
+    ic: 'IC (Depan & Belakang)',
+    payslip1: 'Payslip Bulan 1',
+    payslip2: 'Payslip Bulan 2',
+    payslip3: 'Payslip Bulan 3',
+    bank_page: 'Muka Surat Akaun Bank'
+  },
+
   async submitPage(req, res) {
     const ref = req.query.ref || '';
     let agentName = null;
@@ -119,6 +129,20 @@ const SubmissionController = {
         }
       }
 
+      // File upload validation (skip for drafts)
+      if (!isDraft) {
+        const uploadedFiles = req.files || {};
+        const missingFiles = this.REQUIRED_FILES.filter(f => !uploadedFiles[f] || uploadedFiles[f].length === 0);
+        if (missingFiles.length > 0) {
+          const names = missingFiles.map(f => this.REQUIRED_FILE_LABELS[f] || f).join(', ');
+          req.flash('error', `Sila muat naik dokumen yang diperlukan: ${names}`);
+          return res.redirect(redirectUrl);
+        }
+      }
+
+      // Check if user acknowledged image quality warnings
+      const needsImageReview = !isDraft && req.body.iq_warned_files && req.body.iq_warned_files.trim().length > 0;
+
       const { subagent_id, masteragent_id } = await (async () => {
         // If admin/superadmin assigned an agent directly
         if (req.body.assign_agent && req.session && req.session.user) {
@@ -208,7 +232,8 @@ const SubmissionController = {
         spouse_data,
         job_data,
         reference_data,
-        status
+        status,
+        needs_image_review: needsImageReview
       });
 
       // Move files from temp to /uploads/{submission_id}/
