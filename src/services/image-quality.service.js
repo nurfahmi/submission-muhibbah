@@ -242,7 +242,9 @@ const ImageQualityService = {
         issues.push('glare');
       }
 
-      // === LAYER 2: OCR confidence ===
+      // === LAYER 2: OCR confidence (final authority) ===
+      // If OCR can read text clearly, pixel-level warnings are false positives
+      const OCR_READABLE_THRESHOLD = 65; // Above this = text is readable
       try {
         const worker = await getWorker();
         const { data } = await worker.recognize(filePath);
@@ -254,15 +256,25 @@ const ImageQualityService = {
           const avgConf = words.reduce((sum, w) => sum + w.confidence, 0) / words.length;
           scores.ocrConfidence = Math.round(avgConf);
 
-          if (avgConf < OCR_CONFIDENCE_THRESHOLD && !issues.includes('blurry')) {
-            issues.push('blurry');
+          if (avgConf >= OCR_READABLE_THRESHOLD) {
+            // OCR says readable — remove pixel-level false positives
+            const falsePositives = ['overexposed', 'glare', 'too_dark', 'low_contrast'];
+            for (const fp of falsePositives) {
+              const idx = issues.indexOf(fp);
+              if (idx !== -1) issues.splice(idx, 1);
+            }
+          } else if (avgConf < OCR_CONFIDENCE_THRESHOLD) {
+            // OCR says unreadable — flag as blurry if not already
+            if (!issues.includes('blurry')) {
+              issues.push('blurry');
+            }
           }
         } else if (words.length === 0 && !issues.includes('too_dark') && !issues.includes('overexposed')) {
           // No text at all — likely very blurry or wrong image
           issues.push('blurry');
         }
       } catch (ocrErr) {
-        // OCR failed — don't block, rely on pixel analysis only
+        // OCR failed — keep pixel analysis results as-is
         scores.ocrError = true;
       }
 
