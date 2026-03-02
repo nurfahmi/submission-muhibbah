@@ -508,12 +508,14 @@ const SubmissionController = {
   async listDrafts(req, res) {
     try {
       const currentUser = req.session.user;
+      const PdfService = require('../services/pdf.service');
       const drafts = await Submission.findDrafts(currentUser.id, currentUser.role);
       res.render('dashboard/drafts', {
         layout: 'layouts/main',
         title: 'My Drafts',
         user: currentUser,
         drafts,
+        loanProducts: PdfService.getLoanProducts(),
         page: 'drafts',
         success: req.flash('success'),
         error: req.flash('error')

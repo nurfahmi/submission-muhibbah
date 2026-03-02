@@ -1,3 +1,13 @@
+<%
+  const productMap = {};
+  if (typeof loanProducts !== 'undefined' && loanProducts) {
+    loanProducts.forEach(p => {
+      productMap[p.key] = p.label;
+      if (p.children) p.children.forEach(c => { productMap[c.key] = p.label; });
+    });
+  }
+  function getProductName(key) { return key ? (productMap[key] || key) : '-'; }
+%>
 <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
   <div class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm px-4 py-3 rounded-xl mb-6"><%= success %></div>
 <% } %>
@@ -14,17 +24,26 @@
       <thead>
         <tr class="border-b border-gray-200 dark:border-gray-800">
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Customer IC</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Date</th>
           <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Actions</th>
         </tr>
       </thead>
       <tbody id="draftsTableBody">
         <% if (drafts.length === 0) { %>
-          <tr><td colspan="3" class="px-3 sm:px-6 py-8 text-center text-gray-400">No drafts</td></tr>
+          <tr><td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">No drafts</td></tr>
         <% } %>
         <% drafts.forEach(d => { %>
           <tr class="draft-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-            <td class="px-3 sm:px-6 py-3 font-medium"><%= d.applicant_name %></td>
+            <td class="px-3 sm:px-6 py-3 font-medium">
+              <%= d.applicant_name %>
+              <% if (d.applicant_ic && d.applicant_ic !== '-') { %>
+                <div class="text-xs text-gray-400 sm:hidden font-mono"><%= d.applicant_ic %></div>
+              <% } %>
+            </td>
+            <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-mono text-xs hidden sm:table-cell"><%= d.applicant_ic %></td>
+            <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell"><%= getProductName(d.product_key) %></td>
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell"><%= new Date(d.created_at).toLocaleString() %></td>
             <td class="px-3 sm:px-6 py-3 text-center space-x-2">
               <a href="/dashboard/drafts/<%= d.id %>/edit" class="text-primary-600 dark:text-primary-400 hover:underline text-xs font-medium">Continue</a>

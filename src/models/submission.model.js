@@ -193,11 +193,13 @@ const Submission = {
     });
     return rows.map(row => {
       let applicant_name = '-';
+      let applicant_ic = '-';
       try {
         const data = JSON.parse(encryption.decrypt(row.details?.applicant_data));
         applicant_name = data.name || '-';
+        applicant_ic = data.ic || '-';
       } catch {}
-      return { ...row, applicant_name };
+      return { ...row, applicant_name, applicant_ic };
     });
   },
 
