@@ -40,6 +40,7 @@ router.post('/', async (req, res) => {
       id: uuidv4(),
       username: username.trim().toLowerCase(),
       password: hashed,
+      name: username.trim(),
       role: 'superadmin'
     }
   });
