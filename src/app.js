@@ -31,6 +31,12 @@ app.set('layout', 'layouts/main');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '10mb' }));
 
+// Block search engine indexing
+app.use((req, res, next) => {
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  next();
+});
+
 // Static files
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
