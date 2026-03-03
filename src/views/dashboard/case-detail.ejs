@@ -196,7 +196,7 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
   <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
     <div class="flex items-center justify-between mb-3">
       <h3 class="text-base font-semibold">Dokumen</h3>
-      <% if (files.length > 0 && (user.role === 'superadmin' || user.role === 'admin')) { %>
+      <% if (files.length > 0) { %>
         <a href="/dashboard/cases/<%= submission.id %>/download-all-files" class="px-3 py-1.5 text-xs font-medium bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 transition-colors flex items-center gap-1">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
           Download All
@@ -210,9 +210,7 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
         <% files.forEach(f => { %>
           <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex items-center justify-between">
             <span class="text-xs font-medium capitalize"><%= f.file_type.replace(/_/g, ' ') %></span>
-            <% if (user.role === 'superadmin' || user.role === 'admin') { %>
               <a href="/dashboard/files/<%= f.id %>/download" class="text-primary-600 dark:text-primary-400 text-xs hover:underline">Download</a>
-            <% } %>
           </div>
         <% }) %>
       </div>

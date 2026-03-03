@@ -398,10 +398,6 @@ const SubmissionController = {
     try {
       const currentUser = req.session.user;
 
-      if (currentUser.role !== 'superadmin' && currentUser.role !== 'admin') {
-        return res.status(403).send('Forbidden');
-      }
-
       const file = await FileModel.findById(req.params.fileId);
       if (!file) return res.status(404).send('File not found');
 
