@@ -46,7 +46,7 @@
     </div>
     <div id="waFillResult" class="hidden mt-3 text-sm px-4 py-3 rounded-xl"></div>
   </div>
-  <form method="POST" action="/dashboard/submit-new" enctype="multipart/form-data" class="space-y-6">
+  <form id="submitForm" method="POST" action="/dashboard/submit-new" enctype="multipart/form-data" class="space-y-6">
     <input type="hidden" name="referral_code" value="<%= ref %>">
     <% if (typeof draft !== 'undefined' && draft) { %>
       <input type="hidden" name="draft_id" value="<%= draft.id %>">
@@ -350,7 +350,43 @@
       </button>
     </div>
   </form>
+  <div id="fileError" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-300"></div>
 </div>
+
+<script>
+(function() {
+  const form = document.getElementById('submitForm');
+  const errorDiv = document.getElementById('fileError');
+  const requiredFiles = {
+    ic_depan: 'IC Depan', ic_belakang: 'IC Belakang',
+    payslip1: 'Payslip Terkini 1', payslip2: 'Payslip Terkini 2', payslip3: 'Payslip Terkini 3',
+    bank_page: 'Muka Surat Akaun Bank', signature: 'Tandatangan Customer',
+    chop_sign: 'Chop Bulat, Chop Nama & Sign Majikan', bill_rumah: 'Bill Rumah'
+  };
+
+  form.addEventListener('submit', function(e) {
+    // Skip validation for draft
+    const action = e.submitter?.value;
+    if (action === 'draft') return;
+
+    const missing = [];
+    for (const [name, label] of Object.entries(requiredFiles)) {
+      const input = form.querySelector('input[name="' + name + '"]');
+      if (!input || !input.files || input.files.length === 0) {
+        missing.push(label);
+      }
+    }
+    if (missing.length > 0) {
+      e.preventDefault();
+      errorDiv.innerHTML = '<strong>Sila muat naik dokumen yang diperlukan:</strong><br>' + missing.join(', ');
+      errorDiv.classList.remove('hidden');
+      errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      errorDiv.classList.add('hidden');
+    }
+  });
+})();
+</script>
 
 <div id="iqSettings" class="hidden"
   data-enabled="<%= (typeof siteSettings !== 'undefined' && siteSettings.iq_enabled) || 'true' %>"

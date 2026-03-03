@@ -56,7 +56,7 @@
     </div>
     <% } %>
 
-    <form method="POST" action="/submit" enctype="multipart/form-data" class="space-y-6">
+    <form id="submitForm" method="POST" action="/submit" enctype="multipart/form-data" class="space-y-6">
       <input type="hidden" name="referral_code" value="<%= ref %>">
 
       <!-- Product Selection -->
@@ -307,7 +307,39 @@
         Hantar Permohonan
       </button>
     </form>
+    <div id="fileError" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-300"></div>
   </div>
+
+  <script>
+  (function() {
+    const form = document.getElementById('submitForm');
+    const errorDiv = document.getElementById('fileError');
+    const requiredFiles = {
+      ic_depan: 'IC Depan', ic_belakang: 'IC Belakang',
+      payslip1: 'Payslip Terkini 1', payslip2: 'Payslip Terkini 2', payslip3: 'Payslip Terkini 3',
+      bank_page: 'Muka Surat Akaun Bank', signature: 'Tandatangan Customer',
+      chop_sign: 'Chop Bulat, Chop Nama & Sign Majikan', bill_rumah: 'Bill Rumah'
+    };
+
+    form.addEventListener('submit', function(e) {
+      const missing = [];
+      for (const [name, label] of Object.entries(requiredFiles)) {
+        const input = form.querySelector('input[name="' + name + '"]');
+        if (!input || !input.files || input.files.length === 0) {
+          missing.push(label);
+        }
+      }
+      if (missing.length > 0) {
+        e.preventDefault();
+        errorDiv.innerHTML = '<strong>Sila muat naik dokumen yang diperlukan:</strong><br>' + missing.join(', ');
+        errorDiv.classList.remove('hidden');
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        errorDiv.classList.add('hidden');
+      }
+    });
+  })();
+  </script>
 
   <div id="iqSettings" class="hidden"
     data-enabled="<%= (typeof siteSettings !== 'undefined' && siteSettings.iq_enabled) || 'true' %>"
