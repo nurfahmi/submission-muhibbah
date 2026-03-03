@@ -69,7 +69,7 @@
             </td>
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell text-xs"><%= getProductName(s.product_key) %></td>
             <td class="px-3 sm:px-6 py-3 text-center">
-              <% const canView = (user.role === 'superadmin') || (s.taken_by === user.id); %>
+              <% const canView = (user.role === 'superadmin' || user.role === 'admin') || (s.taken_by === user.id); %>
               <% if (canView) { %>
                 <a href="/dashboard/cases/<%= s.id %>" class="px-3 py-1.5 text-xs font-medium bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">View</a>
               <% } else { %>
