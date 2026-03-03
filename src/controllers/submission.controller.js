@@ -344,14 +344,11 @@ const SubmissionController = {
       const files = await FileModel.findBySubmission(submission.id);
       const loanProducts = PdfService.getLoanProducts();
 
-      // Load admin files (admin+)
-      let adminFiles = [];
-      if (currentUser.role === 'superadmin' || currentUser.role === 'admin') {
-        adminFiles = await prisma.adminCaseFile.findMany({
-          where: { submission_id: submission.id },
-          orderBy: { uploaded_at: 'desc' }
-        });
-      }
+      // Load additional files
+      const adminFiles = await prisma.adminCaseFile.findMany({
+        where: { submission_id: submission.id },
+        orderBy: { uploaded_at: 'desc' }
+      });
 
       res.render('dashboard/case-detail', {
         layout: 'layouts/main',
@@ -700,14 +697,10 @@ const SubmissionController = {
   }
 };
 
-// --- Admin Case File Methods (Superadmin only) ---
+// --- Additional File Methods ---
 const SubmissionController_adminFiles = {
   async uploadAdminFile(req, res) {
     try {
-      if (req.session.user.role !== 'superadmin' && req.session.user.role !== 'admin') {
-        req.flash('error', 'Unauthorized.');
-        return res.redirect('/dashboard/cases');
-      }
       const { id } = req.params;
       const label = req.body.label || 'Untitled';
       const file = req.file;
@@ -747,10 +740,7 @@ const SubmissionController_adminFiles = {
 
   async deleteAdminFile(req, res) {
     try {
-      if (req.session.user.role !== 'superadmin' && req.session.user.role !== 'admin') {
-        req.flash('error', 'Unauthorized.');
-        return res.redirect('/dashboard/cases');
-      }
+
       const { id, fileId } = req.params;
       const record = await prisma.adminCaseFile.findUnique({ where: { id: parseInt(fileId) } });
       if (record) {
@@ -773,10 +763,7 @@ const SubmissionController_adminFiles = {
 
   async downloadAdminFile(req, res) {
     try {
-      if (req.session.user.role !== 'superadmin' && req.session.user.role !== 'admin') {
-        req.flash('error', 'Unauthorized.');
-        return res.redirect('/dashboard/cases');
-      }
+
       const record = await prisma.adminCaseFile.findUnique({ where: { id: parseInt(req.params.fileId) } });
       if (!record) {
         req.flash('error', 'File not found.');
@@ -830,10 +817,7 @@ const SubmissionController_adminFiles = {
 
   async downloadAllAdminFiles(req, res) {
     try {
-      if (req.session.user.role !== 'superadmin' && req.session.user.role !== 'admin') {
-        req.flash('error', 'Unauthorized.');
-        return res.redirect('/dashboard/cases');
-      }
+
       const { id } = req.params;
       const adminFiles = await prisma.adminCaseFile.findMany({ where: { submission_id: id } });
       if (!adminFiles.length) {

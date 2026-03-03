@@ -251,13 +251,11 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
     <% } %>
   </div>
 
-  <% if (user.role === 'superadmin' || user.role === 'admin') { %>
-  <!-- Admin Files -->
+  <!-- Additional Files -->
   <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
-        <h3 class="text-base font-semibold">📎 Admin Files</h3>
-        <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">Admin Only</span>
+        <h3 class="text-base font-semibold">📎 Additional Files</h3>
       </div>
       <% if (typeof adminFiles !== 'undefined' && adminFiles.length > 0) { %>
         <a href="/dashboard/cases/<%= submission.id %>/download-all-admin-files" class="px-3 py-1.5 text-xs font-medium bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-lg hover:bg-purple-100 transition-colors flex items-center gap-1">
@@ -306,9 +304,8 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
         <% }) %>
       </div>
     <% } else { %>
-      <p class="text-sm text-gray-400 text-center py-3">No admin files attached</p>
+      <p class="text-sm text-gray-400 text-center py-3">No additional files attached</p>
     <% } %>
   </div>
-  <% } %>
 
 </div>
