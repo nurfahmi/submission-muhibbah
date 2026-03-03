@@ -326,8 +326,7 @@ const PdfService = {
    */
   async fillTemplate(productKey, submission, options = {}) {
     const { flatten = true } = options;
-    const registry = loadRegistry();
-    const product = registry.find(t => t.key === productKey);
+    const product = this.getProduct(productKey);
     if (!product) throw new Error(`Loan product "${productKey}" not found`);
 
     const filePath = path.join(TEMPLATES_DIR, product.file);
