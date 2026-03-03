@@ -1,3 +1,13 @@
+<%
+  const productMap = {};
+  if (typeof loanProducts !== 'undefined' && loanProducts) {
+    loanProducts.forEach(p => {
+      productMap[p.key] = p.label;
+      if (p.children) p.children.forEach(c => { productMap[c.key] = p.label; });
+    });
+  }
+  function getProductName(key) { return key ? (productMap[key] || key) : '-'; }
+%>
 <% if (typeof success !== 'undefined' && success && success.length > 0) { %>
   <div class="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm px-4 py-3 rounded-xl mb-6">
     <%= success %>
@@ -98,10 +108,10 @@
   </div>
 
   <!-- Product-specific links -->
-  <% if (typeof loanProducts !== 'undefined' && loanProducts.length > 0) { %>
+  <% if (typeof enabledProducts !== 'undefined' && enabledProducts.length > 0) { %>
   <div class="space-y-2">
     <label class="text-xs font-medium text-gray-500 dark:text-gray-400 block">Product-specific links</label>
-    <% loanProducts.forEach((p, i) => { %>
+    <% enabledProducts.forEach((p, i) => { %>
       <div class="flex items-center gap-2">
         <span class="text-xs text-gray-500 dark:text-gray-400 w-32 sm:w-40 shrink-0 truncate" title="<%= p.label %>"><%= p.label %></span>
         <code class="flex-1 min-w-0 text-xs bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded-lg font-mono truncate" id="refLink_<%= i %>"><%= baseUrl %>/submit?ref=<%= referralCode %>&product=<%= p.key %></code>
@@ -166,6 +176,7 @@ function fallbackCopy(text, cb) {
         <thead>
           <tr class="border-b border-gray-200 dark:border-gray-800">
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
+            <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Tarikh</th>
             <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
@@ -173,7 +184,7 @@ function fallbackCopy(text, cb) {
         </thead>
         <tbody id="recentCasesBody">
           <% if (recentCases.length === 0) { %>
-            <tr><td colspan="4" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
+            <tr><td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
           <% } %>
           <% recentCases.forEach(s => { %>
             <tr class="recent-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
@@ -181,6 +192,7 @@ function fallbackCopy(text, cb) {
                 <div class="font-medium"><%= s.applicant_name %></div>
                 <div class="text-xs text-gray-400 sm:hidden"><%= s.applicant_ic !== '-' ? s.applicant_ic : '' %></div>
               </td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell"><%= getProductName(s.product_key) %></td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.masteragent_name %></td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell"><%= new Date(s.created_at).toLocaleDateString('ms-MY') %></td>
               <td class="px-3 sm:px-6 py-3 text-center">
@@ -264,6 +276,7 @@ function fallbackCopy(text, cb) {
     tr.style.animation = 'highlightRow 3s ease-out';
     tr.innerHTML = `
       <td class="px-3 sm:px-6 py-3"><div class="font-medium">${data.applicantName}</div></td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell">-</td>
       <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${data.agentName}</td>
       <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell">${data.date}</td>
       <td class="px-3 sm:px-6 py-3 text-center">
@@ -289,7 +302,7 @@ function fallbackCopy(text, cb) {
         // Show "Tiada kes" if table is empty
         if (!tbody.querySelector('tr')) {
           const tr = document.createElement('tr');
-          tr.innerHTML = '<td colspan="4" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td>';
+          tr.innerHTML = '<td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td>';
           tbody.appendChild(tr);
         }
       }, 500);
