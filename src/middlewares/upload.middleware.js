@@ -31,4 +31,11 @@ const upload = multer({
   limits: { fileSize: MAX_SIZE }
 });
 
+// Permissive upload for additional files (no file type restriction)
+const uploadAny = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB
+});
+
 module.exports = upload;
+module.exports.uploadAny = uploadAny;

@@ -25,8 +25,9 @@ router.get('/files/:fileId/download', authMiddleware, SubmissionController.downl
 router.get('/cases/:id/pdf/:template', authMiddleware, SubmissionController.generatePdf);
 router.post('/cases/:id/upload-file', authMiddleware, upload.single('file'), SubmissionController.uploadSubmissionFile);
 
-// Admin case file routes
-router.post('/cases/:id/admin-files', authMiddleware, upload.single('file'), SubmissionController.uploadAdminFile);
+// Additional file routes (no file type restriction)
+const { uploadAny } = require('../middlewares/upload.middleware');
+router.post('/cases/:id/admin-files', authMiddleware, uploadAny.single('file'), SubmissionController.uploadAdminFile);
 router.get('/admin-files/:fileId/download', authMiddleware, SubmissionController.downloadAdminFile);
 router.post('/cases/:id/admin-files/:fileId/delete', authMiddleware, SubmissionController.deleteAdminFile);
 
