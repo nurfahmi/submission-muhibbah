@@ -29,17 +29,10 @@ const FILE_FIELDS = [
   { name: 'other_doc', maxCount: 10 }
 ];
 
-const REQUIRED_FILES = ['ic_depan', 'ic_belakang', 'payslip1', 'payslip2', 'payslip3', 'bank_page', 'signature', 'chop_sign', 'bill_rumah'];
+const REQUIRED_FILES = ['ic_depan', 'ic_belakang'];
 const REQUIRED_FILE_LABELS = {
   ic_depan: 'IC Depan',
-  ic_belakang: 'IC Belakang',
-  payslip1: 'Payslip Terkini 1',
-  payslip2: 'Payslip Terkini 2',
-  payslip3: 'Payslip Terkini 3',
-  bank_page: 'Muka Surat Akaun Bank',
-  signature: 'Tandatangan Customer',
-  chop_sign: 'Chop Bulat, Chop Nama & Sign Majikan',
-  bill_rumah: 'Bill Rumah'
+  ic_belakang: 'IC Belakang'
 };
 
 const SubmissionController = {
