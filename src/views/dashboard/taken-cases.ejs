@@ -56,9 +56,6 @@
                 <% if (s.needs_image_review) { %>
                   <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" title="Gambar perlu disemak">📷</span>
                 <% } %>
-                <% if (s.updated_at && s.created_at && (new Date(s.updated_at) - new Date(s.created_at)) > 1000 && (Date.now() - new Date(s.updated_at)) < 86400000) { %>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300" title="Dikemaskini">📝 Updated</span>
-                <% } %>
               </div>
               <div class="text-xs text-gray-400 sm:hidden"><%= s.applicant_ic !== '-' ? s.applicant_ic : '' %></div>
             </td>
