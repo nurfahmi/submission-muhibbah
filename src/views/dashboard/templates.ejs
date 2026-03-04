@@ -272,8 +272,7 @@ if (sortEl) {
         body: JSON.stringify({ keys })
       });
       if (res.ok) {
-        status.classList.remove('hidden');
-        setTimeout(() => status.classList.add('hidden'), 2000);
+        location.reload();
       }
     }
   });
