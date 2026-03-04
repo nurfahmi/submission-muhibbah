@@ -19,7 +19,9 @@
   </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 min-h-screen">
-  <div class="max-w-3xl mx-auto py-10 px-4">
+  <div class="max-w-6xl mx-auto py-10 px-4">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+    <div class="xl:col-span-2">
     <div class="text-center mb-8">
       <h1 class="text-2xl font-bold text-primary-600 dark:text-primary-400">Borang Permohonan Kredit</h1>
       <% if (agentName) { %>
@@ -309,6 +311,76 @@
     </form>
     <div id="fileError" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-sm text-red-700 dark:text-red-300"></div>
   </div>
+  </div><!-- end left column -->
+
+  <!-- Right side - Template Note -->
+  <div class="xl:col-span-1">
+    <div class="sticky top-8 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
+      <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+        <h4 class="text-sm font-semibold">📋 Format Auto Isi</h4>
+        <button onclick="copyTemplate()" id="copyBtn" class="px-3 py-1 text-[11px] font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-200 transition-colors">Copy</button>
+      </div>
+      <div class="px-4 py-3">
+        <pre id="templateNote" class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400 whitespace-pre-wrap select-all font-sans">Sila guna format ini untuk fungsi "Auto Isi Borang" bagi mengisi semua ruangan secara automatik.
+
+1)MAKLUMAT PEMOHON 
+👉Nama:
+👉No kp: 
+👉No tel: 
+👉Email :
+👉Alamat Terkini: 
+👉Bilangan Tanggungan: 
+👉Taraf Pendidikan: 
+👉Jenis Kediaman: 
+👉Tempoh Menetap: 
+👉Nama Ibu: 
+👉 No ic ibu: 
+👉 No hp ibu: 
+👉 Alamat ibu : 
+
+2)MAKLUMAT PASANGAN:-
+👉Nama: 
+👉No ic: 
+👉Jawatan: 
+👉Alamat Majikan: 
+👉Tel Pejbt:-
+👉Tel Bimbit: 
+👉Gaji Pasangan: 
+
+3)MAKLUMAT PEKERJAAN PEMOHON:
+👉Nama Majikan: : 
+👉Alamat Majikan: 
+👉Jawatan: 
+👉Tarikh Mula Berkhidmat : 
+👉No Tel Pejbt: 
+👉Anm / Payslip Password:
+👉Hrmis Password:
+ 
+4)RUJUKAN SAUDARA(ADIK BERADIK DAN IBU BAPA SAHAJA)TERDEKAT: (WARIS BERUMUR 50 TAHUN KE BAWAH & TAK SAMA ALAMAT DENGAN PEMOHON)
+👉Nama: 
+👉Alamat Tetap: 
+👉Ic : 
+👉No Tel Bimbit: 
+👉Pertalian:</pre>
+      </div>
+    </div>
+  </div>
+  </div><!-- end grid -->
+
+  <script>
+  function copyTemplate() {
+    const text = document.getElementById('templateNote').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('bg-green-100', 'dark:bg-green-900/30', 'text-green-700', 'dark:text-green-300');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('bg-green-100', 'dark:bg-green-900/30', 'text-green-700', 'dark:text-green-300');
+      }, 2000);
+    });
+  }
+  </script>
 
   <script>
   (function() {
