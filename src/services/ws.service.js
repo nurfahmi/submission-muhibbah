@@ -51,6 +51,25 @@ const WsService = {
         client.send(payload);
       }
     });
+  },
+
+  notifyCaseModified({ caseId, applicantName, masteragentName, subagentName, productKey }) {
+    if (!wss) return;
+    const payload = JSON.stringify({
+      type: 'CASE_MODIFIED',
+      caseId,
+      applicantName: applicantName || 'Unknown',
+      masteragentName: masteragentName || '-',
+      subagentName: subagentName || '-',
+      productKey: productKey || '-',
+      updatedAt: new Date().toLocaleString('ms-MY'),
+      timestamp: Date.now()
+    });
+    wss.clients.forEach(client => {
+      if (client.readyState === 1) {
+        client.send(payload);
+      }
+    });
   }
 };
 

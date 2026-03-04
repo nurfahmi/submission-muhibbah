@@ -254,7 +254,7 @@ function fallbackCopy(text, cb) {
         <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400"><%= recentlyModified.length %></span>
       <% } %>
     </h3>
-    <span id="modifiedRefresh" class="text-[10px] text-gray-400">Auto-refresh: 15s</span>
+    <span id="modifiedRefresh" class="text-[10px] text-gray-400">🟢 Real-time</span>
   </div>
   <div class="overflow-x-auto">
     <table class="w-full text-sm">
@@ -290,30 +290,8 @@ function fallbackCopy(text, cb) {
   </div>
 </div>
 
-<script>
-(function() {
-  setInterval(async () => {
-    try {
-      const res = await fetch('/dashboard/api/recently-modified');
-      const data = await res.json();
-      const body = document.getElementById('modifiedBody');
-      if (!body || !data.length) return;
-      body.innerHTML = data.map(s => `
-        <tr class="modified-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors" style="animation: highlightRow 1s ease-out">
-          <td class="px-3 sm:px-6 py-3 font-medium">${s.applicant_name}</td>
-          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell">${s.product_key || '-'}</td>
-          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${s.masteragent_name || '-'}</td>
-          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${s.subagent_name || '-'}</td>
-          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell">${new Date(s.updated_at).toLocaleString('ms-MY')}</td>
-          <td class="px-3 sm:px-6 py-3 text-center">
-            <a href="/dashboard/cases/${s.id}" class="px-2.5 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-xs font-medium hover:bg-orange-200 transition-colors">View</a>
-          </td>
-        </tr>
-      `).join('');
-    } catch (e) {}
-  }, 15000);
-})();
-</script>
+
+
 
 <style>
   @keyframes highlightRow { from { background: rgba(14,165,233,0.15); } to { background: transparent; } }
@@ -334,6 +312,8 @@ function fallbackCopy(text, cb) {
         } else if (data.type === 'CASE_TAKEN') {
           removeCaseRow(data.caseId);
           updateBadge(-1);
+        } else if (data.type === 'CASE_MODIFIED') {
+          addModifiedRow(data);
         }
       } catch(e) {}
     };
@@ -406,6 +386,33 @@ function fallbackCopy(text, cb) {
         h3.appendChild(span);
       }
     }
+  }
+
+  function addModifiedRow(data) {
+    const tbody = document.getElementById('modifiedBody');
+    if (!tbody) return;
+    // Remove empty row
+    const emptyRow = tbody.querySelector('td[colspan]');
+    if (emptyRow) emptyRow.closest('tr').remove();
+    // Remove existing row for same case (avoid duplicates)
+    const existing = tbody.querySelector('a[href="/dashboard/cases/' + data.caseId + '"]');
+    if (existing) existing.closest('tr').remove();
+    // Insert at top
+    const tr = document.createElement('tr');
+    tr.className = 'modified-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors';
+    tr.style.animation = 'highlightRow 3s ease-out';
+    tr.innerHTML = `
+      <td class="px-3 sm:px-6 py-3 font-medium">${data.applicantName}</td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell">${data.productKey || '-'}</td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${data.masteragentName || '-'}</td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${data.subagentName || '-'}</td>
+      <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell">${data.updatedAt}</td>
+      <td class="px-3 sm:px-6 py-3 text-center">
+        <a href="/dashboard/cases/${data.caseId}" class="px-2.5 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-xs font-medium hover:bg-orange-200 transition-colors">View</a>
+      </td>`;
+    tbody.insertBefore(tr, tbody.firstChild);
+    // Keep max 10 rows
+    while (tbody.children.length > 10) tbody.removeChild(tbody.lastChild);
   }
 
   connect();

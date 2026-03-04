@@ -446,6 +446,17 @@ const SubmissionController = {
         where: { id },
         data: { agent_message: agent_message || null }
       });
+      // Broadcast modification
+      const sub = await Submission.findById(id);
+      if (sub) {
+        WsService.notifyCaseModified({
+          caseId: id,
+          applicantName: sub.applicant_data?.name,
+          masteragentName: sub.masteragent_name,
+          subagentName: sub.subagent_name,
+          productKey: sub.product_key
+        });
+      }
       req.flash('success', 'Note saved.');
       res.redirect(`/dashboard/cases/${id}`);
     } catch (err) {
@@ -696,6 +707,16 @@ const SubmissionController = {
         file_path: path.join(relDir, req.file.filename)
       });
 
+      // Touch updated_at & broadcast
+      await prisma.submission.update({ where: { id: submission.id }, data: { updated_at: new Date() } });
+      WsService.notifyCaseModified({
+        caseId: submission.id,
+        applicantName: submission.applicant_data?.name,
+        masteragentName: submission.masteragent_name,
+        subagentName: submission.subagent_name,
+        productKey: submission.product_key
+      });
+
       req.flash('success', 'File uploaded.');
       res.redirect(`/dashboard/cases/${req.params.id}`);
     } catch (err) {
@@ -738,6 +759,18 @@ const SubmissionController_adminFiles = {
           original_name: file.originalname
         }
       });
+
+      // Touch updated_at & broadcast
+      await prisma.submission.update({ where: { id }, data: { updated_at: new Date() } });
+      if (submission) {
+        WsService.notifyCaseModified({
+          caseId: id,
+          applicantName: submission.applicant_data?.name,
+          masteragentName: submission.masteragent_name,
+          subagentName: submission.subagent_name,
+          productKey: submission.product_key
+        });
+      }
 
       req.flash('success', 'File uploaded.');
       res.redirect(`/dashboard/cases/${id}`);
