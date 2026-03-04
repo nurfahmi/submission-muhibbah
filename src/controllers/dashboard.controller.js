@@ -39,6 +39,9 @@ const DashboardController = {
       // Recent cases (newest 10)
       const recentCases = await Submission.findRecent(currentUser.id, currentUser.role, 10);
 
+      // Recently modified cases (updated_at != created_at, newest first)
+      const recentlyModified = await Submission.findRecentlyModified(currentUser.id, currentUser.role, 10);
+
       // Get full user record for referral code
       const fullUser = await User.findById(currentUser.id);
 
@@ -54,6 +57,7 @@ const DashboardController = {
         totalSub,
         performance,
         recentCases,
+        recentlyModified,
         referralCode: fullUser?.referral_code || null,
         loanProducts: PdfService.getLoanProducts(),
         enabledProducts: PdfService.getEnabledProducts(),
@@ -79,6 +83,17 @@ const DashboardController = {
       res.json({ count });
     } catch (err) {
       res.json({ count: 0 });
+    }
+  },
+
+  async recentlyModifiedApi(req, res) {
+    try {
+      const currentUser = req.session.user;
+      const Submission = require('../models/submission.model');
+      const data = await Submission.findRecentlyModified(currentUser.id, currentUser.role, 10);
+      res.json(data);
+    } catch (err) {
+      res.json([]);
     }
   }
 };

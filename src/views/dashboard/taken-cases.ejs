@@ -32,6 +32,7 @@
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Customer IC</th>
           <% if (user.role === 'superadmin' || user.role === 'admin') { %>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
           <% } else if (user.role === 'masteragent') { %>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Agent</th>
           <% } %>
@@ -41,7 +42,7 @@
         </tr>
       </thead>
       <tbody id="takenTableBody">
-        <% const colCount = (user.role === 'superadmin' || user.role === 'admin' || user.role === 'masteragent') ? 6 : 5; %>
+        <% const colCount = (user.role === 'superadmin' || user.role === 'admin') ? 7 : (user.role === 'masteragent') ? 6 : 5; %>
         <% if (submissions.length === 0) { %>
           <tr><td colspan="<%= colCount %>" class="px-3 sm:px-6 py-8 text-center text-gray-400">No taken cases</td></tr>
         <% } %>
@@ -61,6 +62,7 @@
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell font-mono text-xs"><%= s.applicant_ic %></td>
             <% if (user.role === 'superadmin' || user.role === 'admin') { %>
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.masteragent_name %></td>
+            <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.subagent_name || '-' %></td>
             <% } else if (user.role === 'masteragent') { %>
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.subagent_name %></td>
             <% } %>

@@ -45,6 +45,7 @@ model Submission {
   needs_image_review  Boolean          @default(false)
   agent_message       String?          @db.Text
   created_at          DateTime         @default(now())
+  updated_at          DateTime         @default(now()) @updatedAt
 
   subagent    User? @relation("SubagentSubmissions", fields: [subagent_id], references: [id], onDelete: SetNull)
   masteragent User? @relation("MasteragentSubmissions", fields: [masteragent_id], references: [id], onDelete: SetNull)

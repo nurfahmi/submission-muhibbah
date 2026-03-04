@@ -178,13 +178,14 @@ function fallbackCopy(text, cb) {
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
+            <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
             <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Tarikh</th>
             <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
           </tr>
         </thead>
         <tbody id="recentCasesBody">
           <% if (recentCases.length === 0) { %>
-            <tr><td colspan="5" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
+            <tr><td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
           <% } %>
           <% recentCases.forEach(s => { %>
             <tr class="recent-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
@@ -194,6 +195,7 @@ function fallbackCopy(text, cb) {
               </td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell"><%= getProductName(s.product_key) %></td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.masteragent_name %></td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.subagent_name || '-' %></td>
               <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell"><%= new Date(s.created_at).toLocaleDateString('ms-MY') %></td>
               <td class="px-3 sm:px-6 py-3 text-center">
                 <div class="flex items-center justify-center gap-1.5">
@@ -243,6 +245,76 @@ function fallbackCopy(text, cb) {
 </div>
 
 <% if (user.role === 'superadmin' || user.role === 'admin') { %>
+<!-- Recently Modified Cases -->
+<div class="mt-6 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
+  <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+    <h3 class="text-base font-semibold">
+      📝 Kes Terkini Dikemaskini
+      <% if (typeof recentlyModified !== 'undefined' && recentlyModified.length > 0) { %>
+        <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400"><%= recentlyModified.length %></span>
+      <% } %>
+    </h3>
+    <span id="modifiedRefresh" class="text-[10px] text-gray-400">Auto-refresh: 15s</span>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-gray-200 dark:border-gray-800">
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Last Modified</th>
+          <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
+        </tr>
+      </thead>
+      <tbody id="modifiedBody">
+        <% if (typeof recentlyModified === 'undefined' || recentlyModified.length === 0) { %>
+          <tr><td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes yang dikemaskini</td></tr>
+        <% } else { %>
+          <% recentlyModified.forEach(s => { %>
+            <tr class="modified-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+              <td class="px-3 sm:px-6 py-3 font-medium"><%= s.applicant_name %></td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell"><%= getProductName(s.product_key) %></td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.masteragent_name %></td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell"><%= s.subagent_name || '-' %></td>
+              <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell"><%= new Date(s.updated_at).toLocaleString('ms-MY') %></td>
+              <td class="px-3 sm:px-6 py-3 text-center">
+                <a href="/dashboard/cases/<%= s.id %>" class="px-2.5 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-xs font-medium hover:bg-orange-200 transition-colors">View</a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function() {
+  setInterval(async () => {
+    try {
+      const res = await fetch('/dashboard/api/recently-modified');
+      const data = await res.json();
+      const body = document.getElementById('modifiedBody');
+      if (!body || !data.length) return;
+      body.innerHTML = data.map(s => `
+        <tr class="modified-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors" style="animation: highlightRow 1s ease-out">
+          <td class="px-3 sm:px-6 py-3 font-medium">${s.applicant_name}</td>
+          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden sm:table-cell">${s.product_key || '-'}</td>
+          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${s.masteragent_name || '-'}</td>
+          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell">${s.subagent_name || '-'}</td>
+          <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell">${new Date(s.updated_at).toLocaleString('ms-MY')}</td>
+          <td class="px-3 sm:px-6 py-3 text-center">
+            <a href="/dashboard/cases/${s.id}" class="px-2.5 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-xs font-medium hover:bg-orange-200 transition-colors">View</a>
+          </td>
+        </tr>
+      `).join('');
+    } catch (e) {}
+  }, 15000);
+})();
+</script>
+
 <style>
   @keyframes highlightRow { from { background: rgba(14,165,233,0.15); } to { background: transparent; } }
 </style>

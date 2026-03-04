@@ -16,6 +16,7 @@ router.get('/cases', authMiddleware, SubmissionController.listCases);
 router.get('/cases/:id', authMiddleware, SubmissionController.viewCase);
 router.post('/cases/:id/take', authMiddleware, SubmissionController.takeCase);
 router.post('/cases/:id/update-product', authMiddleware, SubmissionController.updateProduct);
+router.post('/cases/:id/update-note', authMiddleware, SubmissionController.updateNote);
 router.post('/cases/:id/release', authMiddleware, SubmissionController.releaseCase);
 router.get('/taken-cases', authMiddleware, SubmissionController.listTakenCases);
 router.get('/drafts', authMiddleware, SubmissionController.listDrafts);

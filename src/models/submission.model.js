@@ -46,7 +46,12 @@ const Submission = {
   async findById(id) {
     const row = await prisma.submission.findUnique({
       where: { id },
-      include: { details: true, taker: { select: { username: true } } }
+      include: {
+        details: true,
+        taker: { select: { username: true } },
+        subagent: { select: { username: true } },
+        masteragent: { select: { username: true } }
+      }
     });
     if (!row) return null;
 
@@ -57,6 +62,8 @@ const Submission = {
     try { row.reference_data = JSON.parse(encryption.decrypt(details.reference_data)); } catch { row.reference_data = {}; }
 
     row.taken_by_name = row.taker?.username || null;
+    row.subagent_name = row.subagent?.username || null;
+    row.masteragent_name = row.masteragent?.username || null;
     return row;
   },
 
@@ -273,6 +280,36 @@ const Submission = {
       }
     });
     return this._withNames(rows);
+  },
+
+  async findRecentlyModified(userId, role, limit = 10) {
+    let where = { status: { not: 'draft' } };
+    if (role === 'masteragent') {
+      where.masteragent_id = userId;
+    } else if (role === 'subagent') {
+      where.subagent_id = userId;
+    }
+    // Filtering updated_at > created_at done client-side
+
+    const rows = await prisma.submission.findMany({
+      where,
+      orderBy: { updated_at: 'desc' },
+      take: limit,
+      include: {
+        subagent: { select: { username: true } },
+        masteragent: { select: { username: true } },
+        taker: { select: { username: true } },
+        details: { select: { applicant_data: true, job_data: true } }
+      }
+    });
+
+    // Filter client-side: only where updated_at differs from created_at by at least 1 second
+    const modified = rows.filter(r => {
+      const diff = Math.abs(new Date(r.updated_at) - new Date(r.created_at));
+      return diff > 1000;
+    });
+
+    return this._withNames(modified);
   }
 };
 

@@ -438,6 +438,23 @@ const SubmissionController = {
     }
   },
 
+  async updateNote(req, res) {
+    try {
+      const { id } = req.params;
+      const { agent_message } = req.body;
+      await prisma.submission.update({
+        where: { id },
+        data: { agent_message: agent_message || null }
+      });
+      req.flash('success', 'Note saved.');
+      res.redirect(`/dashboard/cases/${id}`);
+    } catch (err) {
+      console.error('Update note error:', err);
+      req.flash('error', 'Failed to save note.');
+      res.redirect(`/dashboard/cases/${req.params.id}`);
+    }
+  },
+
   async updateProduct(req, res) {
     try {
       const { product_key } = req.body;
