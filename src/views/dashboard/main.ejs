@@ -292,7 +292,7 @@ function fallbackCopy(text, cb) {
           addActivityItem('✅', data.takerName || 'Admin', 'Kes diambil', data.caseId);
         } else if (data.type === 'CASE_MODIFIED') {
           showToast(data);
-          addActivityItem('📝', data.applicantName, 'Dokumen dikemaskini', data.caseId);
+          addActivityItem('📝', data.applicantName, data.detail || 'Dokumen dikemaskini', data.caseId);
         }
       } catch(e) {}
     };
@@ -360,7 +360,7 @@ function fallbackCopy(text, cb) {
       <span class="text-lg">📝</span>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-semibold text-orange-800 dark:text-orange-200 truncate">${data.applicantName}</p>
-        <p class="text-[11px] text-orange-600 dark:text-orange-400">Dokumen dikemaskini</p>
+        <p class="text-[11px] text-orange-600 dark:text-orange-400">${data.detail || 'Dokumen dikemaskini'}</p>
       </div>
       <span class="text-xs text-orange-500 dark:text-orange-300 font-medium shrink-0">View →</span>`;
     toast.onclick = () => { window.location.href = '/dashboard/cases/' + data.caseId; };

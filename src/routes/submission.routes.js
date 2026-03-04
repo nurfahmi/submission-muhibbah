@@ -31,6 +31,7 @@ router.post('/cases/:id/upload-file', authMiddleware, upload.single('file'), Sub
 const { uploadAny } = require('../middlewares/upload.middleware');
 router.post('/cases/:id/admin-files', authMiddleware, uploadAny.single('file'), SubmissionController.uploadAdminFile);
 router.get('/admin-files/:fileId/download', authMiddleware, SubmissionController.downloadAdminFile);
+router.get('/admin-files/:fileId/view', authMiddleware, SubmissionController.viewAdminFile);
 router.post('/cases/:id/admin-files/:fileId/delete', authMiddleware, SubmissionController.deleteAdminFile);
 
 // Download all routes

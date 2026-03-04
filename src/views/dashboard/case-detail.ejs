@@ -340,6 +340,7 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
+              <a href="/dashboard/admin-files/<%= af.id %>/view" target="_blank" class="px-2.5 py-1 text-xs font-medium bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg hover:bg-green-100 transition-colors">View</a>
               <a href="/dashboard/admin-files/<%= af.id %>/download" class="px-2.5 py-1 text-xs font-medium bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-100 transition-colors">Download</a>
               <form method="POST" action="/dashboard/cases/<%= submission.id %>/admin-files/<%= af.id %>/delete" class="inline" onsubmit="return confirm('Delete this file?')">
                 <button type="submit" class="px-2.5 py-1 text-xs font-medium bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 transition-colors">Delete</button>

@@ -491,7 +491,8 @@ const SubmissionController = {
           applicantName: sub.applicant_data?.name,
           masteragentName: sub.masteragent_name,
           subagentName: sub.subagent_name,
-          productKey: sub.product_key
+          productKey: sub.product_key,
+          detail: 'Nota dikemaskini'
         });
       }
       req.flash('success', 'Note saved.');
@@ -751,7 +752,8 @@ const SubmissionController = {
         applicantName: submission.applicant_data?.name,
         masteragentName: submission.masteragent_name,
         subagentName: submission.subagent_name,
-        productKey: submission.product_key
+        productKey: submission.product_key,
+        detail: 'Muat naik: ' + (file_type || 'dokumen').replace(/_/g, ' ')
       });
 
       req.flash('success', 'File uploaded.');
@@ -805,7 +807,8 @@ const SubmissionController_adminFiles = {
           applicantName: submission.applicant_data?.name,
           masteragentName: submission.masteragent_name,
           subagentName: submission.subagent_name,
-          productKey: submission.product_key
+          productKey: submission.product_key,
+          detail: 'Muat naik tambahan: ' + label.trim()
         });
       }
 
@@ -859,6 +862,30 @@ const SubmissionController_adminFiles = {
       console.error('Download admin file error:', err);
       req.flash('error', 'Failed to download file.');
       res.redirect('/dashboard/cases');
+    }
+  },
+
+  async viewAdminFile(req, res) {
+    try {
+      const record = await prisma.adminCaseFile.findUnique({ where: { id: parseInt(req.params.fileId) } });
+      if (!record) return res.status(404).send('File not found');
+      const uploadDir = await Setting.getUploadDir();
+      let fullPath = path.join(uploadDir, record.file_path);
+      if (!fs.existsSync(fullPath)) {
+        fullPath = path.join(__dirname, '../../', record.file_path);
+      }
+      if (!fs.existsSync(fullPath)) return res.status(404).send('File not found on disk');
+
+      const ext = path.extname(record.file_path).toLowerCase();
+      const mimeMap = { '.pdf': 'application/pdf', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp', '.mp4': 'video/mp4', '.mov': 'video/quicktime' };
+      const contentType = mimeMap[ext] || 'application/octet-stream';
+
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', 'inline; filename="' + (record.original_name || 'file' + ext) + '"');
+      fs.createReadStream(fullPath).pipe(res);
+    } catch (err) {
+      console.error('View admin file error:', err);
+      res.status(500).send('Failed to view file');
     }
   },
 

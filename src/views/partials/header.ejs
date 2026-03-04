@@ -75,7 +75,7 @@ function addNotif(data) {
     type: data.type,
     caseId: data.caseId,
     applicantName: data.applicantName || data.applicant_name || 'Unknown',
-    message: data.type === 'CASE_MODIFIED' ? 'Dokumen dikemaskini' : data.type === 'NEW_CASE' ? 'Permohonan baru' : 'Kes diambil',
+    message: data.type === 'CASE_MODIFIED' ? (data.detail || 'Dokumen dikemaskini') : data.type === 'NEW_CASE' ? 'Permohonan baru' : 'Kes diambil',
     timestamp: data.timestamp || Date.now(),
     read: false
   });
