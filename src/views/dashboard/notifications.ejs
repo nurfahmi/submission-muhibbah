@@ -28,7 +28,7 @@ function renderPageNotifs() {
       <span class="text-xl shrink-0">${icon}</span>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-semibold truncate ${n.read ? 'text-gray-500 dark:text-gray-400' : ''}">${n.applicantName}</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">${n.message}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">${n.message}${n.updatedBy ? ' · oleh ' + n.updatedBy : ''}</p>
       </div>
       <div class="text-right shrink-0">
         <p class="text-[11px] text-gray-400">${ago}</p>

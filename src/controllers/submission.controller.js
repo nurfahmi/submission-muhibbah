@@ -492,7 +492,8 @@ const SubmissionController = {
           masteragentName: sub.masteragent_name,
           subagentName: sub.subagent_name,
           productKey: sub.product_key,
-          detail: 'Nota dikemaskini'
+          detail: 'Nota dikemaskini',
+          updatedBy: req.session.user.username
         });
       }
       req.flash('success', 'Note saved.');
@@ -753,7 +754,8 @@ const SubmissionController = {
         masteragentName: submission.masteragent_name,
         subagentName: submission.subagent_name,
         productKey: submission.product_key,
-        detail: 'Muat naik: ' + (file_type || 'dokumen').replace(/_/g, ' ')
+        detail: 'Muat naik: ' + (file_type || 'dokumen').replace(/_/g, ' '),
+        updatedBy: req.session.user.username
       });
 
       req.flash('success', 'File uploaded.');
@@ -808,7 +810,8 @@ const SubmissionController_adminFiles = {
           masteragentName: submission.masteragent_name,
           subagentName: submission.subagent_name,
           productKey: submission.product_key,
-          detail: 'Muat naik tambahan: ' + label.trim()
+          detail: 'Muat naik tambahan: ' + label.trim(),
+          updatedBy: req.session.user.username
         });
       }
 

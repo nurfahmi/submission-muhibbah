@@ -76,6 +76,7 @@ function addNotif(data) {
     caseId: data.caseId,
     applicantName: data.applicantName || data.applicant_name || 'Unknown',
     message: data.type === 'CASE_MODIFIED' ? (data.detail || 'Dokumen dikemaskini') : data.type === 'NEW_CASE' ? 'Permohonan baru' : 'Kes diambil',
+    updatedBy: data.updatedBy || '',
     timestamp: data.timestamp || Date.now(),
     read: false
   });
@@ -107,7 +108,7 @@ function renderNotifs() {
         <span class="text-base mt-0.5">${icon}</span>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium truncate ${n.read ? 'text-gray-500 dark:text-gray-400' : ''}">${n.applicantName}</p>
-          <p class="text-[11px] text-gray-500 dark:text-gray-400">${n.message}</p>
+          <p class="text-[11px] text-gray-500 dark:text-gray-400">${n.message}${n.updatedBy ? ' · oleh ' + n.updatedBy : ''}</p>
           <p class="text-[10px] text-gray-400 mt-0.5">${ago}</p>
         </div>
         ${!n.read ? '<span class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0"></span>' : ''}

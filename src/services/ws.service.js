@@ -53,7 +53,7 @@ const WsService = {
     });
   },
 
-  notifyCaseModified({ caseId, applicantName, masteragentName, subagentName, productKey, detail }) {
+  notifyCaseModified({ caseId, applicantName, masteragentName, subagentName, productKey, detail, updatedBy }) {
     if (!wss) return;
     const payload = JSON.stringify({
       type: 'CASE_MODIFIED',
@@ -63,6 +63,7 @@ const WsService = {
       subagentName: subagentName || '-',
       productKey: productKey || '-',
       detail: detail || 'Dokumen dikemaskini',
+      updatedBy: updatedBy || '-',
       updatedAt: new Date().toLocaleString('ms-MY'),
       timestamp: Date.now()
     });
