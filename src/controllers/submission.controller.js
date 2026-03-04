@@ -425,6 +425,31 @@ const SubmissionController = {
     }
   },
 
+  async viewFile(req, res) {
+    try {
+      const file = await FileModel.findById(parseInt(req.params.fileId));
+      if (!file) return res.status(404).send('File not found');
+
+      const uploadDir = await Setting.getUploadDir();
+      let filePath = path.join(uploadDir, file.file_path);
+      if (!fs.existsSync(filePath)) {
+        filePath = path.join(__dirname, '../../', file.file_path);
+      }
+      if (!fs.existsSync(filePath)) return res.status(404).send('File not found on disk');
+
+      const ext = path.extname(file.file_path).toLowerCase();
+      const mimeMap = { '.pdf': 'application/pdf', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.webp': 'image/webp' };
+      const contentType = mimeMap[ext] || 'application/octet-stream';
+
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', 'inline; filename="' + file.file_type + ext + '"');
+      fs.createReadStream(filePath).pipe(res);
+    } catch (err) {
+      console.error('View file error:', err);
+      res.status(500).send('Failed to view file');
+    }
+  },
+
   // --- Case Assignment ---
   async takeCase(req, res) {
     try {

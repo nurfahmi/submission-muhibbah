@@ -23,6 +23,7 @@ router.get('/drafts', authMiddleware, SubmissionController.listDrafts);
 router.get('/drafts/:id/edit', authMiddleware, SubmissionController.editDraft);
 router.post('/drafts/:id/delete', authMiddleware, SubmissionController.deleteDraft);
 router.get('/files/:fileId/download', authMiddleware, SubmissionController.downloadFile);
+router.get('/files/:fileId/view', authMiddleware, SubmissionController.viewFile);
 router.get('/cases/:id/pdf/:template', authMiddleware, SubmissionController.generatePdf);
 router.post('/cases/:id/upload-file', authMiddleware, upload.single('file'), SubmissionController.uploadSubmissionFile);
 

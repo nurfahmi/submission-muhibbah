@@ -234,7 +234,7 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
           <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-3 flex items-center justify-between">
             <span class="text-xs font-medium capitalize"><%= f.file_type.replace(/_/g, ' ') %></span>
             <div class="flex items-center gap-1.5">
-              <a href="/dashboard/files/<%= f.id %>/download" target="_blank" class="text-green-600 dark:text-green-400 text-xs hover:underline">View</a>
+              <a href="/dashboard/files/<%= f.id %>/view" target="_blank" class="text-green-600 dark:text-green-400 text-xs hover:underline">View</a>
               <a href="/dashboard/files/<%= f.id %>/download" class="text-primary-600 dark:text-primary-400 text-xs hover:underline">Download</a>
             </div>
           </div>
