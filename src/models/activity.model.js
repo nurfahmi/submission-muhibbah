@@ -2,9 +2,13 @@ const prisma = require('../config/db');
 
 const Activity = {
   async log({ user_id, action, target_id, description }) {
-    return prisma.activityLog.create({
-      data: { user_id, action, target_id: target_id || null, description: description || null }
-    });
+    try {
+      return await prisma.activityLog.create({
+        data: { user_id, action, target_id: target_id || null, description: description || null }
+      });
+    } catch (err) {
+      console.error('Activity log error (non-fatal):', err.message);
+    }
   },
 
   async findByUser(userId) {
