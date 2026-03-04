@@ -388,7 +388,7 @@ const SubmissionController = {
     try {
       const currentUser = req.session.user;
 
-      const file = await FileModel.findById(req.params.fileId);
+      const file = await FileModel.findById(parseInt(req.params.fileId));
       if (!file) return res.status(404).send('File not found');
 
       const uploadDir = await Setting.getUploadDir();
