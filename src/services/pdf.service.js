@@ -180,6 +180,16 @@ const PdfService = {
     return product.enabled;
   },
 
+  reorderProduct(key, direction) {
+    const registry = loadRegistry();
+    const idx = registry.findIndex(t => t.key === key);
+    if (idx === -1) throw new Error(`Product "${key}" not found`);
+    const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= registry.length) return;
+    [registry[idx], registry[newIdx]] = [registry[newIdx], registry[idx]];
+    saveRegistry(registry);
+  },
+
   getProduct(key) {
     const registry = loadRegistry();
     // Check top-level

@@ -67,6 +67,10 @@
                 </p>
               </div>
               <div class="flex items-center gap-2">
+                <div class="flex flex-col gap-0.5 mr-1">
+                  <form action="/dashboard/settings/templates/<%= t.key %>/reorder/up" method="POST" class="inline"><button type="submit" class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" title="Move up"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg></button></form>
+                  <form action="/dashboard/settings/templates/<%= t.key %>/reorder/down" method="POST" class="inline"><button type="submit" class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" title="Move down"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button></form>
+                </div>
                 <form action="/dashboard/settings/templates/<%= t.key %>/toggle" method="POST" class="inline">
                   <button type="submit" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
                     <%= t.enabled === false ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30' : 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30' %>">
@@ -102,6 +106,10 @@
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
+                  <div class="flex flex-col gap-0.5 mr-1">
+                    <form action="/dashboard/settings/templates/<%= t.key %>/reorder/up" method="POST" class="inline" onclick="event.stopPropagation()"><button type="submit" class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" title="Move up"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg></button></form>
+                    <form action="/dashboard/settings/templates/<%= t.key %>/reorder/down" method="POST" class="inline" onclick="event.stopPropagation()"><button type="submit" class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors" title="Move down"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></button></form>
+                  </div>
                   <form action="/dashboard/settings/templates/<%= t.key %>/toggle" method="POST" class="inline" onclick="event.stopPropagation()">
                     <button type="submit" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-colors
                       <%= t.enabled === false ? 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30' : 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30' %>">

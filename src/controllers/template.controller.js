@@ -234,6 +234,16 @@ const TemplateController = {
     res.redirect('/dashboard/settings/templates');
   },
 
+  // POST /:key/reorder/:direction
+  async reorderProduct(req, res) {
+    try {
+      PdfService.reorderProduct(req.params.key, req.params.direction);
+    } catch (err) {
+      req.flash('error', 'Failed to reorder: ' + err.message);
+    }
+    res.redirect('/dashboard/settings/templates');
+  },
+
   // POST /:key/delete
   async deleteTemplate(req, res) {
     try {
