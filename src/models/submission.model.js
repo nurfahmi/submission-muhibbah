@@ -156,6 +156,69 @@ const Submission = {
     return this._withNames(rows);
   },
 
+  // Taken cases with server-side filters + pagination
+  async findTakenFiltered(userId, role, { search, dateFrom, dateTo, taker, page = 1, perPage = 20 } = {}) {
+    const where = (role === 'superadmin' || role === 'admin')
+      ? { taken_by: { not: null } }
+      : { taken_by: userId };
+
+    // Date filter on taken_at
+    if (dateFrom || dateTo) {
+      where.taken_at = {};
+      if (dateFrom) where.taken_at.gte = new Date(dateFrom + 'T00:00:00');
+      if (dateTo) where.taken_at.lte = new Date(dateTo + 'T23:59:59');
+    }
+
+    // Taker filter (by user id)
+    if (taker) {
+      where.taken_by = taker;
+    }
+
+    // Get unique takers for dropdown (unfiltered, just all takers visible to user)
+    const takerWhere = (role === 'superadmin' || role === 'admin')
+      ? { taken_by: { not: null } }
+      : { taken_by: userId };
+    const allTakers = await prisma.submission.findMany({
+      where: takerWhere,
+      select: { taker: { select: { id: true, username: true } } },
+      distinct: ['taken_by']
+    });
+    const takerList = allTakers
+      .map(r => r.taker)
+      .filter(Boolean)
+      .sort((a, b) => a.username.localeCompare(b.username));
+
+    // Count total matching
+    const total = await prisma.submission.count({ where });
+
+    // Fetch paginated rows
+    const rows = await prisma.submission.findMany({
+      where,
+      orderBy: { taken_at: 'desc' },
+      skip: (page - 1) * perPage,
+      take: perPage,
+      include: {
+        subagent: { select: { username: true } },
+        masteragent: { select: { username: true } },
+        taker: { select: { username: true } },
+        details: { select: { applicant_data: true, job_data: true } }
+      }
+    });
+
+    let results = await this._withNames(rows);
+
+    // Text search filter (client-side on decrypted names — can't do in DB due to encryption)
+    if (search) {
+      const q = search.toLowerCase();
+      results = results.filter(r =>
+        (r.applicant_name || '').toLowerCase().includes(q) ||
+        (r.applicant_ic || '').toLowerCase().includes(q)
+      );
+    }
+
+    return { results, total, takerList, page, perPage, totalPages: Math.ceil(total / perPage) };
+  },
+
   async takeCase(id, userId) {
     // Atomic: only take if not already taken (prevents race condition)
     const result = await prisma.submission.updateMany({

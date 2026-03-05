@@ -542,14 +542,55 @@ const SubmissionController = {
     try {
       const currentUser = req.session.user;
       const PdfService = require('../services/pdf.service');
-      const submissions = await Submission.findTaken(currentUser.id, currentUser.role);
+
+      const period = req.query.period || 'this_month';
+      let dateFrom = req.query.dateFrom || '';
+      let dateTo = req.query.dateTo || '';
+
+      // Compute date range from period preset
+      const now = new Date();
+      if (period !== 'custom' && period !== 'all') {
+        const y = now.getFullYear(), m = now.getMonth();
+        if (period === 'this_month') {
+          dateFrom = new Date(y, m, 1).toISOString().slice(0, 10);
+          dateTo = new Date(y, m + 1, 0).toISOString().slice(0, 10);
+        } else if (period === 'last_month') {
+          dateFrom = new Date(y, m - 1, 1).toISOString().slice(0, 10);
+          dateTo = new Date(y, m, 0).toISOString().slice(0, 10);
+        } else if (period === 'last_3_months') {
+          dateFrom = new Date(y, m - 2, 1).toISOString().slice(0, 10);
+          dateTo = new Date(y, m + 1, 0).toISOString().slice(0, 10);
+        } else if (period === 'this_year') {
+          dateFrom = new Date(y, 0, 1).toISOString().slice(0, 10);
+          dateTo = new Date(y, 11, 31).toISOString().slice(0, 10);
+        }
+      }
+
+      const filters = {
+        search: req.query.search || '',
+        dateFrom: period === 'all' ? '' : dateFrom,
+        dateTo: period === 'all' ? '' : dateTo,
+        taker: req.query.taker || '',
+        page: Math.max(1, parseInt(req.query.page) || 1),
+        perPage: 20
+      };
+
+      const data = await Submission.findTakenFiltered(currentUser.id, currentUser.role, filters);
+
       res.render('dashboard/taken-cases', {
         layout: 'layouts/main',
         title: 'Taken Cases',
         user: currentUser,
-        submissions,
+        submissions: data.results,
+        takerList: data.takerList,
+        total: data.total,
+        page: data.page,
+        perPage: data.perPage,
+        totalPages: data.totalPages,
+        filters,
+        period,
         loanProducts: PdfService.getLoanProducts(),
-        page: 'taken-cases'
+        activePage: 'taken-cases'
       });
     } catch (err) {
       console.error('Taken cases error:', err);

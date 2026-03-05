@@ -13,23 +13,120 @@
     });
   }
   function getProductName(key) { return key ? (productMap[key] || key) : '-'; }
+  const f = typeof filters !== 'undefined' ? filters : {};
+  const _total = typeof total !== 'undefined' ? total : submissions.length;
+  const _page = typeof page !== 'undefined' ? page : 1;
+  const _perPage = typeof perPage !== 'undefined' ? perPage : 20;
+  const _totalPages = typeof totalPages !== 'undefined' ? totalPages : 1;
+  const _takerList = typeof takerList !== 'undefined' ? takerList : [];
+  const _period = typeof period !== 'undefined' ? period : 'this_month';
+
+  const periods = [
+    { key: 'this_month', label: 'Bulan Ini' },
+    { key: 'last_month', label: 'Bulan Lepas' },
+    { key: 'last_3_months', label: '3 Bulan' },
+    { key: 'this_year', label: 'Tahun Ini' },
+    { key: 'all', label: 'Semua' },
+    { key: 'custom', label: 'Custom' }
+  ];
 %>
 
-<div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
-  <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-    <h3 class="text-base font-semibold">Taken Cases</h3>
-    <div class="relative w-full sm:w-72">
-      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <input type="text" id="takenSearch" placeholder="Cari nama, IC..."
-        class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-    </div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-4">
+    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Kes Ditemui</p>
+    <p class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= _total %></p>
   </div>
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-4">
+    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Halaman</p>
+    <p class="text-2xl font-bold text-primary-600 dark:text-primary-400"><%= _page %> / <%= _totalPages %></p>
+  </div>
+  <% if (user.role === 'superadmin' || user.role === 'admin') { %>
+  <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-4">
+    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Admin/Staff</p>
+    <p class="text-2xl font-bold text-green-600 dark:text-green-400"><%= _takerList.length %></p>
+  </div>
+  <% } %>
+</div>
+
+<div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
+  <!-- Header -->
+  <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+    <h3 class="text-base font-semibold mb-3">Taken Cases</h3>
+
+    <!-- Period Buttons -->
+    <div class="flex flex-wrap gap-2 mb-3">
+      <% periods.forEach(p => { %>
+        <% if (p.key === 'custom') { %>
+          <button type="button" id="btnCustom"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+              <%= _period === 'custom' ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700' %>">
+            <%= p.label %>
+          </button>
+        <% } else { %>
+          <a href="/dashboard/taken-cases?period=<%= p.key %><%= f.taker ? '&taker=' + f.taker : '' %><%= f.search ? '&search=' + encodeURIComponent(f.search) : '' %>"
+            class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
+              <%= _period === p.key ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700' %>">
+            <%= p.label %>
+          </a>
+        <% } %>
+      <% }) %>
+    </div>
+
+    <!-- Custom Date Range (hidden by default, shown when custom selected) -->
+    <div id="customRange" class="<%= _period === 'custom' ? '' : 'hidden' %> mb-3">
+      <form method="GET" action="/dashboard/taken-cases" class="flex flex-wrap items-end gap-3">
+        <input type="hidden" name="period" value="custom">
+        <% if (f.taker) { %><input type="hidden" name="taker" value="<%= f.taker %>"><% } %>
+        <% if (f.search) { %><input type="hidden" name="search" value="<%= f.search %>"><% } %>
+        <div class="min-w-[140px]">
+          <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">From</label>
+          <input type="date" name="dateFrom" value="<%= f.dateFrom || '' %>"
+            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div class="min-w-[140px]">
+          <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">To</label>
+          <input type="date" name="dateTo" value="<%= f.dateTo || '' %>"
+            class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <button type="submit" class="px-4 py-1.5 rounded-lg text-xs font-medium bg-primary-600 hover:bg-primary-700 text-white transition-colors">Apply</button>
+      </form>
+    </div>
+
+    <!-- Search + Admin Filter -->
+    <form method="GET" action="/dashboard/taken-cases" class="flex flex-wrap items-end gap-3">
+      <input type="hidden" name="period" value="<%= _period %>">
+      <% if (_period === 'custom') { %>
+        <input type="hidden" name="dateFrom" value="<%= f.dateFrom || '' %>">
+        <input type="hidden" name="dateTo" value="<%= f.dateTo || '' %>">
+      <% } %>
+      <div class="flex-1 min-w-[160px] max-w-[240px]">
+        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cari</label>
+        <input type="text" name="search" value="<%= f.search || '' %>" placeholder="Nama, IC..."
+          class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+      </div>
+      <% if (user.role === 'superadmin' || user.role === 'admin') { %>
+      <div class="min-w-[140px] max-w-[200px]">
+        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Taken By</label>
+        <select name="taker"
+          class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <option value="">All</option>
+          <% _takerList.forEach(t => { %>
+            <option value="<%= t.id %>" <%= (f.taker === t.id) ? 'selected' : '' %>><%= t.username %></option>
+          <% }) %>
+        </select>
+      </div>
+      <% } %>
+      <button type="submit" class="px-4 py-1.5 rounded-lg text-xs font-medium bg-primary-600 hover:bg-primary-700 text-white transition-colors">Filter</button>
+    </form>
+  </div>
+
   <div class="overflow-x-auto">
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b border-gray-200 dark:border-gray-800">
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer Name</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Customer IC</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">IC</th>
           <% if (user.role === 'superadmin' || user.role === 'admin') { %>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
@@ -37,19 +134,18 @@
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Agent</th>
           <% } %>
           <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Taken By</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Tarikh</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Produk</th>
           <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
         </tr>
       </thead>
-      <tbody id="takenTableBody">
-        <% const colCount = (user.role === 'superadmin' || user.role === 'admin') ? 7 : (user.role === 'masteragent') ? 6 : 5; %>
+      <tbody>
+        <% const colCount = (user.role === 'superadmin' || user.role === 'admin') ? 8 : (user.role === 'masteragent') ? 7 : 6; %>
         <% if (submissions.length === 0) { %>
-          <tr><td colspan="<%= colCount %>" class="px-3 sm:px-6 py-8 text-center text-gray-400">No taken cases</td></tr>
+          <tr><td colspan="<%= colCount %>" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes ditemui</td></tr>
         <% } %>
         <% submissions.forEach(s => { %>
-          <tr class="taken-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-            data-name="<%= (s.applicant_name || '').toLowerCase() %>"
-            data-ic="<%= (s.applicant_ic || '').toLowerCase() %>">
+          <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
             <td class="px-3 sm:px-6 py-3 font-medium">
               <div class="flex items-center gap-2">
                 <span><%= s.applicant_name %></span>
@@ -69,6 +165,7 @@
             <td class="px-3 sm:px-6 py-3 text-center">
               <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"><%= s.taken_by_name || '-' %></span>
             </td>
+            <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 text-xs hidden md:table-cell"><%= s.taken_at ? new Date(s.taken_at).toLocaleDateString('ms-MY') : '-' %></td>
             <td class="px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 hidden sm:table-cell text-xs"><%= getProductName(s.product_key) %></td>
             <td class="px-3 sm:px-6 py-3 text-center">
               <% const canView = (user.role === 'superadmin' || user.role === 'admin') || (s.taken_by === user.id); %>
@@ -83,29 +180,48 @@
       </tbody>
     </table>
   </div>
-  <%- include('../partials/pagination', { tableId: 'takenTableBody', perPage: 10, rowClass: 'taken-row' }) %>
-  <div id="noResults" class="hidden px-4 sm:px-6 py-8 text-center text-gray-400 text-sm">Tiada hasil carian ditemui</div>
+
+  <!-- Server-side Pagination -->
+  <% if (_totalPages > 1) { %>
+  <%
+    function pgUrl(p) {
+      const params = new URLSearchParams();
+      params.set('period', _period);
+      if (f.search) params.set('search', f.search);
+      if (_period === 'custom') {
+        if (f.dateFrom) params.set('dateFrom', f.dateFrom);
+        if (f.dateTo) params.set('dateTo', f.dateTo);
+      }
+      if (f.taker) params.set('taker', f.taker);
+      params.set('page', p);
+      return '/dashboard/taken-cases?' + params.toString();
+    }
+    const fromItem = (_page - 1) * _perPage + 1;
+    const toItem = Math.min(_page * _perPage, _total);
+  %>
+  <div class="px-4 sm:px-6 py-3 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+    <p class="text-xs text-gray-500 dark:text-gray-400">
+      Showing <span class="font-medium"><%= fromItem %></span>–<span class="font-medium"><%= toItem %></span> of <span class="font-medium"><%= _total %></span>
+    </p>
+    <div class="flex items-center gap-1">
+      <% if (_page > 1) { %>
+        <a href="<%= pgUrl(_page - 1) %>" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">← Prev</a>
+      <% } else { %>
+        <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 opacity-40 cursor-not-allowed">← Prev</span>
+      <% } %>
+      <span class="text-xs text-gray-500 dark:text-gray-400 px-2"><%= _page %> / <%= _totalPages %></span>
+      <% if (_page < _totalPages) { %>
+        <a href="<%= pgUrl(_page + 1) %>" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">Next →</a>
+      <% } else { %>
+        <span class="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500 opacity-40 cursor-not-allowed">Next →</span>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
 </div>
 
 <script>
-(function() {
-  const searchInput = document.getElementById('takenSearch');
-  const rows = document.querySelectorAll('.taken-row');
-  const noResults = document.getElementById('noResults');
-  if (!searchInput || rows.length === 0) return;
-
-  searchInput.addEventListener('input', function() {
-    const q = this.value.toLowerCase().trim();
-    let visible = 0;
-    rows.forEach(row => {
-      const name = row.dataset.name || '';
-      const ic = row.dataset.ic || '';
-      const match = !q || name.includes(q) || ic.includes(q);
-      row.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-    noResults.classList.toggle('hidden', visible > 0);
-  });
-})();
+document.getElementById('btnCustom')?.addEventListener('click', function() {
+  document.getElementById('customRange')?.classList.toggle('hidden');
+});
 </script>
-<%- include('../partials/pagination-script') %>
