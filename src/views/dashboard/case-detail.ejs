@@ -296,7 +296,8 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
     <% } %>
   </div>
 
-  <!-- Additional Files -->
+  <!-- Additional Files (Admin/Superadmin only) -->
+  <% if (user.role === 'superadmin' || user.role === 'admin') { %>
   <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-2">
@@ -353,5 +354,6 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
       <p class="text-sm text-gray-400 text-center py-3">No additional files attached</p>
     <% } %>
   </div>
+  <% } %>
 
 </div>
