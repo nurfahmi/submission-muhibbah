@@ -207,7 +207,8 @@ const Submission = {
       const q = search.toLowerCase();
       results = results.filter(r =>
         (r.applicant_name || '').toLowerCase().includes(q) ||
-        (r.applicant_ic || '').toLowerCase().includes(q)
+        (r.applicant_ic || '').toLowerCase().includes(q) ||
+        (r.employer_name || '').toLowerCase().includes(q)
       );
     }
 
