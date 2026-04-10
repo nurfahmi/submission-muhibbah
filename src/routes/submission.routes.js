@@ -25,10 +25,11 @@ router.post('/drafts/:id/delete', authMiddleware, SubmissionController.deleteDra
 router.get('/files/:fileId/download', authMiddleware, SubmissionController.downloadFile);
 router.get('/files/:fileId/view', authMiddleware, SubmissionController.viewFile);
 router.get('/cases/:id/pdf/:template', authMiddleware, SubmissionController.generatePdf);
-router.post('/cases/:id/upload-file', authMiddleware, upload.single('file'), SubmissionController.uploadSubmissionFile);
-
-// Additional file routes (no file type restriction)
+// Permissive upload (no file type restriction) for case file uploads
 const { uploadAny } = require('../middlewares/upload.middleware');
+router.post('/cases/:id/upload-file', authMiddleware, uploadAny.array('file', 10), SubmissionController.uploadSubmissionFile);
+
+// Additional file routes
 router.post('/cases/:id/admin-files', authMiddleware, uploadAny.single('file'), SubmissionController.uploadAdminFile);
 router.get('/admin-files/:fileId/download', authMiddleware, SubmissionController.downloadAdminFile);
 router.get('/admin-files/:fileId/view', authMiddleware, SubmissionController.viewAdminFile);

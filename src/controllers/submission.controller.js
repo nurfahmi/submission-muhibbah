@@ -774,7 +774,8 @@ const SubmissionController = {
       }
 
       const file_type = req.body.file_type;
-      if (!file_type || !req.file) {
+      const uploadedFiles = req.files || [];
+      if (!file_type || uploadedFiles.length === 0) {
         req.flash('error', 'File type and file are required.');
         return res.redirect(`/dashboard/cases/${req.params.id}`);
       }
@@ -794,14 +795,16 @@ const SubmissionController = {
       const destDir = path.join(uploadDir, relDir);
       if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
 
-      const newPath = path.join(destDir, req.file.filename);
-      fs.renameSync(req.file.path, newPath);
+      for (const file of uploadedFiles) {
+        const newPath = path.join(destDir, file.filename);
+        fs.renameSync(file.path, newPath);
 
-      await FileModel.create({
-        submission_id: submission.id,
-        file_type: file_type,
-        file_path: path.join(relDir, req.file.filename)
-      });
+        await FileModel.create({
+          submission_id: submission.id,
+          file_type: file_type,
+          file_path: path.join(relDir, file.filename)
+        });
+      }
 
       // Touch updated_at & broadcast
       await prisma.submission.update({ where: { id: submission.id }, data: { updated_at: new Date() } });
@@ -815,11 +818,11 @@ const SubmissionController = {
         updatedBy: req.session.user.username
       });
 
-      req.flash('success', 'File uploaded.');
+      req.flash('success', `${uploadedFiles.length} file(s) uploaded.`);
       res.redirect(`/dashboard/cases/${req.params.id}`);
     } catch (err) {
       console.error('Upload submission file error:', err);
-      if (req.file) try { fs.unlinkSync(req.file.path); } catch {}
+      if (req.files) req.files.forEach(f => { try { fs.unlinkSync(f.path); } catch {} });
       req.flash('error', 'Failed to upload file.');
       res.redirect(`/dashboard/cases/${req.params.id}`);
     }
