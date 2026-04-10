@@ -89,6 +89,33 @@ function parseIC(ic) {
 }
 
 /**
+ * Sanitize text for WinAnsi encoding (pdf-lib standard fonts).
+ * Replaces common Unicode superscripts/subscripts with ASCII equivalents
+ * and strips any remaining non-WinAnsi characters to prevent encoding errors.
+ */
+function sanitizeForWinAnsi(text) {
+  if (!text) return text;
+  // Map common superscript/subscript Unicode chars to ASCII
+  const replacements = {
+    '\u2070': '0', '\u00B9': '1', '\u00B2': '2', '\u00B3': '3',
+    '\u2074': '4', '\u2075': '5', '\u2076': '6', '\u2077': '7',
+    '\u2078': '8', '\u2079': '9',
+    '\u2080': '0', '\u2081': '1', '\u2082': '2', '\u2083': '3',
+    '\u2084': '4', '\u2085': '5', '\u2086': '6', '\u2087': '7',
+    '\u2088': '8', '\u2089': '9',
+    '\u2018': "'", '\u2019': "'", '\u201C': '"', '\u201D': '"',
+    '\u2013': '-', '\u2014': '-', '\u2026': '...', '\u00A0': ' ',
+  };
+  let result = text;
+  for (const [unicode, ascii] of Object.entries(replacements)) {
+    result = result.split(unicode).join(ascii);
+  }
+  // Strip any remaining non-WinAnsi characters (keep printable ASCII + Latin-1 Supplement)
+  result = result.replace(/[^\x20-\x7E\xA0-\xFF\n\r\t]/g, '');
+  return result;
+}
+
+/**
  * Resolve a standard field key to its submission value.
  */
 function resolveFieldValue(standardKey, submission) {
@@ -428,7 +455,7 @@ const PdfService = {
       const value = resolveFieldValue(standardKey, submission);
       if (!value) continue;
 
-      const text = value.toUpperCase();
+      const text = sanitizeForWinAnsi(value.toUpperCase());
 
       // Separate fields into maxLength (boxed/comb) and non-maxLength (regular text)
       const mlFields = [];   // fields with maxLength → chain together
