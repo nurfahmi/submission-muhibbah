@@ -6,7 +6,8 @@
 <% } %>
 
 <%
-  // Group users: non-agents, then masteragents with their subagents
+  // Group users: non-agents, then managers with their users
+  const roleLabel = (r) => ({ masteragent: 'Manager', subagent: 'User', admin: 'Admin', superadmin: 'Superadmin' }[r] || r);
   const admins = users.filter(u => u.role === 'superadmin' || u.role === 'admin');
   const masters = users.filter(u => u.role === 'masteragent');
   const subs = users.filter(u => u.role === 'subagent');
@@ -38,7 +39,7 @@
       </thead>
       <tbody>
         <% if (user.role === 'masteragent') { %>
-          <!-- Masteragent view: simple flat list of subagents only -->
+          <!-- Manager view: simple flat list of users only -->
           <% users.filter(u => u.role === 'subagent').forEach(u => { %>
             <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
               <td class="px-3 sm:px-6 py-3 font-medium"><%= u.username %></td>
@@ -46,7 +47,7 @@
                 <span class="px-2.5 py-1 rounded-lg text-xs font-medium capitalize
                   <% if (u.role === 'masteragent') { %>bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300
                   <% } else { %>bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400<% } %>">
-                  <%= u.role %>
+                  <%= roleLabel(u.role) %>
                 </span>
               </td>
               <td class="px-3 sm:px-6 py-3 text-gray-400 text-xs hidden sm:table-cell">-</td>
@@ -86,7 +87,7 @@
             </tr>
           <% }) %>
 
-          <!-- Master Agent rows (collapsible) -->
+          <!-- Manager rows (collapsible) -->
           <% masters.forEach(ma => {
             const maSubs = subs.filter(s => s.parent_id === ma.id);
           %>
@@ -98,10 +99,10 @@
                 </div>
               </td>
               <td class="px-3 sm:px-6 py-3">
-                <span class="px-2.5 py-1 rounded-lg text-xs font-medium capitalize bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">masteragent</span>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-medium capitalize bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">Manager</span>
               </td>
               <td class="px-3 sm:px-6 py-3 text-gray-400 text-xs hidden sm:table-cell">
-                <span class="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs font-medium"><%= maSubs.length %> sub agent<%= maSubs.length !== 1 ? 's' : '' %></span>
+                <span class="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xs font-medium"><%= maSubs.length %> user<%= maSubs.length !== 1 ? 's' : '' %></span>
               </td>
               <td class="px-3 sm:px-6 py-3 text-center">
                 <div class="flex items-center justify-center gap-1.5 flex-wrap">
@@ -121,7 +122,7 @@
               </td>
             </tr>
 
-            <!-- Sub Agent rows (hidden by default) -->
+            <!-- User rows (hidden by default) -->
             <% maSubs.forEach(sa => { %>
             <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors sa-row hidden bg-gray-50/50 dark:bg-gray-800/30" data-parent-ma="<%= ma.id %>">
               <td class="px-3 sm:px-6 py-3 font-medium pl-10 sm:pl-14">
@@ -131,7 +132,7 @@
                 </div>
               </td>
               <td class="px-3 sm:px-6 py-3">
-                <span class="px-2.5 py-1 rounded-lg text-xs font-medium capitalize bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">subagent</span>
+                <span class="px-2.5 py-1 rounded-lg text-xs font-medium capitalize bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">User</span>
               </td>
               <td class="px-3 sm:px-6 py-3 text-gray-400 text-xs hidden sm:table-cell"><%= ma.username %></td>
               <td class="px-3 sm:px-6 py-3 text-center">
@@ -186,7 +187,7 @@
         <select name="role" id="roleSelect" onchange="handleRoleChange()"
           class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
           <% creatableRoles.forEach(r => { %>
-            <option value="<%= r %>"><%= r.charAt(0).toUpperCase() + r.slice(1) %></option>
+            <option value="<%= r %>"><%= roleLabel(r) %></option>
           <% }) %>
         </select>
       </div>
@@ -195,10 +196,10 @@
         <input type="hidden" name="parent_id" value="<%= user.id %>">
       <% } else { %>
         <div id="parentField">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Master Agent</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Manager</label>
           <div class="relative">
             <input type="hidden" name="parent_id" id="parentIdHidden">
-            <input type="text" id="maSearch" autocomplete="off" placeholder="Search master agent..."
+            <input type="text" id="maSearch" autocomplete="off" placeholder="Search manager..."
               class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
             <div id="maDropdown" class="hidden absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-48 overflow-y-auto">
               <% if (typeof masterAgents !== 'undefined') { masterAgents.forEach(ma => { %>
@@ -260,10 +261,10 @@
       </div>
 
       <div id="editParentField">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Master Agent</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Manager</label>
         <div class="relative">
           <input type="hidden" name="parent_id" id="editParentIdHidden">
-          <input type="text" id="editMaSearch" autocomplete="off" placeholder="Search master agent..."
+          <input type="text" id="editMaSearch" autocomplete="off" placeholder="Search manager..."
             class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
           <div id="editMaDropdown" class="hidden absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg max-h-48 overflow-y-auto">
             <% if (typeof masterAgents !== 'undefined') { masterAgents.forEach(ma => { %>

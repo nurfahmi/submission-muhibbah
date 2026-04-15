@@ -30,7 +30,7 @@
     <a href="/dashboard/cases" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors
       <%= typeof page !== 'undefined' && page === 'cases' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' %>">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      Case List
+      Pending Cases
     </a>
     <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.role === 'superadmin')) { %>
     <a href="/dashboard/taken-cases" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors
@@ -40,6 +40,11 @@
     </a>
     <% } %>
     <% if (typeof user !== 'undefined' && user) { %>
+    <a href="/dashboard/pre-submissions" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors
+      <%= typeof page !== 'undefined' && (page === 'pre-submission' || page === 'pre-submission-list') ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' %>">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+      Pre-Submission
+    </a>
     <a href="/dashboard/submit-new" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors
       <%= typeof page !== 'undefined' && page === 'submit' ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' %>">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>

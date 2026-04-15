@@ -203,7 +203,9 @@ const SubmissionController = {
         phone: req.body.applicant_phone,
         email: req.body.applicant_email,
         address: req.body.applicant_address,
+        taraf_perkahwinan: req.body.applicant_taraf_perkahwinan,
         tanggungan: req.body.applicant_tanggungan,
+        bangsa_agama: req.body.applicant_bangsa_agama,
         pendidikan: req.body.applicant_pendidikan,
         jenis_kediaman: req.body.applicant_jenis_kediaman,
         tempoh_menetap: req.body.applicant_tempoh_menetap,
@@ -216,19 +218,18 @@ const SubmissionController = {
       const spouse_data = {
         name: req.body.spouse_name,
         ic: normalizeIC(req.body.spouse_ic),
-        jawatan: req.body.spouse_jawatan,
-        alamat_majikan: req.body.spouse_alamat_majikan,
-        tel_pejabat: req.body.spouse_tel_pejabat,
         phone: req.body.spouse_phone,
-        gaji: req.body.spouse_gaji
+        hubungan: req.body.spouse_hubungan
       };
 
       const job_data = {
         employer: req.body.job_employer,
         alamat_majikan: req.body.job_alamat_majikan,
+        tel_pejabat: req.body.job_tel_pejabat,
         position: req.body.job_position,
         tarikh_mula: req.body.job_tarikh_mula,
-        tel_pejabat: req.body.job_tel_pejabat,
+        opsyen_pencen: req.body.job_opsyen_pencen,
+        status_jawatan: req.body.job_status_jawatan,
         payslip_link: req.body.job_payslip_link,
         payslip_password: req.body.job_payslip_password,
         hrmis_password: req.body.job_hrmis_password

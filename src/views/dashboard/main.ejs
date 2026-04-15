@@ -53,7 +53,7 @@
       </div>
     </div>
     <p class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= stats.total %></p>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Kes</p>
+    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Total Cases</p>
   </div>
 </div>
 
@@ -161,15 +161,15 @@ function fallbackCopy(text, cb) {
     <div class="px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
       <h3 class="text-base font-semibold">
         <% if (user.role === 'superadmin' || user.role === 'admin') { %>
-          Kes Belum Diambil
+          Unclaimed Cases
           <% if (recentCases.length > 0) { %>
             <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"><%= recentCases.length %></span>
           <% } %>
         <% } else { %>
-          Kes Terbaru
+          Latest Cases
         <% } %>
       </h3>
-      <a href="/dashboard/cases" class="text-xs text-primary-600 dark:text-primary-400 hover:underline font-medium">Lihat Semua →</a>
+      <a href="/dashboard/cases" class="text-xs text-primary-600 dark:text-primary-400 hover:underline font-medium">View All →</a>
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-sm">
@@ -185,7 +185,7 @@ function fallbackCopy(text, cb) {
         </thead>
         <tbody id="recentCasesBody">
           <% if (recentCases.length === 0) { %>
-            <tr><td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td></tr>
+            <tr><td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">No cases</td></tr>
           <% } %>
           <% recentCases.forEach(s => { %>
             <tr class="recent-row border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
@@ -226,7 +226,7 @@ function fallbackCopy(text, cb) {
       </div>
     </div>
     <div id="activityFeed" class="divide-y divide-gray-100 dark:divide-gray-800 overflow-y-auto" style="max-height: 400px;">
-      <div class="px-4 py-6 text-center text-gray-400 text-xs" id="activityEmpty">Tiada aktiviti terkini</div>
+      <div class="px-4 py-6 text-center text-gray-400 text-xs" id="activityEmpty">No recent activity</div>
     </div>
   </div>
   <% } else { %>
@@ -316,10 +316,10 @@ function fallbackCopy(text, cb) {
         } else if (data.type === 'CASE_TAKEN') {
           removeCaseRow(data.caseId);
           updateBadge(-1);
-          addActivityItem('✅', data.takerName || 'Admin', 'Kes diambil', data.caseId);
+          addActivityItem('✅', data.takerName || 'Admin', 'Case taken', data.caseId);
         } else if (data.type === 'CASE_MODIFIED') {
           showToast(data);
-          addActivityItem('📝', data.applicantName, data.detail || 'Dokumen dikemaskini', data.caseId);
+          addActivityItem('📝', data.applicantName, data.detail || 'Documents updated', data.caseId);
         }
       } catch(e) {}
     };
@@ -363,7 +363,7 @@ function fallbackCopy(text, cb) {
         row.remove();
         if (!tbody.querySelector('tr')) {
           const tr = document.createElement('tr');
-          tr.innerHTML = '<td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes</td>';
+          tr.innerHTML = '<td colspan="6" class="px-3 sm:px-6 py-8 text-center text-gray-400">No cases</td>';
           tbody.appendChild(tr);
         }
       }, 500);
@@ -387,7 +387,7 @@ function fallbackCopy(text, cb) {
       <span class="text-lg">📝</span>
       <div class="flex-1 min-w-0">
         <p class="text-sm font-semibold text-orange-800 dark:text-orange-200 truncate">${data.applicantName}</p>
-        <p class="text-[11px] text-orange-600 dark:text-orange-400">${data.detail || 'Dokumen dikemaskini'}</p>
+        <p class="text-[11px] text-orange-600 dark:text-orange-400">${data.detail || 'Documents updated'}</p>
       </div>
       <span class="text-xs text-orange-500 dark:text-orange-300 font-medium shrink-0">View →</span>`;
     toast.onclick = () => { window.location.href = '/dashboard/cases/' + data.caseId; };

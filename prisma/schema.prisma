@@ -27,6 +27,7 @@ model User {
   submissionsAsMaster Submission[] @relation("MasteragentSubmissions")
   takenSubmissions    Submission[] @relation("TakenSubmissions")
   activityLogs        ActivityLog[]
+  preSubmissions      PreSubmission[]
 
   @@map("users")
 }
@@ -106,6 +107,20 @@ model ActivityLog {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("activity_logs")
+}
+
+model PreSubmission {
+  id            String   @id @default(uuid())
+  customer_name String?  @db.VarChar(255)
+  ic_number     String?  @db.VarChar(20)
+  product_key   String?  @db.VarChar(100)
+  created_by    String   @db.VarChar(36)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now()) @updatedAt
+
+  creator User @relation(fields: [created_by], references: [id], onDelete: Cascade)
+
+  @@map("pre_submissions")
 }
 
 model SiteSetting {

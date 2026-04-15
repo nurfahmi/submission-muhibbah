@@ -1,0 +1,226 @@
+<div class="max-w-2xl mx-auto">
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100"><%= editItem ? 'Edit Pre-Submission' : 'Pre-Submission Baru' %></h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Upload document or enter details manually</p>
+    </div>
+    <a href="/dashboard/pre-submissions" class="text-sm text-primary-500 hover:text-primary-600 font-medium flex items-center gap-1">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      List
+    </a>
+  </div>
+
+  <% if (!editItem) { %>
+  <!-- Input Method Toggle -->
+  <div class="flex gap-2 mb-6">
+    <button type="button" id="tabOcr" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border transition-colors bg-primary-50 dark:bg-primary-900/30 border-primary-500 text-primary-700 dark:text-primary-300" onclick="switchTab('ocr')">
+      📷 Scan Document (OCR)
+    </button>
+    <button type="button" id="tabManual" class="flex-1 py-2.5 px-4 rounded-xl text-sm font-medium border transition-colors border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800" onclick="switchTab('manual')">
+      ✏️ Manual Entry
+    </button>
+  </div>
+
+  <!-- OCR Upload Card -->
+  <div id="ocrPanel" class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Document Type</label>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 dark:has-[:checked]:bg-primary-900/30 transition-colors">
+          <input type="radio" name="doc_type" value="ic" checked class="text-primary-500 focus:ring-primary-500">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">IC (Kad Pengenalan)</span>
+        </label>
+        <label class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 cursor-pointer has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 dark:has-[:checked]:bg-primary-900/30 transition-colors">
+          <input type="radio" name="doc_type" value="payslip" class="text-primary-500 focus:ring-primary-500">
+          <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Payslip</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Upload Document</label>
+      <div id="dropZone" class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center cursor-pointer hover:border-primary-400 dark:hover:border-primary-500 transition-colors">
+        <svg class="w-10 h-10 mx-auto text-gray-400 dark:text-gray-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+        </svg>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Drag & drop file here, or <span class="text-primary-500 font-medium">click to browse</span></p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">JPG, PNG or PDF (max 5MB)</p>
+        <input type="file" id="fileInput" accept="image/*,application/pdf" class="hidden">
+      </div>
+      <div id="filePreview" class="hidden mt-3 flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
+        <svg class="w-5 h-5 text-primary-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span id="fileName" class="text-sm text-gray-700 dark:text-gray-300 flex-1 truncate"></span>
+        <button type="button" id="removeFile" class="text-gray-400 hover:text-red-500 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <button type="button" id="btnProcess" disabled class="w-full py-2.5 px-4 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+      <svg id="btnSpinner" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span id="btnText">Process Document</span>
+    </button>
+  </div>
+  <% } %>
+
+  <!-- Save Form (shown after OCR results, manual tab, or editing) -->
+  <div id="saveForm" class="<%= editItem ? '' : 'hidden' %> bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+      <%= editItem ? 'Update Details' : 'Customer Details' %>
+    </h3>
+
+    <form action="/dashboard/pre-submission/save" method="POST">
+      <% if (editItem) { %>
+        <input type="hidden" name="id" value="<%= editItem.id %>">
+      <% } %>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Customer Name</label>
+          <input type="text" name="customer_name" id="resultName" value="<%= editItem ? (editItem.customer_name || '') : '' %>" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="Customer name">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">IC Number</label>
+          <input type="text" name="ic_number" id="resultIC" value="<%= editItem ? (editItem.ic_number || '') : '' %>" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="IC Number (12 digits)">
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <button type="submit" class="w-full py-2.5 px-4 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error message -->
+  <div id="errorMsg" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 mb-6">
+    <p class="text-sm text-red-600 dark:text-red-400 flex items-center gap-2">
+      <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span id="errorText"></span>
+    </p>
+  </div>
+</div>
+
+<script>
+(function() {
+  const saveForm = document.getElementById('saveForm');
+  const resultName = document.getElementById('resultName');
+  const resultIC = document.getElementById('resultIC');
+  const errorMsg = document.getElementById('errorMsg');
+  const errorText = document.getElementById('errorText');
+  const isEdit = <%= editItem ? 'true' : 'false' %>;
+
+  // --- Tab switching (create only) ---
+  const ocrPanel = document.getElementById('ocrPanel');
+  const tabOcr = document.getElementById('tabOcr');
+  const tabManual = document.getElementById('tabManual');
+
+  window.switchTab = function(tab) {
+    if (!ocrPanel) return;
+    if (tab === 'manual') {
+      ocrPanel.classList.add('hidden');
+      saveForm.classList.remove('hidden');
+      tabManual.classList.add('bg-primary-50', 'dark:bg-primary-900/30', 'border-primary-500', 'text-primary-700', 'dark:text-primary-300');
+      tabManual.classList.remove('border-gray-200', 'dark:border-gray-700', 'text-gray-600', 'dark:text-gray-400');
+      tabOcr.classList.remove('bg-primary-50', 'dark:bg-primary-900/30', 'border-primary-500', 'text-primary-700', 'dark:text-primary-300');
+      tabOcr.classList.add('border-gray-200', 'dark:border-gray-700', 'text-gray-600', 'dark:text-gray-400');
+    } else {
+      ocrPanel.classList.remove('hidden');
+      if (!resultName.value && !resultIC.value) saveForm.classList.add('hidden');
+      tabOcr.classList.add('bg-primary-50', 'dark:bg-primary-900/30', 'border-primary-500', 'text-primary-700', 'dark:text-primary-300');
+      tabOcr.classList.remove('border-gray-200', 'dark:border-gray-700', 'text-gray-600', 'dark:text-gray-400');
+      tabManual.classList.remove('bg-primary-50', 'dark:bg-primary-900/30', 'border-primary-500', 'text-primary-700', 'dark:text-primary-300');
+      tabManual.classList.add('border-gray-200', 'dark:border-gray-700', 'text-gray-600', 'dark:text-gray-400');
+    }
+  };
+
+  // --- OCR Upload (create only) ---
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const btnProcess = document.getElementById('btnProcess');
+
+  if (dropZone && fileInput && btnProcess) {
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const removeFile = document.getElementById('removeFile');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
+    let selectedFile = null;
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-primary-400'); });
+    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-primary-400'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-primary-400');
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+    });
+    fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
+
+    function handleFile(file) {
+      selectedFile = file;
+      fileName.textContent = file.name;
+      filePreview.classList.remove('hidden');
+      dropZone.classList.add('hidden');
+      btnProcess.disabled = false;
+      errorMsg.classList.add('hidden');
+    }
+
+    removeFile.addEventListener('click', () => {
+      selectedFile = null;
+      fileInput.value = '';
+      filePreview.classList.add('hidden');
+      dropZone.classList.remove('hidden');
+      btnProcess.disabled = true;
+    });
+
+    btnProcess.addEventListener('click', async () => {
+      if (!selectedFile) return;
+      btnProcess.disabled = true;
+      btnSpinner.classList.remove('hidden');
+      btnText.textContent = 'Processing...';
+      errorMsg.classList.add('hidden');
+
+      const formData = new FormData();
+      formData.append('document', selectedFile);
+      formData.append('doc_type', document.querySelector('input[name="doc_type"]:checked').value);
+
+      try {
+        const resp = await fetch('/dashboard/pre-submission/ocr', { method: 'POST', body: formData });
+        const data = await resp.json();
+        if (data.success) {
+          resultName.value = data.name || '';
+          resultIC.value = data.ic || '';
+          saveForm.classList.remove('hidden');
+          if (!data.name && !data.ic) {
+            showError('Could not fully detect information. Please review and complete below.');
+          }
+        } else {
+          showError(data.error || 'Failed to process document.');
+        }
+      } catch (err) {
+        showError('Network error. Please try again.');
+      } finally {
+        btnProcess.disabled = false;
+        btnSpinner.classList.add('hidden');
+        btnText.textContent = 'Process Document';
+      }
+    });
+  }
+
+  function showError(msg) {
+    errorText.textContent = msg;
+    errorMsg.classList.remove('hidden');
+  }
+})();
+</script>

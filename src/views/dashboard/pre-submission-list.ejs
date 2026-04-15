@@ -1,0 +1,122 @@
+<%
+  const productMap = {};
+  if (typeof loanProducts !== 'undefined' && loanProducts) {
+    loanProducts.forEach(p => {
+      productMap[p.key] = p.label;
+      if (p.children) p.children.forEach(c => { productMap[c.key] = p.label; });
+    });
+  }
+  function getProductName(key) { return key ? (productMap[key] || key) : '-'; }
+%>
+
+<div class="max-w-5xl mx-auto">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Pre-Submission</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"><%= items.length %> records</p>
+    </div>
+    <a href="/dashboard/pre-submission" class="py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-xl transition-colors flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      Add New
+    </a>
+  </div>
+
+  <% if (typeof success !== 'undefined' && success && success.length) { %>
+  <div class="mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-3">
+    <p class="text-sm text-green-600 dark:text-green-400"><%= success %></p>
+  </div>
+  <% } %>
+
+  <% if (typeof error !== 'undefined' && error && error.length) { %>
+  <div class="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3">
+    <p class="text-sm text-red-600 dark:text-red-400"><%= error %></p>
+  </div>
+  <% } %>
+
+  <% if (items.length === 0) { %>
+  <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-12 text-center">
+    <svg class="w-12 h-12 mx-auto text-gray-300 dark:text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+    <p class="text-gray-500 dark:text-gray-400 text-sm">No pre-submissions yet.</p>
+    <a href="/dashboard/pre-submission" class="inline-block mt-3 text-sm text-primary-500 hover:text-primary-600 font-medium">+ Add Pre-Submission</a>
+  </div>
+  <% } else { %>
+
+  <!-- Search -->
+  <div class="mb-4">
+    <input type="text" id="searchInput" placeholder="Search name or IC..." class="w-full sm:w-80 px-4 py-2.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-200 dark:border-gray-800">
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer Name</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">IC No</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Product</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">By</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+            <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+          <% items.forEach(function(item, idx) { %>
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors tableRow" data-search="<%= (item.customer_name || '').toLowerCase() %> <%= (item.ic_number || '').toLowerCase() %>">
+            <td class="px-4 py-3 text-gray-500 dark:text-gray-400"><%= idx + 1 %></td>
+            <td class="px-4 py-3">
+              <a href="/dashboard/pre-submissions/<%= item.id %>" class="font-medium text-primary-600 dark:text-primary-400 hover:underline"><%= item.customer_name || '-' %></a>
+            </td>
+            <td class="px-4 py-3 text-gray-700 dark:text-gray-300 font-mono"><%= item.ic_number || '-' %></td>
+            <td class="px-4 py-3">
+              <% if (item.product_key) { %>
+                <span class="px-2 py-0.5 rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium"><%= getProductName(item.product_key) %></span>
+              <% } else { %>
+                <span class="text-gray-400 text-xs">-</span>
+              <% } %>
+            </td>
+            <td class="px-4 py-3 text-gray-500 dark:text-gray-400"><%= item.creator ? item.creator.username : '-' %></td>
+            <td class="px-4 py-3 text-gray-500 dark:text-gray-400 whitespace-nowrap">
+              <%= new Date(item.created_at).toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+            </td>
+            <td class="px-4 py-3 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <a href="/dashboard/pre-submissions/<%= item.id %>" class="p-1.5 rounded-lg text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="View">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </a>
+                <a href="/dashboard/pre-submissions/<%= item.id %>/edit" class="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors" title="Edit">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </a>
+                <form action="/dashboard/pre-submissions/<%= item.id %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this record?')">
+                  <button type="submit" class="p-1.5 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors" title="Delete">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<script>
+(function() {
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const q = this.value.toLowerCase();
+      document.querySelectorAll('.tableRow').forEach(row => {
+        row.style.display = (row.getAttribute('data-search') || '').includes(q) ? '' : 'none';
+      });
+    });
+  }
+})();
+</script>

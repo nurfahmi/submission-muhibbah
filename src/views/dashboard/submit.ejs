@@ -8,18 +8,18 @@
       <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
         <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h3 class="text-lg font-bold text-green-600 dark:text-green-400 mb-2">Berjaya!</h3>
+      <h3 class="text-lg font-bold text-green-600 dark:text-green-400 mb-2">Success!</h3>
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-6"><%= success %></p>
     <% } else { %>
       <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
         <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </div>
-      <h3 class="text-lg font-bold text-red-600 dark:text-red-400 mb-2">Gagal!</h3>
+      <h3 class="text-lg font-bold text-red-600 dark:text-red-400 mb-2">Failed!</h3>
       <p class="text-sm text-gray-600 dark:text-gray-400 mb-6"><%= error %></p>
     <% } %>
     <button onclick="document.getElementById('statusModal').remove()"
       class="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
-      Tutup
+      Close
     </button>
   </div>
 </div>
@@ -34,15 +34,15 @@
       <svg class="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       <h2 class="text-lg font-semibold">Auto Isi dari WhatsApp</h2>
     </div>
-    <p class="text-xs text-gray-400 mb-3">Paste mesej WhatsApp di bawah, kemudian klik "Auto Isi Borang" untuk isi semua field secara automatik.</p>
-    <textarea id="waMessageInput" rows="6" placeholder="Paste mesej WhatsApp di sini..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-green-500 font-mono"></textarea>
+    <p class="text-xs text-gray-400 mb-3">Paste a WhatsApp message below, then click "Auto Fill Form" to fill in all fields automatically.</p>
+    <textarea id="waMessageInput" rows="6" placeholder="Paste WhatsApp message here..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-green-500 font-mono"></textarea>
     <div class="flex gap-2 mt-3">
       <button type="button" id="btnAutoFill" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-6 rounded-xl text-sm transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-        Auto Isi Borang
+        Auto Fill Form
       </button>
       <button type="button" id="btnClearWa" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold py-2.5 px-6 rounded-xl text-sm transition-colors">
-        Kosongkan
+        Clear
       </button>
     </div>
     <div id="waFillResult" class="hidden mt-3 text-sm px-4 py-3 rounded-xl"></div>
@@ -62,7 +62,7 @@
       </div>
       <select name="product_key" required
         class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        <option value="">-- Pilih Produk --</option>
+        <option value="">-- Select Product --</option>
         <% loanProducts.forEach(p => { %>
           <option value="<%= p.key %>"><%= p.label %></option>
         <% }) %>
@@ -77,14 +77,14 @@
         <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <h2 class="text-lg font-semibold">Assign Referer</h2>
       </div>
-      <p class="text-xs text-gray-400 mb-3">Pilih agent yang merujuk kes ini. Jika tiada, biarkan kosong.</p>
+      <p class="text-xs text-gray-400 mb-3">Select the agent who referred this case. Leave empty if none.</p>
       <div class="relative">
         <input type="hidden" name="assign_agent" id="assignAgentHidden"
           value="<%= (typeof draft !== 'undefined' && draft) ? (draft.subagent_id || draft.masteragent_id || '') : '' %>">
         <div class="flex gap-2">
           <div class="relative flex-1">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="agentSearch" autocomplete="off" placeholder="Cari agent..."
+            <input type="text" id="agentSearch" autocomplete="off" placeholder="Search agent..."
               class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
           </div>
           <button type="button" id="clearAgent" class="px-3 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-sm transition-colors" title="Clear">
@@ -103,10 +103,10 @@
               </div>
               <span class="px-2 py-0.5 rounded text-xs font-medium
                 <% if (ag.role === 'masteragent') { %>bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300
-                <% } else { %>bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400<% } %>"><%= ag.role === 'masteragent' ? 'Master' : 'Sub' %></span>
+                <% } else { %>bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400<% } %>"><%= ag.role === 'masteragent' ? 'Manager' : 'User' %></span>
             </div>
           <% }) %>
-          <div id="agentNoResult" class="hidden px-4 py-3 text-sm text-gray-400 text-center">Tiada agent ditemui</div>
+          <div id="agentNoResult" class="hidden px-4 py-3 text-sm text-gray-400 text-center">No agent found</div>
         </div>
       </div>
       <div id="selectedAgentBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-medium"></div>
@@ -127,59 +127,63 @@
           <input type="text" name="applicant_name" value="<%= a.name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No KP</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kad Pengenalan</label>
           <input type="text" name="applicant_ic" value="<%= a.ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel</label>
-          <input type="tel" name="applicant_phone" value="<%= a.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-          <input type="email" name="applicant_email" value="<%= a.email || '' %>" required autocapitalize="off" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
         <div class="sm:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Terkini</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Tetap</label>
           <textarea name="applicant_address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= a.address || '' %></textarea>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bilangan Tanggungan</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel HP</label>
+          <input type="tel" name="applicant_phone" value="<%= a.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Perkahwinan</label>
+          <input type="text" name="applicant_taraf_perkahwinan" value="<%= a.taraf_perkahwinan || '' %>" required placeholder="cth: Berkahwin / Bujang" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bilangan Tanggungan (Anak)</label>
           <input type="text" name="applicant_tanggungan" value="<%= a.tanggungan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Pendidikan</label>
-          <input type="text" name="applicant_pendidikan" value="<%= a.pendidikan || '' %>" required placeholder="cth: SPM" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bangsa / Agama</label>
+          <input type="text" name="applicant_bangsa_agama" value="<%= a.bangsa_agama || '' %>" required placeholder="cth: Melayu / Islam" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Pendidikan Paling Tinggi</label>
+          <input type="text" name="applicant_pendidikan" value="<%= a.pendidikan || '' %>" required placeholder="cth: SPM / Diploma / Ijazah" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis Kediaman</label>
-          <input type="text" name="applicant_jenis_kediaman" value="<%= a.jenis_kediaman || '' %>" required placeholder="cth: Rumah Sendiri" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_jenis_kediaman" value="<%= a.jenis_kediaman || '' %>" required placeholder="cth: Menyewa / Milik Sendiri" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tempoh Menetap</label>
           <input type="text" name="applicant_tempoh_menetap" value="<%= a.tempoh_menetap || '' %>" required placeholder="cth: 5 tahun" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Email</label>
+          <input type="email" name="applicant_email" value="<%= a.email || '' %>" required autocapitalize="off" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Ibu</label>
           <input type="text" name="applicant_nama_ibu" value="<%= a.nama_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Ibu</label>
+          <input type="tel" name="applicant_hp_ibu" value="<%= a.hp_ibu || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No IC Ibu</label>
           <input type="text" name="applicant_ic_ibu" value="<%= a.ic_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No HP Ibu</label>
-          <input type="tel" name="applicant_hp_ibu" value="<%= a.hp_ibu || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
-        <div class="sm:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Ibu</label>
-          <textarea name="applicant_alamat_ibu" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= a.alamat_ibu || '' %></textarea>
-        </div>
       </div>
     </div>
 
-    <!-- Section 2: Maklumat Pasangan -->
+    <!-- Section 2: Maklumat Pasangan / Ibu Bapa -->
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-      <h2 class="text-lg font-semibold mb-4">2. Maklumat Pasangan</h2>
+      <h2 class="text-lg font-semibold mb-4">2. Maklumat Pasangan / Ibu Bapa</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
@@ -190,24 +194,12 @@
           <input type="text" name="spouse_ic" value="<%= sp.ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jawatan</label>
-          <input type="text" name="spouse_jawatan" value="<%= sp.jawatan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
-        <div class="sm:col-span-2">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Majikan</label>
-          <input type="text" name="spouse_alamat_majikan" value="<%= sp.alamat_majikan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tel Pejabat</label>
-          <input type="tel" name="spouse_tel_pejabat" value="<%= sp.tel_pejabat || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-        </div>
-        <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tel Bimbit</label>
           <input type="tel" name="spouse_phone" value="<%= sp.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gaji Pasangan (RM)</label>
-          <input type="text" name="spouse_gaji" value="<%= sp.gaji || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hubungan</label>
+          <input type="text" name="spouse_hubungan" value="<%= sp.hubungan || '' %>" required placeholder="cth: Isteri / Suami / Ibu / Bapa" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
       </div>
     </div>
@@ -225,16 +217,24 @@
           <input type="text" name="job_alamat_majikan" value="<%= j.alamat_majikan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Pejabat</label>
+          <input type="tel" name="job_tel_pejabat" value="<%= j.tel_pejabat || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jawatan</label>
           <input type="text" name="job_position" value="<%= j.position || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarikh Mula Berkhidmat</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarikh Lantikan</label>
           <input type="text" name="job_tarikh_mula" value="<%= j.tarikh_mula || '' %>" required placeholder="cth: 20/09/2014" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Pejabat</label>
-          <input type="tel" name="job_tel_pejabat" value="<%= j.tel_pejabat || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opsyen Pencen</label>
+          <input type="text" name="job_opsyen_pencen" value="<%= j.opsyen_pencen || '' %>" required placeholder="cth: Ya / Tidak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status Jawatan</label>
+          <input type="text" name="job_status_jawatan" value="<%= j.status_jawatan || '' %>" required placeholder="cth: Tetap / Kontrak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Payslip Link</label>
@@ -282,7 +282,7 @@
     <!-- Section 5: Document Upload -->
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
       <h2 class="text-lg font-semibold mb-2">5. Dokumen Diperlukan</h2>
-      <p class="text-xs text-gray-400 mb-4">Format: JPG, PNG, PDF | Max: 5MB per file | <span class="text-red-500">*</span> = Wajib</p>
+      <p class="text-xs text-gray-400 mb-4">Format: JPG, PNG, PDF | Max: 5MB per file | <span class="text-red-500">*</span> = Required</p>
       <%
         const _sd = typeof siteSettings !== 'undefined' ? siteSettings : {};
         function isFileReqD(key) {
@@ -325,7 +325,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Chop Bulat, Chop Nama & Sign Majikan <%- reqStarD('chop_sign') %></label>
           <input type="file" name="chop_sign" accept=".jpg,.jpeg,.png,.pdf" multiple class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary-50 dark:file:bg-primary-900/30 file:text-primary-700 dark:file:text-primary-300 hover:file:bg-primary-100">
-          <p class="text-xs text-gray-400 mt-1">Boleh muat naik lebih dari satu fail</p>
+          <p class="text-xs text-gray-400 mt-1">Multiple files allowed</p>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bill Rumah <%- reqStarD('bill_rumah') %></label>
@@ -338,26 +338,26 @@
         <div class="sm:col-span-2">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lain-lain (Other)</label>
           <input type="file" name="other_doc" accept=".jpg,.jpeg,.png,.pdf" multiple class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary-50 dark:file:bg-primary-900/30 file:text-primary-700 dark:file:text-primary-300 hover:file:bg-primary-100">
-          <p class="text-xs text-gray-400 mt-1">Boleh muat naik lebih dari satu fail</p>
+          <p class="text-xs text-gray-400 mt-1">Multiple files allowed</p>
         </div>
       </div>
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Agent Message (Optional)</label>
-      <textarea name="agent_message" rows="3" placeholder="Mesej tambahan untuk admin..."
+      <textarea name="agent_message" rows="3" placeholder="Additional message for admin..."
         class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
-      <p class="text-xs text-gray-400 mt-1">Catatan atau mesej kepada admin berkenaan permohonan ini</p>
+      <p class="text-xs text-gray-400 mt-1">Notes or message to admin regarding this application</p>
     </div>
 
     <div class="flex gap-3">
       <button type="submit" name="action" value="submit"
         class="flex-1 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 rounded-2xl text-sm transition-colors">
-        Hantar Permohonan
+        Submit Application
       </button>
       <button type="submit" name="action" value="draft" formnovalidate
         class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-semibold py-3 rounded-2xl text-sm transition-colors">
-        Simpan Draft
+        Save Draft
       </button>
     </div>
   </form>
@@ -375,46 +375,44 @@
       <pre id="templateNote" class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400 whitespace-pre-wrap select-all font-sans break-words" style="word-break:break-word;">Sila guna format ini untuk fungsi "Auto Isi Borang"
 bagi mengisi semua ruangan secara automatik.
 
-1)MAKLUMAT PEMOHON 
-👉Nama:
-👉No kp: 
-👉No tel: 
-👉Email :
-👉Alamat Terkini: 
-👉Bilangan Tanggungan: 
-👉Taraf Pendidikan: 
-👉Jenis Kediaman: 
-👉Tempoh Menetap: 
-👉Nama Ibu: 
-👉 No ic ibu: 
-👉 No hp ibu: 
-👉 Alamat ibu : 
+1)MAKLUMAT PEMOHON :-
+➜ NAMA:
+➜ KAD PENGENALAN:
+➜ ALAMAT TETAP:
+➜ NO TEL HP:
+➜ TARAF PERKAHWINAN:
+➜ BILANGAN TANGGUNGAN (ANAK):
+➜ BANGSA / AGAMA:
+➜ TARAF PENDIDIKAN PALING TINGGI:
+➜ JENIS KEDIAMAN:
+➜ TEMPOH MENETAP:
+➜ ALAMAT EMAIL:
+➜ NAMA IBU:
+➜ NO TEL:
+➜ NO IC:
 
-2)MAKLUMAT PASANGAN:-
-👉Nama: 
-👉No ic: 
-👉Jawatan: 
-👉Alamat Majikan: 
-👉Tel Pejbt:-
-👉Tel Bimbit: 
-👉Gaji Pasangan: 
+2)MAKLUMAT PASANGAN / IBU BAPA :-
+➜ NAMA:
+➜ NO IC:
+➜ TEL BIMBIT:
+➜ HUBUNGAN:
 
-3)MAKLUMAT PEKERJAAN PEMOHON:
-👉Nama Majikan: : 
-👉Alamat Majikan: 
-👉Jawatan: 
-👉Tarikh Mula Berkhidmat : 
-👉No Tel Pejbt: 
-👉Anm / Payslip Password:
-👉Hrmis Password:
- 
-4)RUJUKAN SAUDARA(ADIK BERADIK DAN IBU BAPA SAHAJA)TERDEKAT:
+3)MAKLUMAT PEKERJAAN PEMOHON:-
+➜ NAMA MAJIKAN:
+➜ ALAMAT MAJIKAN:
+➜ NO TEL PEJBT:
+➜ JAWATAN:
+➜ TARIKH LANTIKAN:
+➜ OPSYEN PENCEN:
+➜ STATUS JAWATAN(TETAP/KONTRAK):
+
+4)RUJUKAN SAUDARA TERDEKAT:-
 (WARIS BERUMUR 50 TAHUN KE BAWAH & TAK SAMA ALAMAT DENGAN PEMOHON)
-👉Nama: 
-👉Alamat Tetap: 
-👉Ic : 
-👉No Tel Bimbit: 
-👉Pertalian:</pre>
+➜ NAMA:
+➜ IC NO:
+➜ NO TELEFON:
+➜ ALAMAT:
+➜ PERTALIAN:</pre>
     </div>
   </div>
 </div>
@@ -469,7 +467,7 @@ function copyTemplate() {
     }
     if (missing.length > 0) {
       e.preventDefault();
-      errorDiv.innerHTML = '<strong>Sila muat naik dokumen yang diperlukan:</strong><br>' + missing.join(', ');
+      errorDiv.innerHTML = '<strong>Please upload the required documents:</strong><br>' + missing.join(', ');
       errorDiv.classList.remove('hidden');
       errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } else {
@@ -544,14 +542,15 @@ function copyTemplate() {
       // Detect section headers
       const lineLower = line.toLowerCase();
       if (lineLower.includes('maklumat pemohon') && !lineLower.includes('pekerjaan')) { section = 1; continue; }
-      if (lineLower.includes('maklumat pasangan')) { section = 2; continue; }
+      if (lineLower.includes('maklumat pasangan') || lineLower.includes('ibu bapa')) { section = 2; continue; }
       if (lineLower.includes('maklumat pekerjaan') || lineLower.includes('pekerjaan pemohon')) { section = 3; continue; }
-      if (lineLower.includes('rujukan saudara')) { section = 4; continue; }
+      if (lineLower.includes('rujukan saudara') || lineLower.includes('saudara terdekat')) { section = 4; continue; }
+      if (lineLower.includes('waris berumur')) continue; // Skip instruction line
       if (lineLower.includes('doc diperlukan') || lineLower.includes('dokumen diperlukan')) { section = 5; continue; }
-      if (section === 5) continue; // Skip document section
+      if (section === 5) continue;
 
-      // Remove emoji markers
-      line = line.replace(/👉/g, '').trim();
+      // Remove emoji markers (➜, 👉, arrows)
+      line = line.replace(/[➜👉→▶►]/g, '').trim();
 
       // Extract key:value - split on first colon
       const colonIdx = line.indexOf(':');
@@ -559,51 +558,80 @@ function copyTemplate() {
 
       const rawKey = line.substring(0, colonIdx).trim().toLowerCase();
       let value = line.substring(colonIdx + 1).trim();
-      // Remove trailing :- or -
+      // Remove leading :- or -
       value = value.replace(/^[:\-\s]+/, '').trim();
 
       if (!value) continue;
 
-      // Map based on section + key
+      // === SECTION 1: MAKLUMAT PEMOHON ===
+      // Priority: most-specific key first to avoid false matches
+      // BPA order: NAMA, KAD PENGENALAN, ALAMAT TETAP, NO TEL HP, WARGANEGARA,
+      //   TARAF PERKAHWINAN, BILANGAN TANGGUNGAN, BANGSA/AGAMA, TARAF PENDIDIKAN,
+      //   JENIS KEDIAMAN, TEMPOH MENETAP, ALAMAT EMAIL, NAMA IBU, NO TEL, NO IC
       if (section === 1) {
+        // --- Mother's fields (specific, checked first) ---
         if (rawKey.includes('nama') && rawKey.includes('ibu')) { if(setVal('applicant_nama_ibu', value)) filled++; }
-        else if ((rawKey.includes('ic') || rawKey.includes('kp')) && rawKey.includes('ibu')) { if(setVal('applicant_ic_ibu', value)) filled++; }
-        else if ((rawKey.includes('hp') || rawKey.includes('tel') || rawKey.includes('no hp')) && rawKey.includes('ibu')) { if(setVal('applicant_hp_ibu', value)) filled++; }
-        else if (rawKey.includes('alamat') && !rawKey.includes('terkini')) { if(setVal('applicant_alamat_ibu', value)) filled++; }
-        else if (rawKey.includes('nama')) { if(setVal('applicant_name', value)) filled++; }
-        else if (rawKey.includes('no kp') || rawKey.includes('kp') || rawKey.includes('no ic') || rawKey.includes('ic')) { if(setVal('applicant_ic', value)) filled++; }
-        else if (rawKey.includes('no tel') || rawKey.includes('tel')) { if(setVal('applicant_phone', value)) filled++; }
-        else if (rawKey.includes('email')) { if(setVal('applicant_email', value)) filled++; }
-        else if (rawKey.includes('alamat terkini') || rawKey.includes('alamat')) { if(setVal('applicant_address', value)) filled++; }
-        else if (rawKey.includes('tanggungan') || rawKey.includes('bilangan')) { if(setVal('applicant_tanggungan', value)) filled++; }
-        else if (rawKey.includes('pendidikan') || rawKey.includes('taraf')) { if(setVal('applicant_pendidikan', value)) filled++; }
-        else if (rawKey.includes('kediaman') || rawKey.includes('jenis')) { if(setVal('applicant_jenis_kediaman', value)) filled++; }
+        else if (rawKey.includes('ic') && rawKey.includes('ibu')) { if(setVal('applicant_ic_ibu', value)) filled++; }
+        else if (rawKey.includes('tel') && rawKey.includes('ibu')) { if(setVal('applicant_hp_ibu', value)) filled++; }
+        // "NO IC" (no "ibu" word, but appears AFTER nama ibu in BPA) — check if nama_ibu already filled
+        else if (rawKey === 'no ic' && document.querySelector('[name="applicant_nama_ibu"]')?.value) { if(setVal('applicant_ic_ibu', value)) filled++; }
+        // "NO TEL" (no "ibu"/"hp" word, but appears AFTER nama ibu in BPA) — check if nama_ibu already filled
+        else if (rawKey === 'no tel' && document.querySelector('[name="applicant_nama_ibu"]')?.value) { if(setVal('applicant_hp_ibu', value)) filled++; }
+
+        // --- Compound keys (multi-word, checked before single-word) ---
+        else if (rawKey.includes('kad pengenalan')) { if(setVal('applicant_ic', value)) filled++; }
+        else if (rawKey.includes('alamat') && rawKey.includes('email')) { if(setVal('applicant_email', value)) filled++; }
+        else if (rawKey.includes('alamat')) { if(setVal('applicant_address', value)) filled++; }
+        else if (rawKey.includes('tel') && rawKey.includes('hp')) { if(setVal('applicant_phone', value)) filled++; }
+        else if (rawKey.includes('perkahwinan')) { if(setVal('applicant_taraf_perkahwinan', value)) filled++; }
+        else if (rawKey.includes('tanggungan')) { if(setVal('applicant_tanggungan', value)) filled++; }
+        else if (rawKey.includes('bangsa') || rawKey.includes('agama')) { if(setVal('applicant_bangsa_agama', value)) filled++; }
+        else if (rawKey.includes('pendidikan')) { if(setVal('applicant_pendidikan', value)) filled++; }
+        else if (rawKey.includes('kediaman')) { if(setVal('applicant_jenis_kediaman', value)) filled++; }
         else if (rawKey.includes('tempoh') || rawKey.includes('menetap')) { if(setVal('applicant_tempoh_menetap', value)) filled++; }
+        else if (rawKey.includes('email')) { if(setVal('applicant_email', value)) filled++; }
+
+        // --- Generic single-word (last resort) ---
+        else if (rawKey.includes('nama')) { if(setVal('applicant_name', value)) filled++; }
+        else if (rawKey.includes('kp') || rawKey.includes('ic')) { if(setVal('applicant_ic', value)) filled++; }
+        else if (rawKey.includes('tel')) { if(setVal('applicant_phone', value)) filled++; }
       }
+
+      // === SECTION 2: MAKLUMAT PASANGAN / IBU BAPA ===
+      // BPA order: NAMA, NO IC, TEL BIMBIT, HUBUNGAN
       else if (section === 2) {
         if (rawKey.includes('nama')) { if(setVal('spouse_name', value)) filled++; }
         else if (rawKey.includes('ic') || rawKey.includes('kp')) { if(setVal('spouse_ic', value)) filled++; }
-        else if (rawKey.includes('jawatan')) { if(setVal('spouse_jawatan', value)) filled++; }
-        else if (rawKey.includes('alamat')) { if(setVal('spouse_alamat_majikan', value)) filled++; }
-        else if (rawKey.includes('pejbt') || rawKey.includes('pejabat')) { if(setVal('spouse_tel_pejabat', value)) filled++; }
         else if (rawKey.includes('bimbit') || rawKey.includes('tel')) { if(setVal('spouse_phone', value)) filled++; }
-        else if (rawKey.includes('gaji')) { if(setVal('spouse_gaji', value)) filled++; }
+        else if (rawKey.includes('hubungan')) { if(setVal('spouse_hubungan', value)) filled++; }
       }
+
+      // === SECTION 3: MAKLUMAT PEKERJAAN ===
+      // BPA order: NAMA MAJIKAN, ALAMAT MAJIKAN, NO TEL PEJBT, JAWATAN,
+      //   TARIKH LANTIKAN, OPSYEN PENCEN, STATUS JAWATAN
       else if (section === 3) {
-        if (rawKey.includes('nama majikan') || (rawKey.includes('nama') && rawKey.includes('majikan'))) { if(setVal('job_employer', value)) filled++; }
+        if (rawKey.includes('nama') && rawKey.includes('majikan')) { if(setVal('job_employer', value)) filled++; }
+        else if (rawKey.includes('nama') && !rawKey.includes('majikan')) { if(setVal('job_employer', value)) filled++; }
         else if (rawKey.includes('alamat')) { if(setVal('job_alamat_majikan', value)) filled++; }
+        else if (rawKey.includes('pejbt') || rawKey.includes('pejabat')) { if(setVal('job_tel_pejabat', value)) filled++; }
+        else if (rawKey.includes('status') && rawKey.includes('jawatan')) { if(setVal('job_status_jawatan', value)) filled++; }
         else if (rawKey.includes('jawatan')) { if(setVal('job_position', value)) filled++; }
-        else if (rawKey.includes('tarikh') || rawKey.includes('mula')) { if(setVal('job_tarikh_mula', value)) filled++; }
-        else if (rawKey.includes('tel') || rawKey.includes('pejbt') || rawKey.includes('pejabat')) { if(setVal('job_tel_pejabat', value)) filled++; }
+        else if (rawKey.includes('tarikh') || rawKey.includes('lantikan')) { if(setVal('job_tarikh_mula', value)) filled++; }
+        else if (rawKey.includes('pencen') || rawKey.includes('opsyen')) { if(setVal('job_opsyen_pencen', value)) filled++; }
+        else if (rawKey.includes('status')) { if(setVal('job_status_jawatan', value)) filled++; }
+        else if (rawKey.includes('tel')) { if(setVal('job_tel_pejabat', value)) filled++; }
         else if (rawKey.includes('payslip') && rawKey.includes('link')) { if(setVal('job_payslip_link', value)) filled++; }
-        else if (rawKey.includes('payslip') && rawKey.includes('password') || rawKey.includes('anm')) { if(setVal('job_payslip_password', value)) filled++; }
+        else if (rawKey.includes('anm') || (rawKey.includes('payslip') && rawKey.includes('password'))) { if(setVal('job_payslip_password', value)) filled++; }
         else if (rawKey.includes('hrmis')) { if(setVal('job_hrmis_password', value)) filled++; }
       }
+
+      // === SECTION 4: RUJUKAN SAUDARA TERDEKAT ===
+      // BPA order: NAMA, IC NO, NO TELEFON, ALAMAT, PERTALIAN
       else if (section === 4) {
         if (rawKey.includes('nama')) { if(setVal('ref_name', value)) filled++; }
+        else if (rawKey.includes('ic')) { if(setVal('ref_ic', value)) filled++; }
+        else if (rawKey.includes('tel') || rawKey.includes('telefon')) { if(setVal('ref_phone', value)) filled++; }
         else if (rawKey.includes('alamat')) { if(setVal('ref_address', value)) filled++; }
-        else if (rawKey.includes('ic') || rawKey.includes('kp')) { if(setVal('ref_ic', value)) filled++; }
-        else if (rawKey.includes('tel') || rawKey.includes('bimbit')) { if(setVal('ref_phone', value)) filled++; }
         else if (rawKey.includes('pertalian') || rawKey.includes('hubungan')) { if(setVal('ref_relationship', value)) filled++; }
       }
     }
@@ -615,10 +643,12 @@ function copyTemplate() {
   function fillNAForEmpty() {
     const allFields = [
       'applicant_name','applicant_ic','applicant_phone','applicant_email','applicant_address',
-      'applicant_tanggungan','applicant_pendidikan','applicant_jenis_kediaman','applicant_tempoh_menetap',
-      'applicant_nama_ibu','applicant_ic_ibu','applicant_hp_ibu','applicant_alamat_ibu',
-      'spouse_name','spouse_ic','spouse_jawatan','spouse_alamat_majikan','spouse_tel_pejabat','spouse_phone','spouse_gaji',
-      'job_employer','job_alamat_majikan','job_position','job_tarikh_mula','job_tel_pejabat',
+      'applicant_taraf_perkahwinan','applicant_tanggungan','applicant_bangsa_agama',
+      'applicant_pendidikan','applicant_jenis_kediaman','applicant_tempoh_menetap',
+      'applicant_nama_ibu','applicant_ic_ibu','applicant_hp_ibu',
+      'spouse_name','spouse_ic','spouse_phone','spouse_hubungan',
+      'job_employer','job_alamat_majikan','job_tel_pejabat','job_position','job_tarikh_mula',
+      'job_opsyen_pencen','job_status_jawatan',
       'ref_name','ref_ic','ref_address','ref_phone','ref_relationship'
     ];
     allFields.forEach(function(name) {
@@ -632,15 +662,15 @@ function copyTemplate() {
   btnAutoFill.addEventListener('click', function() {
     const text = waInput.value.trim();
     if (!text) {
-      showResult('Sila paste mesej WhatsApp terlebih dahulu.', true);
+      showResult('Please paste a WhatsApp message first.', true);
       return;
     }
     const filled = parseWhatsApp(text);
     if (filled > 0) {
       fillNAForEmpty();
-      showResult('✅ Berjaya mengisi ' + filled + ' field secara automatik. Field yang tiada maklumat diisi dengan N/A.', false);
+      showResult('✅ Successfully filled ' + filled + ' fields automatically. Empty fields were set to N/A.', false);
     } else {
-      showResult('⚠️ Tiada field yang dapat diisi. Pastikan format mesej WhatsApp betul.', true);
+      showResult('⚠️ No fields could be filled. Please check the WhatsApp message format.', true);
     }
   });
 
@@ -666,7 +696,7 @@ function copyTemplate() {
     hidden.value = id;
     search.value = name;
     dropdown.classList.add('hidden');
-    const roleLabel = role === 'masteragent' ? 'Master' : 'Sub';
+    const roleLabel = role === 'masteragent' ? 'Manager' : 'User';
     badge.textContent = name + ' (' + roleLabel + ')';
     badge.classList.remove('hidden');
   }

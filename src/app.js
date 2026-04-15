@@ -69,6 +69,7 @@ const userRoutes = require('./routes/user.routes');
 const submissionRoutes = require('./routes/submission.routes');
 const settingRoutes = require('./routes/setting.routes');
 const templateRoutes = require('./routes/template.routes');
+const presubmissionRoutes = require('./routes/presubmission.routes');
 const prisma = require('./config/db');
 
 // Root redirect - go to /setup if no superadmin, else /auth/login
@@ -83,6 +84,7 @@ app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/dashboard/users', userRoutes);
 app.use('/dashboard', submissionRoutes);
+app.use('/dashboard', presubmissionRoutes);
 app.use('/dashboard/settings/templates', templateRoutes);
 app.use('/dashboard/settings', settingRoutes);
 app.use('/', submissionRoutes); // Public /submit route

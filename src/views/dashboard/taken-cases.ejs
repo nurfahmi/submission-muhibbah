@@ -22,11 +22,11 @@
   const _period = typeof period !== 'undefined' ? period : 'this_month';
 
   const periods = [
-    { key: 'this_month', label: 'Bulan Ini' },
-    { key: 'last_month', label: 'Bulan Lepas' },
-    { key: 'last_3_months', label: '3 Bulan' },
-    { key: 'this_year', label: 'Tahun Ini' },
-    { key: 'all', label: 'Semua' },
+    { key: 'this_month', label: 'This Month' },
+    { key: 'last_month', label: 'Last Month' },
+    { key: 'last_3_months', label: '3 Months' },
+    { key: 'this_year', label: 'This Year' },
+    { key: 'all', label: 'All' },
     { key: 'custom', label: 'Custom' }
   ];
 %>
@@ -101,8 +101,8 @@
         <input type="hidden" name="dateTo" value="<%= f.dateTo || '' %>">
       <% } %>
       <div class="flex-1 min-w-[160px] max-w-[240px]">
-        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Cari</label>
-        <input type="text" name="search" value="<%= f.search || '' %>" placeholder="Nama, IC, Majikan..."
+        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Search</label>
+        <input type="text" name="search" value="<%= f.search || '' %>" placeholder="Name, IC, Employer..."
           class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
       </div>
       <% if (user.role === 'superadmin' || user.role === 'admin') { %>
@@ -128,21 +128,21 @@
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer</th>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">IC</th>
           <% if (user.role === 'superadmin' || user.role === 'admin') { %>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Manager</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">User</th>
           <% } else if (user.role === 'masteragent') { %>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Agent</th>
           <% } %>
           <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Taken By</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Tarikh</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Produk</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden md:table-cell">Date</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Product</th>
           <th class="text-center px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Action</th>
         </tr>
       </thead>
       <tbody>
         <% const colCount = (user.role === 'superadmin' || user.role === 'admin') ? 8 : (user.role === 'masteragent') ? 7 : 6; %>
         <% if (submissions.length === 0) { %>
-          <tr><td colspan="<%= colCount %>" class="px-3 sm:px-6 py-8 text-center text-gray-400">Tiada kes ditemui</td></tr>
+          <tr><td colspan="<%= colCount %>" class="px-3 sm:px-6 py-8 text-center text-gray-400">No cases found</td></tr>
         <% } %>
         <% submissions.forEach(s => { %>
           <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">

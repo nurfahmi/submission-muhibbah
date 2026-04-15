@@ -15,28 +15,35 @@
 <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
   <a href="/dashboard/cases" class="text-primary-600 dark:text-primary-400 hover:underline text-sm">← Back to Cases</a>
   <div class="flex flex-wrap items-center gap-2 text-xs">
+    <button type="button" id="btnCopyAll" class="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-primary-50 dark:hover:bg-primary-900/20 text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 text-xs font-medium transition-colors flex items-center gap-1.5">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+      <span id="copyAllLabel">Copy All</span>
+    </button>
     <% if (submission.product_key) { %>
       <span class="px-2.5 py-1 rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium"><%= typeof getProductName === 'function' ? getProductName(submission.product_key) : submission.product_key %></span>
     <% } %>
     <% if (submission.masteragent_name) { %>
-      <span class="px-2.5 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">MA: <%= submission.masteragent_name %></span>
+      <span class="px-2.5 py-1 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-medium">Mgr: <%= submission.masteragent_name %></span>
     <% } %>
     <% if (submission.subagent_name) { %>
-      <span class="px-2.5 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium">SA: <%= submission.subagent_name %></span>
+      <span class="px-2.5 py-1 rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-medium">Usr: <%= submission.subagent_name %></span>
     <% } %>
   </div>
 </div>
 
 <%
 const labels = {
-  name: 'Nama', ic: 'No KP', phone: 'No Tel', email: 'Email',
-  address: 'Alamat Terkini', tanggungan: 'Bil. Tanggungan', pendidikan: 'Taraf Pendidikan',
-  jenis_kediaman: 'Jenis Kediaman', tempoh_menetap: 'Tempoh Menetap',
-  nama_ibu: 'Nama Ibu', ic_ibu: 'No IC Ibu', hp_ibu: 'No HP Ibu', alamat_ibu: 'Alamat Ibu',
-  jawatan: 'Jawatan', alamat_majikan: 'Alamat Majikan',
-  tel_pejabat: 'Tel Pejabat', gaji: 'Gaji (RM)',
+  name: 'Nama', ic: 'Kad Pengenalan', phone: 'No Tel HP', email: 'Alamat Email',
+  address: 'Alamat Tetap', taraf_perkahwinan: 'Taraf Perkahwinan',
+  tanggungan: 'Bil. Tanggungan (Anak)', bangsa_agama: 'Bangsa / Agama',
+  pendidikan: 'Taraf Pendidikan', jenis_kediaman: 'Jenis Kediaman',
+  tempoh_menetap: 'Tempoh Menetap',
+  nama_ibu: 'Nama Ibu', ic_ibu: 'No IC Ibu', hp_ibu: 'No Tel Ibu',
+  hubungan: 'Hubungan',
   employer: 'Nama Majikan', position: 'Jawatan',
-  tarikh_mula: 'Tarikh Mula Berkhidmat',
+  alamat_majikan: 'Alamat Majikan', tel_pejabat: 'No Tel Pejabat',
+  tarikh_mula: 'Tarikh Lantikan',
+  opsyen_pencen: 'Opsyen Pencen', status_jawatan: 'Status Jawatan',
   payslip_link: 'Payslip Link', payslip_password: 'ANM/Payslip Password',
   hrmis_password: 'HRMIS Password',
   relationship: 'Pertalian'
@@ -47,13 +54,13 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
 <% if (submission.taken_by && typeof loanProducts !== 'undefined' && loanProducts.length > 0) { %>
 <!-- Loan Product PDF Download -->
 <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-6">
-  <h3 class="text-base font-semibold mb-2">📄 Borang Produk</h3>
-  <p class="text-xs text-gray-400 mb-4">Pilih produk pinjaman dan lihat atau muat turun borang yang telah diisi secara automatik.</p>
+  <h3 class="text-base font-semibold mb-2">📄 Loan Product Form</h3>
+  <p class="text-xs text-gray-400 mb-4">Select a loan product and view or download the auto-filled form.</p>
 
   <form method="POST" action="/dashboard/cases/<%= submission.id %>/update-product" class="flex items-center gap-2 mb-4">
     <select name="product_key" id="productSelect"
       class="flex-1 px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
-      <option value="">-- Pilih Produk --</option>
+      <option value="">-- Select Product --</option>
       <% loanProducts.forEach(p => { %>
         <option value="<%= p.key %>" <% if (submission.product_key === p.key) { %>selected<% } %>><%= p.label %></option>
       <% }) %>
@@ -125,8 +132,8 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
   <div class="lg:col-span-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4 flex items-center gap-3">
     <span class="text-2xl">📷</span>
     <div>
-      <p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Gambar Perlu Disemak</p>
-      <p class="text-xs text-amber-600 dark:text-amber-400">Pemohon telah menghantar gambar yang mungkin kabur atau ada masalah kualiti. Sila semak dokumen yang dimuat naik.</p>
+      <p class="text-sm font-semibold text-amber-700 dark:text-amber-300">Images Need Review</p>
+      <p class="text-xs text-amber-600 dark:text-amber-400">The applicant has submitted images that may be blurry or have quality issues. Please review the uploaded documents.</p>
     </div>
   </div>
   <% } %>
@@ -169,7 +176,7 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
     <% if (submission.taken_by) { %>
     <form method="POST" action="/dashboard/cases/<%= submission.id %>/release" class="mt-4 space-y-2">
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Release Reason</label>
-      <textarea name="release_reason" rows="2" required class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500" placeholder="Sebab lepaskan kes..."></textarea>
+      <textarea name="release_reason" rows="2" required class="w-full px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500" placeholder="Reason for releasing this case..."></textarea>
       <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-medium transition-colors">Release Case</button>
     </form>
     <% } %>
@@ -178,40 +185,40 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
 
   <!-- Applicant Data -->
   <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-    <h3 class="text-base font-semibold mb-3">Maklumat Pemohon</h3>
+    <h3 class="text-base font-semibold mb-3">Applicant Details</h3>
     <div class="space-y-2 text-sm">
       <% if (submission.applicant_data) { Object.entries(submission.applicant_data).forEach(([k,v]) => { %>
-        <div class="flex justify-between gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><span class="text-right"><%= v || '-' %></span></div>
+        <div class="flex justify-between items-center gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><div class="flex items-center gap-1.5"><span class="text-right"><%= v || '-' %></span><% if (v) { %><button type="button" onclick="copyVal(this, '<%= String(v).replace(/'/g, "\\'") %>')" class="shrink-0 p-1 rounded-md text-gray-300 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Copy"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></button><% } %></div></div>
       <% })} %>
     </div>
   </div>
 
   <!-- Spouse Data -->
   <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-    <h3 class="text-base font-semibold mb-3">Maklumat Pasangan</h3>
+    <h3 class="text-base font-semibold mb-3">Spouse / Parent Details</h3>
     <div class="space-y-2 text-sm">
       <% if (submission.spouse_data) { Object.entries(submission.spouse_data).forEach(([k,v]) => { %>
-        <div class="flex justify-between gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><span class="text-right"><%= v || '-' %></span></div>
+        <div class="flex justify-between items-center gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><div class="flex items-center gap-1.5"><span class="text-right"><%= v || '-' %></span><% if (v) { %><button type="button" onclick="copyVal(this, '<%= String(v).replace(/'/g, "\\'") %>')" class="shrink-0 p-1 rounded-md text-gray-300 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Copy"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></button><% } %></div></div>
       <% })} %>
     </div>
   </div>
 
   <!-- Job Data -->
   <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-    <h3 class="text-base font-semibold mb-3">Maklumat Pekerjaan</h3>
+    <h3 class="text-base font-semibold mb-3">Employment Details</h3>
     <div class="space-y-2 text-sm">
       <% if (submission.job_data) { Object.entries(submission.job_data).forEach(([k,v]) => { %>
-        <div class="flex justify-between gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><span class="text-right"><%= v || '-' %></span></div>
+        <div class="flex justify-between items-center gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><div class="flex items-center gap-1.5"><span class="text-right"><%= v || '-' %></span><% if (v) { %><button type="button" onclick="copyVal(this, '<%= String(v).replace(/'/g, "\\'") %>')" class="shrink-0 p-1 rounded-md text-gray-300 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Copy"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></button><% } %></div></div>
       <% })} %>
     </div>
   </div>
 
   <!-- Reference Data -->
   <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-    <h3 class="text-base font-semibold mb-3">Rujukan Saudara</h3>
+    <h3 class="text-base font-semibold mb-3">Family Reference</h3>
     <div class="space-y-2 text-sm">
       <% if (submission.reference_data) { Object.entries(submission.reference_data).forEach(([k,v]) => { %>
-        <div class="flex justify-between gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><span class="text-right"><%= v || '-' %></span></div>
+        <div class="flex justify-between items-center gap-4"><span class="text-gray-500 dark:text-gray-400 shrink-0"><%= label(k) %>:</span><div class="flex items-center gap-1.5"><span class="text-right"><%= v || '-' %></span><% if (v) { %><button type="button" onclick="copyVal(this, '<%= String(v).replace(/'/g, "\\'") %>')" class="shrink-0 p-1 rounded-md text-gray-300 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors" title="Copy"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg></button><% } %></div></div>
       <% })} %>
     </div>
   </div>
@@ -245,10 +252,10 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
     <%
       const allFileTypes = {
         ic_depan: 'IC Depan', ic_belakang: 'IC Belakang',
-        payslip1: 'Payslip Terkini 1', payslip2: 'Payslip Terkini 2', payslip3: 'Payslip Terkini 3',
-        bank_page: 'Muka Surat Akaun Bank', signature: 'Tandatangan Customer',
-        chop_sign: 'Chop Bulat, Chop Nama & Sign Majikan', bill_rumah: 'Bill Rumah',
-        settlement_letter: 'Settlement Letter', other_doc: 'Lain-lain'
+        payslip1: 'Latest Payslip 1', payslip2: 'Latest Payslip 2', payslip3: 'Latest Payslip 3',
+        bank_page: 'Bank Account Page', signature: 'Customer Signature',
+        chop_sign: 'Employer Stamp & Signature', bill_rumah: 'House Bill',
+        settlement_letter: 'Settlement Letter', other_doc: 'Others'
       };
       const uploadedTypes = files.map(f => f.file_type);
       const missingTypes = Object.entries(allFileTypes).filter(([k]) => k === 'other_doc' || !uploadedTypes.includes(k));
@@ -357,3 +364,74 @@ function label(key) { return labels[key] || key.replace(/_/g, ' '); }
   <% } %>
 
 </div>
+
+<script>
+var _subData = {
+  a: <%- JSON.stringify(submission.applicant_data || {}) %>,
+  s: <%- JSON.stringify(submission.spouse_data || {}) %>,
+  j: <%- JSON.stringify(submission.job_data || {}) %>,
+  r: <%- JSON.stringify(submission.reference_data || {}) %>
+};
+
+function copyVal(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const svg = btn.innerHTML;
+    btn.innerHTML = '<svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+    setTimeout(() => { btn.innerHTML = svg; }, 1000);
+  });
+}
+
+document.getElementById('btnCopyAll').addEventListener('click', function() {
+  const a = _subData.a, s = _subData.s, j = _subData.j, r = _subData.r;
+  const v = (val) => (val && String(val).trim()) ? String(val).trim() : '';
+
+  const text = `PEGAWAI YANG LAYAK SIGN BPA :
+
+
+1)MAKLUMAT PEMOHON :-
+➜ NAMA: ${v(a.name)}
+➜ KAD PENGENALAN: ${v(a.ic)}
+➜ ALAMAT TETAP: ${v(a.address)}
+➜ NO TEL HP: ${v(a.phone)}
+➜ WARGANEGARA: MALAYSIA
+➜ TARAF PERKAHWINAN : ${v(a.taraf_perkahwinan)}
+➜ BILANGAN TANGGUNGAN (ANAK): ${v(a.tanggungan)}
+➜ BANGSA / AGAMA : ${v(a.bangsa_agama)}
+➜ TARAF PENDIDIKAN PALING TINGGI: ${v(a.pendidikan)}
+➜ JENIS KEDIAMAN(MENYEWA/MILIK SENDIRI/MAJIKAN/IBUBAPA): ${v(a.jenis_kediaman)}
+➜ TEMPOH MENETAP: ${v(a.tempoh_menetap)}
+➜ ALAMAT EMAIL: ${v(a.email)}
+➜ NAMA IBU: ${v(a.nama_ibu)}
+➜ NO TEL: ${v(a.hp_ibu)}
+➜ NO IC: ${v(a.ic_ibu)}
+
+2)MAKLUMAT PASANGAN / IBU BAPA :-
+➜ NAMA: ${v(s.name)}
+➜ NO IC : ${v(s.ic)}
+➜ TEL BIMBIT: ${v(s.phone)}
+➜ HUBUNGAN: ${v(s.hubungan)}
+
+3)MAKLUMAT PEKERJAAN PEMOHON:-
+➜ NAMA MAJIKAN: ${v(j.employer)}
+➜ ALAMAT MAJIKAN: ${v(j.alamat_majikan)}
+➜ NO TEL PEJBT: ${v(j.tel_pejabat)}
+➜ JAWATAN: ${v(j.position)}
+➜ TARIKH LANTIKAN: ${v(j.tarikh_mula)}
+➜ OPSYEN PENCEN : ${v(j.opsyen_pencen)}
+➜ STATUS JAWATAN(TETAP/KONTRAK): ${v(j.status_jawatan)}
+
+
+4)RUJUKAN SAUDARA TERDEKAT:-
+➜ NAMA: ${v(r.name)}
+➜ IC NO: ${v(r.ic)}
+➜ NO TELEFON: ${v(r.phone)}
+➜ ALAMAT: ${v(r.address)}
+➜ PERTALIAN: ${v(r.relationship)}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const label = document.getElementById('copyAllLabel');
+    label.textContent = 'Copied!';
+    setTimeout(() => { label.textContent = 'Copy All'; }, 1500);
+  });
+});
+</script>

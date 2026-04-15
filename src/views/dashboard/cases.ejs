@@ -16,7 +16,7 @@
     </div>
     <div class="relative w-full sm:w-72">
       <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-      <input type="text" id="caseSearch" placeholder="Cari nama, IC..."
+      <input type="text" id="caseSearch" placeholder="Search name, IC..."
         class="w-full pl-9 pr-4 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
     </div>
   </div>
@@ -27,8 +27,8 @@
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium">Customer Name</th>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Customer IC</th>
           <% if (user.role === 'superadmin' || user.role === 'admin') { %>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Master Agent</th>
-          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Sub Agent</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Manager</th>
+          <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">User</th>
           <% } else if (user.role === 'masteragent') { %>
           <th class="text-left px-3 sm:px-6 py-3 text-gray-500 dark:text-gray-400 font-medium hidden sm:table-cell">Agent</th>
           <% } %>
@@ -91,7 +91,7 @@
     </table>
   </div>
   <%- include('../partials/pagination', { tableId: 'caseTableBody', perPage: 10, rowClass: 'case-row' }) %>
-  <div id="noResults" class="hidden px-4 sm:px-6 py-8 text-center text-gray-400 text-sm">Tiada hasil carian ditemui</div>
+  <div id="noResults" class="hidden px-4 sm:px-6 py-8 text-center text-gray-400 text-sm">No results found</div>
 </div>
 
 <script>
