@@ -281,7 +281,7 @@
 
     <!-- Section 5: Document Upload -->
     <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800 p-6">
-      <h2 class="text-lg font-semibold mb-2">5. Dokumen Diperlukan</h2>
+      <h2 class="text-lg font-semibold mb-2">5. Required Documents</h2>
       <p class="text-xs text-gray-400 mb-4">Format: JPG, PNG, PDF | Max: 5MB per file | <span class="text-red-500">*</span> = Required</p>
       <%
         const _sd = typeof siteSettings !== 'undefined' ? siteSettings : {};
@@ -319,7 +319,7 @@
           <input type="file" name="bank_page" accept=".jpg,.jpeg,.png,.pdf" class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary-50 dark:file:bg-primary-900/30 file:text-primary-700 dark:file:text-primary-300 hover:file:bg-primary-100">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tandatangan Customer <%- reqStarD('signature') %></label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Customer Signature <%- reqStarD('signature') %></label>
           <input type="file" name="signature" accept=".jpg,.jpeg,.png,.pdf" class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-medium file:bg-primary-50 dark:file:bg-primary-900/30 file:text-primary-700 dark:file:text-primary-300 hover:file:bg-primary-100">
         </div>
         <div>
@@ -372,7 +372,7 @@
       <button onclick="copyTemplate()" id="copyBtn" class="px-3 py-1 text-[11px] font-medium bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-lg hover:bg-primary-200 transition-colors">Copy</button>
     </div>
     <div class="px-4 py-3">
-      <pre id="templateNote" class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400 whitespace-pre-wrap select-all font-sans break-words" style="word-break:break-word;">Sila guna format ini untuk fungsi "Auto Isi Borang"
+      <pre id="templateNote" class="text-[11px] leading-relaxed text-gray-600 dark:text-gray-400 whitespace-pre-wrap select-all font-sans break-words" style="word-break:break-word;">Use this format for "Auto Fill Form"
 bagi mengisi semua ruangan secara automatik.
 
 1)MAKLUMAT PEMOHON :-
@@ -440,10 +440,10 @@ function copyTemplate() {
   const requiredFiles = {};
   <% const _ss2 = typeof siteSettings !== 'undefined' ? siteSettings : {};
      const _fileMap2 = {
-       ic_depan: 'IC Depan', ic_belakang: 'IC Belakang',
-       payslip1: 'Payslip Terkini 1', payslip2: 'Payslip Terkini 2', payslip3: 'Payslip Terkini 3',
-       bank_page: 'Muka Surat Akaun Bank', signature: 'Tandatangan Customer',
-       chop_sign: 'Chop & Sign Majikan', bill_rumah: 'Bill Rumah', settlement_letter: 'Settlement Letter'
+       ic_depan: 'IC Front', ic_belakang: 'IC Back',
+       payslip1: 'Latest Payslip 1', payslip2: 'Latest Payslip 2', payslip3: 'Latest Payslip 3',
+       bank_page: 'Bank Account Page', signature: 'Customer Signature',
+       chop_sign: 'Employer Chop & Sign', bill_rumah: 'Utility Bill', settlement_letter: 'Settlement Letter'
      };
      Object.entries(_fileMap2).forEach(([key, label]) => {
        const settingKey = 'req_' + key;

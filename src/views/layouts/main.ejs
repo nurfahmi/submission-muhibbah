@@ -117,7 +117,7 @@
     function showToast(name) {
       const toast = document.getElementById('notifToast');
       const msg = document.getElementById('notifMsg');
-      msg.textContent = 'Permohonan baru dari ' + name;
+      msg.textContent = 'New application from ' + name;
       toast.classList.remove('hidden');
       setTimeout(() => toast.classList.add('hidden'), 8000);
     }

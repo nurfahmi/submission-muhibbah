@@ -312,7 +312,7 @@ function fallbackCopy(text, cb) {
         if (data.type === 'NEW_CASE') {
           addCaseRow(data);
           updateBadge(1);
-          addActivityItem('🆕', data.applicantName, 'Permohonan baru', data.caseId);
+          addActivityItem('🆕', data.applicantName, 'New application', data.caseId);
         } else if (data.type === 'CASE_TAKEN') {
           removeCaseRow(data.caseId);
           updateBadge(-1);
