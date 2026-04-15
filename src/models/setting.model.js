@@ -2,7 +2,7 @@ const prisma = require('../config/db');
 const path = require('path');
 
 const DEFAULTS = {
-  site_name: 'Credit Submission System',
+  site_name: 'Muhibbah Submission',
   site_short: 'CSS',
   logo_url: '',
   favicon_url: '',
