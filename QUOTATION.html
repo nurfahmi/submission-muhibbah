@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sebut Harga — Muhibbah Submission System</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --primary: #1a365d;
+      --primary-light: #2b6cb0;
+      --accent: #e53e3e;
+      --accent-soft: #fc8181;
+      --bg: #ffffff;
+      --text: #1a202c;
+      --text-light: #4a5568;
+      --border: #e2e8f0;
+      --card-bg: #f7fafc;
+      --highlight: #ebf8ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background: #f0f4f8;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    .download-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .download-bar span { font-weight: 600; font-size: 14px; }
+    .download-bar button {
+      background: #fff;
+      color: var(--primary);
+      border: none;
+      padding: 10px 28px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .download-bar button:hover { background: #edf2f7; transform: translateY(-1px); }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 70px auto 20px;
+      background: #fff;
+      padding: 20mm 18mm;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    /* ---- COVER PAGE ---- */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 257mm;
+      padding: 30mm 20mm;
+    }
+    .cover-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      padding: 6px 22px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .cover h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .cover h2 {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text-light);
+      margin-bottom: 48px;
+    }
+    .cover-line {
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 48px;
+    }
+    .cover-meta {
+      width: 100%;
+      max-width: 400px;
+    }
+    .cover-meta table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .cover-meta td {
+      padding: 10px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cover-meta td:first-child {
+      font-weight: 600;
+      color: var(--primary);
+      width: 45%;
+      text-align: left;
+    }
+    .cover-meta td:last-child {
+      color: var(--text-light);
+      text-align: left;
+    }
+
+    /* ---- SECTION HEADERS ---- */
+    .section-num {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      width: 28px; height: 28px;
+      text-align: center;
+      line-height: 28px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    h2.section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+    }
+
+    /* ---- MODULE CARDS ---- */
+    .module {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      page-break-inside: avoid;
+    }
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .module-header h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .module-header h3 .icon { font-size: 18px; }
+    .module-price {
+      background: var(--primary);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    .module ul {
+      list-style: none;
+      padding: 0;
+    }
+    .module li {
+      padding: 3px 0 3px 18px;
+      position: relative;
+      font-size: 12.5px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+    .module li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #38a169;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    /* ---- PRICING TABLE ---- */
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .price-table thead th {
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .price-table thead th:last-child { text-align: right; }
+    .price-table tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-table tbody td:last-child { text-align: right; font-weight: 500; }
+    .price-table tbody tr:nth-child(even) { background: var(--card-bg); }
+    .price-table tfoot td {
+      padding: 12px 14px;
+      font-weight: 800;
+      font-size: 15px;
+      background: var(--highlight);
+      border-top: 2px solid var(--primary);
+    }
+    .price-table tfoot td:last-child { text-align: right; color: var(--primary); }
+
+    /* ---- TECH TABLE ---- */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .tech-table td {
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tech-table td:first-child {
+      font-weight: 600;
+      color: var(--primary);
+      width: 40%;
+    }
+
+    /* ---- ADD-ON TABLE ---- */
+    .addon-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    .addon-table th {
+      background: var(--card-bg);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+    .addon-table th:last-child { text-align: right; }
+    .addon-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .addon-table td:last-child { text-align: right; font-weight: 500; }
+
+    /* ---- TERMS ---- */
+    .terms ol {
+      padding-left: 20px;
+    }
+    .terms li {
+      margin-bottom: 8px;
+      font-size: 12.5px;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+    .terms li strong { color: var(--text); }
+
+    /* ---- SIGNATURE ---- */
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 20px;
+    }
+    .sig-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .sig-box h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sig-field {
+      margin-bottom: 18px;
+    }
+    .sig-field label {
+      display: block;
+      font-size: 11px;
+      color: var(--text-light);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .sig-field .line {
+      border-bottom: 1px solid #cbd5e0;
+      height: 28px;
+    }
+
+    /* ---- FOOTER ---- */
+    .page-footer {
+      position: absolute;
+      bottom: 15mm;
+      left: 18mm;
+      right: 18mm;
+      text-align: center;
+      font-size: 10px;
+      color: #a0aec0;
+      border-top: 1px solid var(--border);
+      padding-top: 8px;
+    }
+
+    .summary-text {
+      font-size: 13px;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .note-box {
+      background: #fffaf0;
+      border-left: 4px solid #ed8936;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #744210;
+      border-radius: 0 6px 6px 0;
+      margin-top: 12px;
+    }
+
+    /* ---- PRINT STYLES ---- */
+    @media print {
+      body { background: #fff; }
+      .download-bar { display: none !important; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: 100%;
+        padding: 15mm 18mm;
+      }
+      .page-break { page-break-before: always; }
+      .module { break-inside: avoid; }
+      @page {
+        size: A4;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Download Bar -->
+<div class="download-bar">
+  <span>📄 Sebut Harga — Muhibbah Submission System</span>
+  <button onclick="window.print()">⬇ Download PDF</button>
+</div>
+
+<!-- ==================== PAGE 1: COVER ==================== -->
+<div class="page">
+  <div class="cover">
+    <div class="cover-badge">Sebut Harga / Quotation</div>
+    <h1>Sistem Pengurusan<br>Permohonan</h1>
+    <h2>Muhibbah Submission System</h2>
+    <div class="cover-line"></div>
+    <div class="cover-meta">
+      <table>
+        <tr><td>No. Sebut Harga</td><td>Q-2026-MSS-001</td></tr>
+        <tr><td>Disediakan oleh</td><td style="color: var(--accent); font-weight:600;">[Nama Syarikat]</td></tr>
+        <tr><td>Disediakan untuk</td><td style="color: var(--accent); font-weight:600;">[Nama Klien]</td></tr>
+        <tr><td>Tarikh</td><td>April 2026</td></tr>
+        <tr><td>Sah Sehingga</td><td>30 hari dari tarikh di atas</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 1</div>
+</div>
+
+<!-- ==================== PAGE 2: RINGKASAN + MODUL 1-3 ==================== -->
+<div class="page page-break">
+
+  <h2 class="section-title"><span class="section-num">1</span> Ringkasan Projek</h2>
+  <p class="summary-text">
+    <strong>Muhibbah Submission System</strong> ialah platform pengurusan permohonan pinjaman berbasis web yang direka untuk syarikat pembiayaan, koperasi, atau agensi produk kewangan. Sistem ini membolehkan penerimaan permohonan pelanggan secara digital, pengurusan dokumen, penjanaan borang PDF automatik, dan pemantauan status kes secara masa nyata melalui satu dashboard berpusat.
+  </p>
+
+  <h2 class="section-title" style="margin-top: 28px;"><span class="section-num">2</span> Skop Kerja & Modul Sistem</h2>
+
+  <!-- Module 1 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">👥</span> Modul 1 — Pengurusan Pengguna & Hierarki Agen</h3>
+      <span class="module-price">RM 1,500</span>
+    </div>
+    <ul>
+      <li>Sistem log masuk selamat dengan pengurusan sesi (MySQL session store)</li>
+      <li>4 peringkat peranan: Superadmin → Admin → Master Agent → Sub Agent</li>
+      <li>Kod rujukan (referral code) unik untuk setiap agen bagi penjejakkan sumber permohonan</li>
+      <li>Fungsi Impersonation — Superadmin boleh masuk sebagai mana‑mana pengguna</li>
+      <li>Log aktiviti penuh (audit trail) bagi setiap tindakan pengguna</li>
+      <li>Halaman one-time setup untuk penciptaan akaun Superadmin pertama</li>
+      <li>Kawalan peranan penuh untuk penciptaan, pengemaskinian, dan pemadaman pengguna</li>
+    </ul>
+  </div>
+
+  <!-- Module 2 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">📝</span> Modul 2 — Borang Permohonan Awam & Peribadi</h3>
+      <span class="module-price">RM 2,500</span>
+    </div>
+    <ul>
+      <li>Borang awam boleh diakses tanpa log masuk melalui pautan rujukan agen</li>
+      <li>Borang peribadi — agen log masuk dan hantar permohonan terus dari dashboard</li>
+      <li>Pengumpulan data 4 bahagian: Pemohon, Pasangan, Pekerjaan, Saudara Terdekat</li>
+      <li>Sokongan berbilang produk pinjaman — pilih semasa penghantaran</li>
+      <li>Pentadbir boleh tugaskan permohonan kepada agen tertentu</li>
+      <li>Validasi sisi pelayan bagi semua medan wajib</li>
+      <li>Fungsi Draft — simpan permohonan separuh siap, teruskan kemudian</li>
+      <li>Normalisasi nombor IC automatik</li>
+    </ul>
+  </div>
+
+  <!-- Module 3 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">📁</span> Modul 3 — Pengurusan Dokumen & Muat Naik Fail</h3>
+      <span class="module-price">RM 2,000</span>
+    </div>
+    <ul>
+      <li>Muat naik: IC depan/belakang, payslip (×3), penyata bank, tandatangan, cop, bil rumah, surat penyelesaian</li>
+      <li>Semakan kualiti imej masa nyata: blur, overexposed, glare, gelap, kontras rendah</li>
+      <li>Fail tersusun dalam folder YYYY-MM/IC/ secara automatik</li>
+      <li>Lihat inline dalam pelayar atau muat turun; muat turun ZIP semua fail dalam satu klik</li>
+      <li>Admin boleh muat naik fail tambahan (admin case files) dengan label</li>
+      <li>Konfigurasi dokumen wajib dari panel tetapan</li>
+    </ul>
+  </div>
+
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 2</div>
+</div>
+
+<!-- ==================== PAGE 3: MODUL 4-6 ==================== -->
+<div class="page page-break">
+
+  <!-- Module 4 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">⚙️</span> Modul 4 — Pengurusan Kes & Aliran Kerja</h3>
+      <span class="module-price">RM 2,500</span>
+    </div>
+    <ul>
+      <li>Senarai kes tertangguh (pending, belum diambil) untuk pentadbir</li>
+      <li>Fungsi Ambil Kes — pentadbir menuntut kes (atomic, elak pertindihan)</li>
+      <li>Senarai Kes Diambil dengan penapisan: carian teks, tarikh, pentadbir + penomboran halaman</li>
+      <li>Kemas kini status kes: Draft → Pending → Reviewed → Approved → Rejected</li>
+      <li>Kemas kini produk pinjaman selepas kes diambil</li>
+      <li>Fungsi Lepas Kes dengan sebab pelepasan dicatat</li>
+      <li>Ruang nota agen untuk komunikasi dalaman</li>
+      <li>Log aktiviti penuh bagi setiap perubahan kes</li>
+    </ul>
+  </div>
+
+  <!-- Module 5 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">📄</span> Modul 5 — Penjanaan PDF Automatik</h3>
+      <span class="module-price">RM 3,000</span>
+    </div>
+    <ul>
+      <li>Upload templat PDF rasmi produk pinjaman ke sistem</li>
+      <li>Pemetaan medan visual — pentadbir petakan medan PDF kepada data pemohon tanpa kod</li>
+      <li>Penjanaan PDF automatik dengan data pemohon</li>
+      <li>Sokongan medan: teks bebas, kotak bernombor (comb), checkbox, radio button, dropdown</li>
+      <li>Pengisian teks pintar: teks panjang dibahagi merentasi berbilang baris secara automatik</li>
+      <li>Pengiraan automatik dari IC: tarikh lahir, umur, jantina, warganegara</li>
+      <li>Sokongan produk hierarki (induk + sub-produk) dengan pengaturan semula susunan</li>
+      <li>Kawalan ON/OFF produk per-Master Agent</li>
+    </ul>
+  </div>
+
+  <!-- Module 6 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">🔍</span> Modul 6 — Pra‑Permohonan & OCR Dokumen</h3>
+      <span class="module-price">RM 1,500</span>
+    </div>
+    <ul>
+      <li>Modul pra‑permohonan untuk rekod awal pelanggan (nama & IC) sebelum dokumen lengkap</li>
+      <li>OCR automatik — imbas IC atau payslip dan ekstrak nama, nombor IC</li>
+      <li>Jana PDF produk terus dari rekod pra-permohonan (nama + IC sahaja)</li>
+      <li>Senarai pra-permohonan mengikut agen atau global (admin)</li>
+      <li>Edit, padam, kemaskini produk dalam rekod pra‑permohonan</li>
+    </ul>
+  </div>
+
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 3</div>
+</div>
+
+<!-- ==================== PAGE 4: MODUL 7-10 + TECH ==================== -->
+<div class="page page-break">
+
+  <!-- Module 7 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">📊</span> Modul 7 — Dashboard & Statistik</h3>
+      <span class="module-price">RM 1,000</span>
+    </div>
+    <ul>
+      <li>Statistik ringkas: jumlah kes hari ini, minggu ini, bulan ini, keseluruhan</li>
+      <li>Jadual prestasi agen (Master Agent → bilangan kes)</li>
+      <li>Senarai 10 kes terbaru dan kes baru-baru ini dikemaskini</li>
+      <li>Paparan kod rujukan dan pautan permohonan terus dari dashboard</li>
+    </ul>
+  </div>
+
+  <!-- Module 8 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">🔔</span> Modul 8 — Notifikasi Masa Nyata (WebSocket)</h3>
+      <span class="module-price">RM 1,000</span>
+    </div>
+    <ul>
+      <li>Notifikasi langsung tanpa refresh: permohonan baru, kes diambil, kes dikemaskini</li>
+      <li>Heartbeat automatik untuk kekalkan sambungan yang sihat</li>
+      <li>Halaman notifikasi penuh untuk semakan semua makluman</li>
+    </ul>
+  </div>
+
+  <!-- Module 9 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">🛠️</span> Modul 9 — Tetapan & Pengurusan Sistem</h3>
+      <span class="module-price">RM 1,000</span>
+    </div>
+    <ul>
+      <li>Panel tetapan Superadmin: nama sistem, singkatan, logo, favicon, warna tema</li>
+      <li>Tetapan ambang kualiti imej (blur/brightness) dan mod sekat muat naik</li>
+      <li>Direktori simpanan fail boleh ditetapkan ke folder luaran</li>
+      <li>Paksa huruf besar untuk kemasukan teks</li>
+      <li>Tetapkan dokumen wajib mengikut keperluan projek</li>
+    </ul>
+  </div>
+
+  <!-- Module 10 -->
+  <div class="module">
+    <div class="module-header">
+      <h3><span class="icon">🔒</span> Modul 10 — Keselamatan & Perlindungan Data</h3>
+      <span class="module-price">RM 500</span>
+    </div>
+    <ul>
+      <li>Enkripsi AES-256-CBC bagi semua data peribadi pemohon dalam pangkalan data</li>
+      <li>Sesi disimpan dalam MySQL (kekal melepasi restart server)</li>
+      <li>Reverse proxy ready (Cloudflare Tunnel / Nginx)</li>
+      <li>Menyekat pengindeksan enjin carian (X-Robots-Tag: noindex)</li>
+      <li>Pengesahan input di sisi pelayan untuk semua borang</li>
+    </ul>
+  </div>
+
+  <!-- Tech Stack -->
+  <h2 class="section-title" style="margin-top: 28px;"><span class="section-num">3</span> Spesifikasi Teknikal</h2>
+  <table class="tech-table">
+    <tr><td>Backend</td><td>Node.js + Express.js</td></tr>
+    <tr><td>Templating</td><td>EJS (Embedded JavaScript)</td></tr>
+    <tr><td>Pangkalan Data</td><td>MySQL + Prisma ORM</td></tr>
+    <tr><td>Pengesahan</td><td>bcryptjs (hash kata laluan)</td></tr>
+    <tr><td>Enkripsi Data</td><td>AES-256-CBC (Node.js crypto)</td></tr>
+    <tr><td>Notifikasi</td><td>WebSocket (ws library)</td></tr>
+    <tr><td>Pemprosesan Imej</td><td>Sharp + Tesseract.js OCR</td></tr>
+    <tr><td>Penjanaan PDF</td><td>pdf-lib</td></tr>
+  </table>
+
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 4</div>
+</div>
+
+<!-- ==================== PAGE 5: PRICING + ADD-ONS + TERMS + SIGNATURE ==================== -->
+<div class="page page-break">
+
+  <h2 class="section-title"><span class="section-num">4</span> Senarai Harga</h2>
+
+  <table class="price-table">
+    <thead>
+      <tr><th style="width:40px">#</th><th>Modul</th><th>Harga (RM)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Pengurusan Pengguna & Hierarki Agen</td><td>1,500.00</td></tr>
+      <tr><td>2</td><td>Borang Permohonan Awam & Peribadi</td><td>2,500.00</td></tr>
+      <tr><td>3</td><td>Pengurusan Dokumen & Muat Naik Fail</td><td>2,000.00</td></tr>
+      <tr><td>4</td><td>Pengurusan Kes & Aliran Kerja</td><td>2,500.00</td></tr>
+      <tr><td>5</td><td>Penjanaan PDF Automatik</td><td>3,000.00</td></tr>
+      <tr><td>6</td><td>Pra‑Permohonan & OCR Dokumen</td><td>1,500.00</td></tr>
+      <tr><td>7</td><td>Dashboard & Statistik</td><td>1,000.00</td></tr>
+      <tr><td>8</td><td>Notifikasi Masa Nyata (WebSocket)</td><td>1,000.00</td></tr>
+      <tr><td>9</td><td>Tetapan & Pengurusan Sistem</td><td>1,000.00</td></tr>
+      <tr><td>10</td><td>Keselamatan & Perlindungan Data</td><td>500.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="2">JUMLAH KESELURUHAN</td><td>17,000.00</td></tr>
+    </tfoot>
+  </table>
+
+  <div class="note-box" style="margin-top: 14px;">
+    Harga di atas <strong>tidak termasuk</strong> GST/SST (jika berkenaan).
+  </div>
+
+  <!-- Add-ons -->
+  <h2 class="section-title" style="margin-top: 28px;"><span class="section-num">5</span> Perkhidmatan Pilihan (Add‑On)</h2>
+  <table class="addon-table">
+    <thead>
+      <tr><th>Perkhidmatan</th><th>Harga (RM)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Persediaan & Deployment ke server klien</td><td>500.00</td></tr>
+      <tr><td>Konfigurasi Cloudflare Tunnel / domain</td><td>300.00</td></tr>
+      <tr><td>Latihan pengguna (1 sesi, 2 jam)</td><td>500.00</td></tr>
+      <tr><td>Sokongan teknikal pasca-hantar (3 bulan)</td><td>1,200.00</td></tr>
+      <tr><td>Integrasi webhook ke sistem luar (per endpoint)</td><td>800.00</td></tr>
+      <tr><td>Penyesuaian templat PDF / produk baru</td><td>300.00 / produk</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 5</div>
+</div>
+
+<!-- ==================== PAGE 6: TERMS + SIGNATURE ==================== -->
+<div class="page page-break">
+
+  <h2 class="section-title"><span class="section-num">6</span> Terma & Syarat</h2>
+  <div class="terms">
+    <ol>
+      <li><strong>Bayaran Deposit</strong> — 50% daripada jumlah keseluruhan diperlukan sebelum kerja dimulakan.</li>
+      <li><strong>Bayaran Akhir</strong> — Baki 50% dibayar selepas demo sistem diserahkan dan diterima klien.</li>
+      <li><strong>Tempoh Pembangunan</strong> — Anggaran 4–6 minggu dari tarikh deposit diterima.</li>
+      <li><strong>Pemilikan Kod</strong> — Selepas pembayaran penuh diterima, hak milik kod sumber diserahkan kepada klien.</li>
+      <li><strong>Waranti</strong> — Waranti pembaikan bug selama 30 hari selepas penyerahan sistem.</li>
+      <li><strong>Hak Cipta Data</strong> — Semua data yang dimasukkan ke sistem adalah milik klien sepenuhnya.</li>
+      <li><strong>Perubahan Skop</strong> — Sebarang perubahan skop selepas pembangunan bermula tertakluk kepada amaun tambahan yang dipersetujui bersama.</li>
+    </ol>
+  </div>
+
+  <!-- Signature -->
+  <h2 class="section-title" style="margin-top: 36px;"><span class="section-num">7</span> Tandatangan Persetujuan</h2>
+
+  <div class="sig-grid">
+    <div class="sig-box">
+      <h4>Pembangun</h4>
+      <div class="sig-field">
+        <label>Nama</label>
+        <div class="line"></div>
+      </div>
+      <div class="sig-field">
+        <label>Jawatan</label>
+        <div class="line"></div>
+      </div>
+      <div class="sig-field">
+        <label>Tandatangan</label>
+        <div class="line" style="height: 50px;"></div>
+      </div>
+      <div class="sig-field">
+        <label>Tarikh</label>
+        <div class="line"></div>
+      </div>
+    </div>
+    <div class="sig-box">
+      <h4>Klien</h4>
+      <div class="sig-field">
+        <label>Nama</label>
+        <div class="line"></div>
+      </div>
+      <div class="sig-field">
+        <label>Jawatan</label>
+        <div class="line"></div>
+      </div>
+      <div class="sig-field">
+        <label>Tandatangan</label>
+        <div class="line" style="height: 50px;"></div>
+      </div>
+      <div class="sig-field">
+        <label>Tarikh</label>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <p style="text-align: center; margin-top: 40px; font-size: 12px; color: #a0aec0; font-style: italic;">
+    Sebut harga ini disediakan berdasarkan keperluan teknikal yang telah dianalisis.<br>
+    Segala pertanyaan lanjut boleh dikemukakan terus kepada wakil kami.
+  </p>
+
+  <div class="page-footer">Sebut Harga Q-2026-MSS-001 &nbsp;|&nbsp; Halaman 6</div>
+</div>
+
+</body>
+</html>

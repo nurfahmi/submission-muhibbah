@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Detail — Muhibbah Submission System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --blue: #3b82f6;
+      --blue-dark: #2563eb;
+      --blue-soft: #dbeafe;
+      --cyan: #06b6d4;
+      --emerald: #10b981;
+      --emerald-soft: #d1fae5;
+      --amber: #f59e0b;
+      --amber-soft: #fef3c7;
+      --rose: #f43f5e;
+      --rose-soft: #ffe4e6;
+      --violet: #8b5cf6;
+      --violet-soft: #ede9fe;
+      --slate: #64748b;
+      --slate-light: #94a3b8;
+      --border: #e2e8f0;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== DOWNLOAD BAR ===== */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      padding: 10px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .topbar-logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; color: #fff; font-size: 16px;
+    }
+    .topbar-title { color: #fff; font-weight: 700; font-size: 15px; }
+    .topbar-sub { color: var(--slate-light); font-size: 12px; font-weight: 400; }
+    .btn-download {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--cyan) 100%);
+      color: #fff; border: none; padding: 10px 28px; border-radius: 8px;
+      font-weight: 700; font-size: 13px; cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center; gap: 8px;
+    }
+    .btn-download:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,0.4); }
+
+    /* ===== HERO ===== */
+    .hero {
+      margin-top: 56px;
+      background: linear-gradient(135deg, var(--navy) 0%, #1a2744 50%, var(--navy-light) 100%);
+      color: #fff; padding: 80px 32px 60px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 70%, rgba(59,130,246,0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 70% 30%, rgba(6,182,212,0.06) 0%, transparent 60%);
+    }
+    .hero-content { position: relative; max-width: 800px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block; padding: 6px 18px; border-radius: 20px; font-size: 11px;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      background: rgba(59,130,246,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3);
+      margin-bottom: 24px;
+    }
+    .hero h1 { font-size: 42px; font-weight: 900; line-height: 1.15; margin-bottom: 16px; }
+    .hero h1 span { background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 17px; color: var(--slate-light); max-width: 600px; margin: 0 auto 32px; line-height: 1.7; }
+
+    .hero-stats {
+      display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { font-size: 36px; font-weight: 900; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-stat .label { font-size: 12px; color: var(--slate-light); font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ===== CONTAINER ===== */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ===== SECTION ===== */
+    .section { padding: 60px 0; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-header .tag {
+      display: inline-block; padding: 4px 14px; border-radius: 6px; font-size: 11px;
+      font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .section-header h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+    .section-header p { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+    /* ===== MODULE CARD ===== */
+    .module-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+      margin-bottom: 32px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: box-shadow 0.3s;
+    }
+    .module-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+
+    .module-head {
+      padding: 24px 28px; display: flex; align-items: center; gap: 16px;
+      border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+    }
+    .module-icon {
+      width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .module-head-text { flex: 1; }
+    .module-head-text h3 { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+    .module-head-text p { font-size: 13px; color: var(--text-muted); }
+    .module-toggle {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 14px;
+      color: var(--slate); transition: all 0.3s; background: var(--bg); flex-shrink: 0;
+    }
+    .module-card.open .module-toggle { transform: rotate(180deg); background: var(--blue-soft); color: var(--blue); }
+
+    .module-body { padding: 0 28px 28px; display: none; }
+    .module-card.open .module-body { display: block; }
+
+    /* ===== FEATURE GRID ===== */
+    .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .feat-item {
+      padding: 16px; border-radius: 10px; background: var(--bg); border: 1px solid var(--border);
+    }
+    .feat-item h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .feat-item p { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+    .feat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ===== FLOW DIAGRAM ===== */
+    .flow {
+      display: flex; align-items: center; gap: 0; margin: 20px 0; flex-wrap: wrap;
+      justify-content: center;
+    }
+    .flow-step {
+      padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700;
+      text-align: center; color: #fff; min-width: 100px;
+    }
+    .flow-arrow { font-size: 18px; color: var(--slate-light); padding: 0 6px; }
+
+    /* ===== DATA TABLE ===== */
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+    .data-table th {
+      text-align: left; padding: 10px 14px; font-weight: 700; font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.5px; color: var(--slate);
+      border-bottom: 2px solid var(--border); background: var(--bg);
+    }
+    .data-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+    .data-table tr:hover td { background: var(--bg); }
+
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 700;
+    }
+    .badge-blue { background: var(--blue-soft); color: var(--blue-dark); }
+    .badge-green { background: var(--emerald-soft); color: #059669; }
+    .badge-amber { background: var(--amber-soft); color: #b45309; }
+    .badge-rose { background: var(--rose-soft); color: #e11d48; }
+    .badge-violet { background: var(--violet-soft); color: var(--violet); }
+
+    /* ===== TECH STACK ===== */
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .tech-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; display: flex; align-items: flex-start; gap: 14px;
+      transition: box-shadow 0.3s;
+    }
+    .tech-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .tech-icon {
+      width: 40px; height: 40px; border-radius: 10px; display: flex;
+      align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .tech-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .tech-card p { font-size: 12px; color: var(--text-muted); }
+
+    /* ===== ARCHITECTURE ===== */
+    .arch-box {
+      background: var(--navy); color: #fff; border-radius: 16px; padding: 32px;
+      margin: 24px 0; font-family: 'SF Mono', 'Fira Code', monospace;
+    }
+    .arch-layer {
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px;
+      margin-bottom: 12px; background: rgba(255,255,255,0.03);
+    }
+    .arch-layer-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--cyan); margin-bottom: 10px;
+    }
+    .arch-items { display: flex; gap: 8px; flex-wrap: wrap; }
+    .arch-item {
+      padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ===== SECURITY ===== */
+    .sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sec-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px; display: flex; gap: 14px;
+    }
+    .sec-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .sec-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .sec-card p { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--navy); color: var(--slate-light); padding: 40px 32px;
+      text-align: center; font-size: 13px;
+    }
+    .footer strong { color: #fff; }
+
+    /* ===== PRINT ===== */
+    @media print {
+      .topbar { display: none !important; }
+      body { background: #fff; }
+      .hero { margin-top: 0; padding: 40px 32px 30px; }
+      .module-body { display: block !important; }
+      .module-toggle { display: none; }
+      .module-card { break-inside: avoid; box-shadow: none; }
+      .section { padding: 30px 0; }
+      @page { size: A4; margin: 10mm; }
+    }
+
+    @media (max-width: 768px) {
+      .feat-grid, .sec-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 28px; }
+      .hero-stats { gap: 24px; }
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">M</div>
+    <div>
+      <div class="topbar-title">Muhibbah Submission System</div>
+      <div class="topbar-sub">Comprehensive Feature Documentation</div>
+    </div>
+  </div>
+  <button class="btn-download" onclick="window.print()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download PDF
+  </button>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">📋 Platform Feature Documentation</div>
+    <h1>Muhibbah <span>Submission</span> System</h1>
+    <p>A comprehensive digital loan application management platform — from application intake, document management, automated PDF generation, to real-time case monitoring.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">10</div><div class="label">Core Modules</div></div>
+      <div class="hero-stat"><div class="num">85+</div><div class="label">Features</div></div>
+      <div class="hero-stat"><div class="num">4</div><div class="label">Role Tiers</div></div>
+      <!-- Roles: Superadmin, Admin, Manager, User -->
+      <div class="hero-stat"><div class="num">7</div><div class="label">DB Tables</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ARCHITECTURE OVERVIEW ===== -->
+<section class="section" style="background: #fff; border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag" style="background: var(--navy); color: var(--cyan);">Architecture</div>
+      <h2>System Architecture</h2>
+      <p>Full overview of the system architecture from client layer to database</p>
+    </div>
+
+    <div class="arch-box">
+      <div class="arch-layer">
+        <div class="arch-layer-title">🌐 Client Layer</div>
+        <div class="arch-items">
+          <span class="arch-item" style="background: rgba(59,130,246,0.2); color: #93c5fd;">EJS Templates</span>
+          <span class="arch-item" style="background: rgba(59,130,246,0.2); color: #93c5fd;">WebSocket Client</span>
+          <span class="arch-item" style="background: rgba(59,130,246,0.2); color: #93c5fd;">Public Submit Form</span>
+          <span class="arch-item" style="background: rgba(59,130,246,0.2); color: #93c5fd;">Dashboard UI</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">⚡ Application Layer</div>
+        <div class="arch-items">
+          <span class="arch-item" style="background: rgba(16,185,129,0.2); color: #6ee7b7;">Express.js Router</span>
+          <span class="arch-item" style="background: rgba(16,185,129,0.2); color: #6ee7b7;">Auth Middleware</span>
+          <span class="arch-item" style="background: rgba(16,185,129,0.2); color: #6ee7b7;">Role Middleware</span>
+          <span class="arch-item" style="background: rgba(16,185,129,0.2); color: #6ee7b7;">Upload Middleware</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">🧠 Service Layer</div>
+        <div class="arch-items">
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">PDF Service</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">OCR Service</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">AI Vision Service</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">Image Quality</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">Encryption</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">WebSocket</span>
+          <span class="arch-item" style="background: rgba(245,158,11,0.2); color: #fcd34d;">Referral</span>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-layer-title">💾 Data Layer</div>
+        <div class="arch-items">
+          <span class="arch-item" style="background: rgba(139,92,246,0.2); color: #c4b5fd;">Prisma ORM</span>
+          <span class="arch-item" style="background: rgba(139,92,246,0.2); color: #c4b5fd;">MySQL Database</span>
+          <span class="arch-item" style="background: rgba(139,92,246,0.2); color: #c4b5fd;">Session Store</span>
+          <span class="arch-item" style="background: rgba(139,92,246,0.2); color: #c4b5fd;">File Storage</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MODULES ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag" style="background: var(--blue-soft); color: var(--blue-dark);">System Modules</div>
+      <h2>Complete Feature Breakdown</h2>
+      <p>Each module detailed with technical specifications and workflow descriptions</p>
+    </div>
+
+    <!-- ====== MODULE 1: USER MANAGEMENT ====== -->
+    <div class="module-card open" id="mod1">
+      <div class="module-head" onclick="toggleModule('mod1')">
+        <div class="module-icon" style="background: var(--blue-soft); color: var(--blue-dark);">👥</div>
+        <div class="module-head-text">
+          <h3>Module 1 — User Management & Agent Hierarchy</h3>
+          <p>4-tier hierarchical role system: Superadmin, Admin, Manager, User</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <div class="feat-grid">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> 4-Tier Role Hierarchy</h4>
+            <p><strong>Superadmin → Admin → Manager → User.</strong> Each tier manages users below it. Superadmin has full system control; Users can only submit applications.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Unique Referral Codes</h4>
+            <p>Every agent is assigned an auto-generated unique referral code. Used to track application sources through public links <code>/submit?ref=CODE</code>. Agents include Managers and Users.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--violet);"></span> User Impersonation</h4>
+            <p>Superadmin can "log in as" any user for testing and support. The original session is preserved and can be restored at any time with one click.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--amber);"></span> Full Audit Trail</h4>
+            <p>Every action (create user, take case, download file, generate PDF) is fully logged with timestamp, user ID, target ID, and action description.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--rose);"></span> One-Time Setup Flow</h4>
+            <p>A special setup page appears automatically on first launch when no accounts exist. After the first Superadmin is created, this page is permanently disabled.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--cyan);"></span> Secure Authentication</h4>
+            <p>Passwords hashed with <strong>bcryptjs</strong> (10 rounds). Sessions stored in MySQL Store — persist across server restarts. 24-hour session cookie duration.</p>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 24px; font-size: 14px; font-weight: 700;">Role Permissions Matrix</h4>
+        <table class="data-table">
+          <thead>
+            <tr><th>Role</th><th>Can Create</th><th>View Cases</th><th>Take Cases</th><th>Settings</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-rose">Superadmin</span></td>
+              <td>All roles</td><td>All pending cases</td><td>✅</td><td>✅ Full access</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-violet">Admin</span></td>
+              <td>Admin, Master, Sub</td><td>All pending cases</td><td>✅</td><td>❌</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Manager</span></td>
+              <td>User only</td><td>Own + User cases</td><td>❌</td><td>❌</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-green">User</span></td>
+              <td>None</td><td>Own cases only</td><td>❌</td><td>❌</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 2: SUBMISSION FORM ====== -->
+    <div class="module-card" id="mod2">
+      <div class="module-head" onclick="toggleModule('mod2')">
+        <div class="module-icon" style="background: var(--emerald-soft); color: #059669;">📝</div>
+        <div class="module-head-text">
+          <h3>Module 2 — Digital Application Form</h3>
+          <p>Public &amp; private submission with 30+ data fields across 4 sections</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <h4 style="margin-top: 12px; font-size: 14px; font-weight: 700;">Two Submission Modes</h4>
+        <div class="feat-grid" style="margin-top: 12px;">
+          <div class="feat-item" style="border-left: 3px solid var(--emerald);">
+            <h4>🌐 Public Form</h4>
+            <p>Accessed via <code>/submit?ref=AGENT_CODE</code> — no login required. Customers fill the form directly and upload documents. The agent is credited automatically through the referral code.</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--blue);">
+            <h4>🔒 Private Form</h4>
+            <p>Accessed by logged-in agents through the dashboard. Admins can select which agent (Manager or User) to credit via a dropdown. Superadmin/Admin can also submit directly on behalf of agents.</p>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 24px; font-size: 14px; font-weight: 700;">Applicant Data Sections</h4>
+        <table class="data-table">
+          <thead><tr><th>Section</th><th>Data Fields</th><th>Count</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-blue">Applicant</span></td>
+              <td>Name, IC, Phone, Email, Address, Marital Status, Dependents, Race/Religion, Education, Residence Type, Duration of Stay, Mother's Info (Name, IC, Phone, Address)</td>
+              <td>16 fields</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-violet">Spouse</span></td>
+              <td>Name, IC, Position, Employer Address, Office Phone, Mobile, Salary, Relationship</td>
+              <td>8 fields</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-amber">Employment</span></td>
+              <td>Employer Name, Employer Address, Position, Start Date, Office Phone, Pension Option, Employment Status, Payslip Link, Payslip Password, HRMIS Password</td>
+              <td>10 fields</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-green">Next of Kin</span></td>
+              <td>Reference Name, IC, Address, Phone, Relationship</td>
+              <td>5 fields</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="feat-grid" style="margin-top: 20px;">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--amber);"></span> Draft System</h4>
+            <p>Forms can be saved as drafts and resumed later. Drafts can be edited, deleted, or converted to full submissions. Validation is skipped for draft saves.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--cyan);"></span> Multi-Product Support</h4>
+            <p>Loan product list is loaded from a registry — agents select a product during submission. Product lists can vary per Manager (per-agent control).</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> IC Auto-Normalization</h4>
+            <p>IC numbers are automatically stripped of dashes and spaces — ensuring a consistent 12-digit format for date of birth, gender, and age calculations.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--rose);"></span> Comprehensive Validation</h4>
+            <p>Server-side validation for all 31 required fields. Error messages in Malay with a list of missing fields. Invalid submissions are blocked entirely.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 3: DOCUMENT MANAGEMENT ====== -->
+    <div class="module-card" id="mod3">
+      <div class="module-head" onclick="toggleModule('mod3')">
+        <div class="module-icon" style="background: var(--amber-soft); color: #b45309;">📁</div>
+        <div class="module-head-text">
+          <h3>Module 3 — Document Management & Image Quality Engine</h3>
+          <p>11 document types with multi-layer image quality analysis</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <h4 style="margin-top: 12px; font-size: 14px; font-weight: 700;">Supported Document Types</h4>
+        <table class="data-table">
+          <thead><tr><th>Document</th><th>Max Files</th><th>Required</th><th>Configurable</th></tr></thead>
+          <tbody>
+            <tr><td>IC Front</td><td>1 file</td><td><span class="badge badge-rose">Required</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>IC Back</td><td>1 file</td><td><span class="badge badge-rose">Required</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Payslips (Month 1, 2, 3)</td><td>1 file each</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Bank Statement</td><td>1 file</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Customer Signature</td><td>1 file</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Employer Stamp & Signature</td><td>5 files</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>House Bill</td><td>1 file</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Settlement Letter</td><td>1 file</td><td><span class="badge badge-green">Optional</span></td><td>Toggleable from settings</td></tr>
+            <tr><td>Other Documents</td><td>10 files</td><td><span class="badge badge-green">Optional</span></td><td>—</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="margin-top: 24px; font-size: 14px; font-weight: 700;">🔬 Multi-Layer Image Quality Engine</h4>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Every uploaded image goes through a two-layer analysis before acceptance:</p>
+
+        <div class="feat-grid">
+          <div class="feat-item" style="border-left: 3px solid var(--rose);">
+            <h4>Layer 1 — Pixel Analysis (Sharp)</h4>
+            <p><strong>Laplacian Variance:</strong> Computes edge variance to detect blur.<br>
+            <strong>Sobel Edge Density:</strong> Edge density as secondary confirmation.<br>
+            <strong>Pixel Statistics:</strong> Mean brightness, standard deviation for contrast.<br>
+            <strong>Grid Glare Detection:</strong> Image split into 8×8 grid — each cell checked for brightness, color saturation, and edge density to detect flash reflections.</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--blue);">
+            <h4>Layer 2 — OCR Verification (Tesseract)</h4>
+            <p><strong>OCR Confidence Score:</strong> Text extracted from image — if confidence &gt; 65%, pixel-level warnings are dismissed as false positives.<br>
+            <strong>OCR Override:</strong> If score &lt; 50% with sufficient words found, image is flagged as blurry regardless of pixel analysis.<br>
+            <strong>Language Support:</strong> English + Malay (eng+msa).</p>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 20px; font-size: 14px; font-weight: 700;">Detected Issue Types</h4>
+        <table class="data-table">
+          <thead><tr><th>Issue</th><th>Detection Method</th><th>Threshold</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge badge-rose">Blurry</span></td><td>Laplacian Variance + Edge Density</td><td>Variance &lt; 200 AND Edge &lt; 8%</td></tr>
+            <tr><td><span class="badge badge-amber">Overexposed</span></td><td>Percentage of pixels &gt; 235 brightness</td><td>&gt; 30% bright pixels</td></tr>
+            <tr><td><span class="badge badge-violet">Glare/Reflection</span></td><td>8×8 grid: bright + desaturated + no edges</td><td>≥ 2 glare cells</td></tr>
+            <tr><td><span class="badge badge-blue">Too Dark</span></td><td>Percentage of pixels &lt; 40 brightness</td><td>&gt; 50% dark pixels</td></tr>
+            <tr><td><span class="badge badge-green">Low Contrast</span></td><td>Brightness standard deviation</td><td>StdDev &lt; 35</td></tr>
+          </tbody>
+        </table>
+
+        <div class="feat-grid" style="margin-top: 20px;">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Auto File Organization</h4>
+            <p>Files are organized into folders <code>YYYY-MM/IC_NUMBER/</code> automatically. Admins can configure an external storage directory from the settings panel.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> One-Click ZIP Download</h4>
+            <p>Download all applicant documents or all admin files as a single ZIP archive. Uses the <code>archiver</code> library with compression level 5.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 4: CASE WORKFLOW ====== -->
+    <div class="module-card" id="mod4">
+      <div class="module-head" onclick="toggleModule('mod4')">
+        <div class="module-icon" style="background: var(--violet-soft); color: var(--violet);">⚙️</div>
+        <div class="module-head-text">
+          <h3>Module 4 — Case Management & Workflow</h3>
+          <p>Complete case lifecycle from intake to approval with advanced filtering</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <h4 style="margin-top: 12px; font-size: 14px; font-weight: 700;">Case Lifecycle Flow</h4>
+        <div class="flow" style="margin: 20px 0;">
+          <div class="flow-step" style="background: var(--slate);">Draft</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step" style="background: var(--amber);">Pending</div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-step" style="background: var(--blue);">Taken</div>
+          <span class="flow-arrow">⟲</span>
+          <div class="flow-step" style="background: var(--emerald);">Released</div>
+        </div>
+        <p style="font-size: 12.5px; color: var(--text-muted); text-align: center; margin-bottom: 8px;">
+          <strong>Draft</strong> — saved but not submitted &nbsp;→&nbsp; <strong>Pending</strong> — submitted, waiting for admin &nbsp;→&nbsp; <strong>Taken</strong> — claimed by admin for processing &nbsp;→&nbsp; <strong>Released</strong> — returned to pending queue
+        </p>
+
+        <div class="feat-grid">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> Atomic Case Assignment</h4>
+            <p>Admins claim cases for processing. Uses <strong>updateMany</strong> with condition <code>taken_by = null</code> — ensures no two admins can claim the same case simultaneously (race-condition proof).</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--rose);"></span> Case Release</h4>
+            <p>Cases can be released back to the pending queue. Release reason is recorded in <code>release_reason</code>. Release date and take date are tracked separately.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--amber);"></span> Advanced Filtering</h4>
+            <p>"Taken Cases" list supports: text search (name, IC, employer), date filtering (this month, last month, 3 months, this year, custom range), filter by taker, and pagination (20 per page).</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Internal Notes</h4>
+            <p>An <code>agent_message</code> field for internal communication between agents and admins. Every note update is broadcast in real-time via WebSocket.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--violet);"></span> Admin Case Files</h4>
+            <p>Admins can upload additional files (letters, notes) with custom labels to any case. These files are stored separately from customer files in the <code>admin_files/</code> folder.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--cyan);"></span> Encrypted Search</h4>
+            <p>Since applicant data is encrypted (AES-256), search is performed client-side after decryption — ensuring data privacy even during query operations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 5: PDF ENGINE ====== -->
+    <div class="module-card" id="mod5">
+      <div class="module-head" onclick="toggleModule('mod5')">
+        <div class="module-icon" style="background: var(--rose-soft); color: #e11d48;">📄</div>
+        <div class="module-head-text">
+          <h3>Module 5 — Automated PDF Generation Engine</h3>
+          <p>Smart field mapping engine with AI Vision support and multi-row text filling</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <div class="feat-grid" style="margin-top: 12px;">
+          <div class="feat-item" style="border-left: 3px solid var(--rose);">
+            <h4>PDF Template Upload</h4>
+            <p>Upload official loan form PDFs (up to 50MB) — the system automatically reads all interactive form fields. Supports single-file products and multi-file products (parent with sub-documents).</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--blue);">
+            <h4>Visual Field Mapping</h4>
+            <p>Visual mapping interface — admins select PDF fields and map them to one of <strong>30 standard data fields</strong>. Actual PDF preview displayed side-by-side for reference.</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--violet);">
+            <h4>🤖 AI Auto-Mapping (Gemini Vision)</h4>
+            <p>System captures screenshots of each PDF page, sends to <strong>Gemini 2.5 Pro</strong> with field list and positions — AI suggests mappings automatically. Supports section-by-section processing for high accuracy.</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--emerald);">
+            <h4>Smart Multi-Row Text Filling</h4>
+            <p>When a long address is mapped to 3 PDF rows, text is automatically split at word boundaries (~50 characters per row). Adjacent comb/boxed fields are chained into a single text stream.</p>
+          </div>
+        </div>
+
+        <h4 style="margin-top: 24px; font-size: 14px; font-weight: 700;">Supported PDF Field Types</h4>
+        <table class="data-table">
+          <thead><tr><th>Type</th><th>Action</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>TextField (Regular)</td><td>Fill full text / split across multi-rows</td><td>Name, Address</td></tr>
+            <tr><td>TextField (MaxLength/Comb)</td><td>Chain adjacent boxed fields, split at word boundaries</td><td>IC Number (12 boxes)</td></tr>
+            <tr><td>CheckBox</td><td>Check/uncheck based on value (yes/true/1)</td><td>Gender, Consent</td></tr>
+            <tr><td>RadioGroup</td><td>Auto-select matching option</td><td>Marital Status</td></tr>
+            <tr><td>Dropdown</td><td>Auto-select matching option</td><td>State, Race</td></tr>
+          </tbody>
+        </table>
+
+        <h4 style="margin-top: 24px; font-size: 14px; font-weight: 700;">Automatic Calculations from IC Number</h4>
+        <div class="feat-grid">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--cyan);"></span> Date of Birth</h4>
+            <p>Extracted from first 6 IC digits (YYMMDD). Years 00-29 → 2000s; 30-99 → 1900s. Output format: DD/MM/YYYY.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--amber);"></span> Gender & Age</h4>
+            <p>Last IC digit: odd = Male (L), even = Female (P). Age calculated from date of birth to current date.</p>
+          </div>
+        </div>
+
+        <div class="feat-grid" style="margin-top: 16px;">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--violet);"></span> Product Hierarchy</h4>
+            <p>Products can have sub-products (children). Example: "Personal Loan" can contain "Form A", "Form B", "Agreement". Each sub-product has its own field mapping.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--rose);"></span> Per-Agent Product Control</h4>
+            <p>Each product can be enabled/disabled for specific Managers via a <code>disabledFor</code> list. Users inherit their Manager's product settings.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 6: PRE-SUBMISSION & OCR ====== -->
+    <div class="module-card" id="mod6">
+      <div class="module-head" onclick="toggleModule('mod6')">
+        <div class="module-icon" style="background: #fef3c7; color: #92400e;">🔍</div>
+        <div class="module-head-text">
+          <h3>Module 6 — Pre-Submission & Smart OCR</h3>
+          <p>Early customer records with AI-powered data extraction from documents</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <div class="feat-grid" style="margin-top: 12px;">
+          <div class="feat-item" style="border-left: 3px solid var(--amber);">
+            <h4>Pre-Submission Records</h4>
+            <p>Create early records with just customer name and IC number — useful for quick registration before complete documents are collected. Can be edited and updated anytime.</p>
+          </div>
+          <div class="feat-item" style="border-left: 3px solid var(--violet);">
+            <h4>🤖 AI-Powered OCR (Gemini 2.5 Flash)</h4>
+            <p>Upload an IC card photo or payslip — AI extracts full name and IC number automatically. Supports Malaysian 12-digit IC format. PDFs are auto-converted to images before analysis.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Generate PDF from Pre-Submission</h4>
+            <p>Select a loan product and generate the form PDF directly from a pre-submission record. Useful for preparing initial forms even when complete data is not yet available.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> OCR Workflow</h4>
+            <p>Upload image → AI analysis → Name & IC auto-fill → Save pre-submission → Select product → Generate PDF. The entire flow can be completed in under 30 seconds.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 7: DASHBOARD ====== -->
+    <div class="module-card" id="mod7">
+      <div class="module-head" onclick="toggleModule('mod7')">
+        <div class="module-icon" style="background: var(--blue-soft); color: var(--blue-dark);">📊</div>
+        <div class="module-head-text">
+          <h3>Module 7 — Dashboard & Performance Analytics</h3>
+          <p>Real-time statistics display with agent performance tables</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <div class="feat-grid" style="margin-top: 12px;">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> Statistics Cards</h4>
+            <p>4 summary cards: total cases today, this week, this month, and all-time. Calculated in real-time from the database based on current user's role.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Performance Table</h4>
+            <p>Admins see all Managers with their respective case counts. Managers see only their Users. Data auto-refreshes on every dashboard visit.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--violet);"></span> Recent Cases Feed</h4>
+            <p>10 most recent cases by creation date. Admins only see pending untaken cases — functions as a new application inbox.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--amber);"></span> Recently Modified Feed</h4>
+            <p>10 most recently updated cases (updated_at ≠ created_at). Shows active cases currently being processed. Auto-polls every 30 seconds.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--cyan);"></span> Referral Link Display</h4>
+            <p>Managers and Users see their referral code and full submission link directly from the dashboard. Link can be copied with one click for sharing with customers.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--rose);"></span> Active Product List</h4>
+            <p>Dashboard displays active loan products based on the agent's tier. Managers and Users only see products enabled for them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 8: WEBSOCKET ====== -->
+    <div class="module-card" id="mod8">
+      <div class="module-head" onclick="toggleModule('mod8')">
+        <div class="module-icon" style="background: var(--emerald-soft); color: #059669;">🔔</div>
+        <div class="module-head-text">
+          <h3>Module 8 — Real-Time Notifications (WebSocket)</h3>
+          <p>Instant push notifications without page refresh</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <h4 style="margin-top: 12px; font-size: 14px; font-weight: 700;">Notification Types</h4>
+        <table class="data-table">
+          <thead><tr><th>Event</th><th>Payload</th><th>Trigger</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-blue">NEW_CASE</span></td>
+              <td>caseId, applicantName, agentName, date</td>
+              <td>New application form submitted</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-amber">CASE_TAKEN</span></td>
+              <td>caseId, takerName</td>
+              <td>Admin claims a case from the pending queue</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-violet">CASE_MODIFIED</span></td>
+              <td>caseId, applicantName, masteragentName, subagentName, productKey, detail, updatedBy, updatedAt</td>
+              <td>File upload, note update, or any case change</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="feat-grid" style="margin-top: 20px;">
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--emerald);"></span> Automatic Heartbeat</h4>
+            <p>Ping/pong every 30 seconds. Dead connections are detected and terminated automatically — prevents zombie connection buildup on the server.</p>
+          </div>
+          <div class="feat-item">
+            <h4><span class="feat-dot" style="background: var(--blue);"></span> Notification Page</h4>
+            <p>Dedicated page at <code>/dashboard/notifications</code> to view all recent alerts. API endpoint <code>/dashboard/api/new-cases-count</code> provides a badge counter for the sidebar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 9: SETTINGS ====== -->
+    <div class="module-card" id="mod9">
+      <div class="module-head" onclick="toggleModule('mod9')">
+        <div class="module-icon" style="background: #e0e7ff; color: #4338ca;">🛠</div>
+        <div class="module-head-text">
+          <h3>Module 9 — System Settings Panel</h3>
+          <p>Full configuration including branding, image quality, storage, and required documents</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <table class="data-table" style="margin-top: 12px;">
+          <thead><tr><th>Setting</th><th>Description</th><th>Default</th></tr></thead>
+          <tbody>
+            <tr><td>System Name</td><td>Full name displayed in the header</td><td>Muhibbah Submission</td></tr>
+            <tr><td>Short Name</td><td>3-letter abbreviation for the sidebar</td><td>CSS</td></tr>
+            <tr><td>Logo & Favicon</td><td>Upload custom images (JPG/PNG/SVG/ICO, max 2MB)</td><td>—</td></tr>
+            <tr><td>Primary Color</td><td>Primary UI color</td><td>#0ea5e9</td></tr>
+            <tr><td>Accent Color</td><td>Secondary highlight color</td><td>#8b5cf6</td></tr>
+            <tr><td>Image Quality Check</td><td>Enable/disable the IQ engine</td><td>Enabled</td></tr>
+            <tr><td>Blur Threshold</td><td>Laplacian variance threshold</td><td>50</td></tr>
+            <tr><td>Brightness Threshold</td><td>Overexposure pixel threshold</td><td>245</td></tr>
+            <tr><td>Bright Pixel %</td><td>Allowed percentage of bright pixels</td><td>40%</td></tr>
+            <tr><td>Block Upload</td><td>Prevent upload if quality is low</td><td>Disabled</td></tr>
+            <tr><td>Storage Directory</td><td>External folder path for file storage (with browser)</td><td>./uploads</td></tr>
+            <tr><td>Force Uppercase</td><td>Auto-uppercase text input</td><td>Disabled</td></tr>
+            <tr><td>Required Documents</td><td>10 toggles for each document type</td><td>IC Front + Back</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ====== MODULE 10: SECURITY ====== -->
+    <div class="module-card" id="mod10">
+      <div class="module-head" onclick="toggleModule('mod10')">
+        <div class="module-icon" style="background: var(--rose-soft); color: #e11d48;">🔒</div>
+        <div class="module-head-text">
+          <h3>Module 10 — Security & Data Protection</h3>
+          <p>Field-level encryption, secure authentication, and multi-layer access control</p>
+        </div>
+        <div class="module-toggle">▼</div>
+      </div>
+      <div class="module-body">
+        <div class="sec-grid" style="margin-top: 12px;">
+          <div class="sec-card">
+            <div class="sec-icon" style="background: var(--rose-soft);">🔐</div>
+            <div>
+              <h4>AES-256-CBC Encryption</h4>
+              <p>All applicant personal data (name, IC, address, employment info, references) is encrypted before storage in the database. Encryption key derived via <code>crypto.scryptSync</code> with salt. Unique IV generated for every encryption operation.</p>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-icon" style="background: var(--blue-soft);">🔑</div>
+            <div>
+              <h4>Password Hashing</h4>
+              <p>User passwords are hashed using <strong>bcryptjs</strong> with 10 rounds. The original password is never stored. Verification uses <code>bcrypt.compare()</code>.</p>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-icon" style="background: var(--emerald-soft);">🛡</div>
+            <div>
+              <h4>Persistent Session Store (MySQL)</h4>
+              <p>Sessions are stored in a MySQL table (not in-memory) — they survive server restarts. 24-hour session cookie duration. Proxy trust enabled for Cloudflare Tunnel deployments.</p>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-icon" style="background: var(--amber-soft);">🤖</div>
+            <div>
+              <h4>Search Engine Blocking</h4>
+              <p>Header <code>X-Robots-Tag: noindex, nofollow</code> is set on every response — prevents search engines from indexing any page of the system.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TECH STACK ===== -->
+<section class="section" style="background: #fff; border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag" style="background: var(--emerald-soft); color: #059669;">Technology</div>
+      <h2>Tech Stack</h2>
+      <p>Modern technologies used to build this system</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #dcfce7;">🟢</div>
+        <div><h4>Node.js + Express</h4><p>Core server framework — routing, middleware, and HTTP management</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #fef3c7;">📋</div>
+        <div><h4>EJS Templating</h4><p>Server-side rendering with layout system and reusable partials</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #dbeafe;">💾</div>
+        <div><h4>MySQL + Prisma ORM</h4><p>Relational database with type-safe ORM and migration support</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #ede9fe;">🔌</div>
+        <div><h4>WebSocket (ws)</h4><p>Real-time push notifications without polling</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #ffe4e6;">📄</div>
+        <div><h4>pdf-lib</h4><p>In-memory PDF processing — fill fields, flatten, and generate without modifying originals</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #d1fae5;">🖼</div>
+        <div><h4>Sharp + Tesseract</h4><p>Image quality analysis (Laplacian, Sobel) + Malay/English text OCR</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #fef3c7;">🤖</div>
+        <div><h4>Gemini AI (Vision)</h4><p>AI auto-mapping of PDF fields + smart IC/payslip OCR via Gemini 2.5</p></div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon" style="background: #dbeafe;">📦</div>
+        <div><h4>Multer + Archiver</h4><p>File upload management and ZIP archive generation for downloads</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DATABASE SCHEMA ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="tag" style="background: var(--violet-soft); color: var(--violet);">Database</div>
+      <h2>Database Schema</h2>
+      <p>7 tables with optimized relationships and indexing</p>
+    </div>
+    <table class="data-table" style="background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid var(--border);">
+      <thead>
+        <tr><th>Table</th><th>Purpose</th><th>Key Columns</th><th>Relationships</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>users</strong></td><td>System users</td>
+          <td>UUID, username, password (hashed), role, referral_code</td>
+          <td>Self-ref (parent_id → users), creator → users</td>
+        </tr>
+        <tr>
+          <td><strong>submissions</strong></td><td>Application cases</td>
+          <td>UUID, status, product_key, taken_by, taken_at, needs_image_review</td>
+          <td>subagent → users, masteragent → users, taker → users</td>
+        </tr>
+        <tr>
+          <td><strong>submission_details</strong></td><td>Applicant data (encrypted)</td>
+          <td>applicant_data, spouse_data, job_data, reference_data — all AES-256 encrypted</td>
+          <td>1:1 → submissions</td>
+        </tr>
+        <tr>
+          <td><strong>submission_files</strong></td><td>Applicant files</td>
+          <td>file_type, file_path</td>
+          <td>N:1 → submissions (cascade delete)</td>
+        </tr>
+        <tr>
+          <td><strong>admin_case_files</strong></td><td>Admin-uploaded files</td>
+          <td>label, file_path, original_name</td>
+          <td>N:1 → submissions (cascade delete)</td>
+        </tr>
+        <tr>
+          <td><strong>activity_logs</strong></td><td>Audit log</td>
+          <td>action, target_id, description</td>
+          <td>N:1 → users (cascade delete)</td>
+        </tr>
+        <tr>
+          <td><strong>pre_submissions</strong></td><td>Pre-submissions</td>
+          <td>customer_name, ic_number, product_key</td>
+          <td>N:1 → users (creator, cascade delete)</td>
+        </tr>
+        <tr>
+          <td><strong>site_settings</strong></td><td>System settings</td>
+          <td>key-value store (site_name, colors, thresholds, etc.)</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p><strong>Muhibbah Submission System</strong> — Digital Loan Application Management Platform</p>
+  <p style="margin-top: 6px;">This document was auto-generated from source code analysis. April 2026.</p>
+</div>
+
+<script>
+  function toggleModule(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  // Open all modules on print
+  window.addEventListener('beforeprint', () => {
+    document.querySelectorAll('.module-card').forEach(c => c.classList.add('open'));
+  });
+</script>
+
+</body>
+</html>

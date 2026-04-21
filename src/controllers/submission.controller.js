@@ -57,6 +57,10 @@ const SubmissionController = {
       ? PdfService.getEnabledProductsForAgent(masteragentId)
       : PdfService.getEnabledProducts();
 
+    // Restore form data from session if validation failed
+    const formData = (req.session && req.session.formData) || {};
+    if (req.session) delete req.session.formData;
+
     res.render('public/submit', {
       layout: false,
       title: 'Submit Application',
@@ -64,6 +68,7 @@ const SubmissionController = {
       agentName,
       loanProducts,
       selectedProduct: productParam,
+      formData,
       success: req.flash ? req.flash('success') : null,
       error: req.flash ? req.flash('error') : null
     });
@@ -93,6 +98,10 @@ const SubmissionController = {
       ? PdfService.getEnabledProductsForAgent(masteragentId)
       : PdfService.getEnabledProducts();
 
+    // Restore form data from session if validation failed
+    const formData = (req.session && req.session.formData) || {};
+    if (req.session) delete req.session.formData;
+
     res.render('dashboard/submit', {
       layout: 'layouts/main',
       title: 'New Submission',
@@ -100,6 +109,7 @@ const SubmissionController = {
       ref,
       agents,
       loanProducts,
+      formData,
       page: 'submit'
     });
   } catch (err) {
@@ -132,14 +142,9 @@ const SubmissionController = {
           ['applicant_nama_ibu', 'Nama Ibu'],
           ['applicant_ic_ibu', 'No IC Ibu'],
           ['applicant_hp_ibu', 'No HP Ibu'],
-          ['applicant_alamat_ibu', 'Alamat Ibu'],
           ['spouse_name', 'Nama Pasangan'],
           ['spouse_ic', 'No IC Pasangan'],
-          ['spouse_jawatan', 'Jawatan Pasangan'],
-          ['spouse_alamat_majikan', 'Alamat Majikan Pasangan'],
-          ['spouse_tel_pejabat', 'Tel Pejabat Pasangan'],
           ['spouse_phone', 'Tel Bimbit Pasangan'],
-          ['spouse_gaji', 'Gaji Pasangan'],
           ['job_employer', 'Nama Majikan'],
           ['job_alamat_majikan', 'Alamat Majikan'],
           ['job_position', 'Jawatan'],
@@ -156,6 +161,7 @@ const SubmissionController = {
         if (missing.length > 0) {
           const names = missing.map(([, label]) => label).join(', ');
           req.flash('error', `Sila isi semua maklumat yang diperlukan: ${names}`);
+          if (req.session) req.session.formData = req.body;
           return res.redirect(redirectUrl);
         }
       }
@@ -167,6 +173,7 @@ const SubmissionController = {
         if (missingFiles.length > 0) {
           const names = missingFiles.map(f => REQUIRED_FILE_LABELS[f] || f).join(', ');
           req.flash('error', `Sila muat naik dokumen yang diperlukan: ${names}`);
+          if (req.session) req.session.formData = req.body;
           return res.redirect(redirectUrl);
         }
       }
@@ -317,6 +324,7 @@ const SubmissionController = {
       const isPrivate = req.session && req.session.user;
       const fallback = isPrivate ? '/dashboard/submit-new' : `/submit?ref=${req.body.referral_code || ''}`;
       req.flash('error', 'Failed to submit application.');
+      if (req.session) req.session.formData = req.body;
       res.redirect(fallback);
     }
   },

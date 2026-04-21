@@ -63,8 +63,9 @@
       <select name="product_key" required
         class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         <option value="">-- Select Product --</option>
+        <% const _fd = (typeof formData !== 'undefined' && formData) ? formData : {}; %>
         <% loanProducts.forEach(p => { %>
-          <option value="<%= p.key %>"><%= p.label %></option>
+          <option value="<%= p.key %>" <%= _fd.product_key === p.key ? 'selected' : '' %>><%= p.label %></option>
         <% }) %>
       </select>
     </div>
@@ -112,6 +113,7 @@
       <div id="selectedAgentBadge" class="hidden mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-sm font-medium"></div>
     </div>
     <% } %>
+    <% const f = (typeof formData !== 'undefined' && formData) ? formData : {}; %>
     <% const d = (typeof draft !== 'undefined' && draft) ? draft : null; %>
     <% const a = d ? (d.applicant_data || {}) : {}; %>
     <% const sp = d ? (d.spouse_data || {}) : {}; %>
@@ -124,59 +126,59 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
-          <input type="text" name="applicant_name" value="<%= a.name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_name" value="<%= a.name || f.applicant_name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kad Pengenalan</label>
-          <input type="text" name="applicant_ic" value="<%= a.ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_ic" value="<%= a.ic || f.applicant_ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Tetap</label>
-          <textarea name="applicant_address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= a.address || '' %></textarea>
+          <textarea name="applicant_address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= a.address || f.applicant_address || '' %></textarea>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel HP</label>
-          <input type="tel" name="applicant_phone" value="<%= a.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="tel" name="applicant_phone" value="<%= a.phone || f.applicant_phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Perkahwinan</label>
-          <input type="text" name="applicant_taraf_perkahwinan" value="<%= a.taraf_perkahwinan || '' %>" required placeholder="cth: Berkahwin / Bujang" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_taraf_perkahwinan" value="<%= a.taraf_perkahwinan || f.applicant_taraf_perkahwinan || '' %>" required placeholder="cth: Berkahwin / Bujang" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bilangan Tanggungan (Anak)</label>
-          <input type="text" name="applicant_tanggungan" value="<%= a.tanggungan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_tanggungan" value="<%= a.tanggungan || f.applicant_tanggungan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bangsa / Agama</label>
-          <input type="text" name="applicant_bangsa_agama" value="<%= a.bangsa_agama || '' %>" required placeholder="cth: Melayu / Islam" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_bangsa_agama" value="<%= a.bangsa_agama || f.applicant_bangsa_agama || '' %>" required placeholder="cth: Melayu / Islam" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Taraf Pendidikan Paling Tinggi</label>
-          <input type="text" name="applicant_pendidikan" value="<%= a.pendidikan || '' %>" required placeholder="cth: SPM / Diploma / Ijazah" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_pendidikan" value="<%= a.pendidikan || f.applicant_pendidikan || '' %>" required placeholder="cth: SPM / Diploma / Ijazah" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jenis Kediaman</label>
-          <input type="text" name="applicant_jenis_kediaman" value="<%= a.jenis_kediaman || '' %>" required placeholder="cth: Menyewa / Milik Sendiri" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_jenis_kediaman" value="<%= a.jenis_kediaman || f.applicant_jenis_kediaman || '' %>" required placeholder="cth: Menyewa / Milik Sendiri" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tempoh Menetap</label>
-          <input type="text" name="applicant_tempoh_menetap" value="<%= a.tempoh_menetap || '' %>" required placeholder="cth: 5 tahun" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_tempoh_menetap" value="<%= a.tempoh_menetap || f.applicant_tempoh_menetap || '' %>" required placeholder="cth: 5 tahun" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Email</label>
-          <input type="email" name="applicant_email" value="<%= a.email || '' %>" required autocapitalize="off" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="email" name="applicant_email" value="<%= a.email || f.applicant_email || '' %>" required autocapitalize="off" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Ibu</label>
-          <input type="text" name="applicant_nama_ibu" value="<%= a.nama_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_nama_ibu" value="<%= a.nama_ibu || f.applicant_nama_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Ibu</label>
-          <input type="tel" name="applicant_hp_ibu" value="<%= a.hp_ibu || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="tel" name="applicant_hp_ibu" value="<%= a.hp_ibu || f.applicant_hp_ibu || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No IC Ibu</label>
-          <input type="text" name="applicant_ic_ibu" value="<%= a.ic_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="applicant_ic_ibu" value="<%= a.ic_ibu || f.applicant_ic_ibu || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
       </div>
     </div>
@@ -187,19 +189,19 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
-          <input type="text" name="spouse_name" value="<%= sp.name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="spouse_name" value="<%= sp.name || f.spouse_name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No IC</label>
-          <input type="text" name="spouse_ic" value="<%= sp.ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="spouse_ic" value="<%= sp.ic || f.spouse_ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tel Bimbit</label>
-          <input type="tel" name="spouse_phone" value="<%= sp.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="tel" name="spouse_phone" value="<%= sp.phone || f.spouse_phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hubungan</label>
-          <input type="text" name="spouse_hubungan" value="<%= sp.hubungan || '' %>" required placeholder="cth: Isteri / Suami / Ibu / Bapa" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="spouse_hubungan" value="<%= sp.hubungan || f.spouse_hubungan || '' %>" required placeholder="cth: Isteri / Suami / Ibu / Bapa" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
       </div>
     </div>
@@ -210,43 +212,43 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama Majikan</label>
-          <input type="text" name="job_employer" value="<%= j.employer || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_employer" value="<%= j.employer || f.job_employer || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Majikan</label>
-          <input type="text" name="job_alamat_majikan" value="<%= j.alamat_majikan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_alamat_majikan" value="<%= j.alamat_majikan || f.job_alamat_majikan || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Pejabat</label>
-          <input type="tel" name="job_tel_pejabat" value="<%= j.tel_pejabat || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="tel" name="job_tel_pejabat" value="<%= j.tel_pejabat || f.job_tel_pejabat || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Jawatan</label>
-          <input type="text" name="job_position" value="<%= j.position || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_position" value="<%= j.position || f.job_position || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tarikh Lantikan</label>
-          <input type="text" name="job_tarikh_mula" value="<%= j.tarikh_mula || '' %>" required placeholder="cth: 20/09/2014" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_tarikh_mula" value="<%= j.tarikh_mula || f.job_tarikh_mula || '' %>" required placeholder="cth: 20/09/2014" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opsyen Pencen</label>
-          <input type="text" name="job_opsyen_pencen" value="<%= j.opsyen_pencen || '' %>" required placeholder="cth: Ya / Tidak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_opsyen_pencen" value="<%= j.opsyen_pencen || f.job_opsyen_pencen || '' %>" required placeholder="cth: Ya / Tidak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status Jawatan</label>
-          <input type="text" name="job_status_jawatan" value="<%= j.status_jawatan || '' %>" required placeholder="cth: Tetap / Kontrak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_status_jawatan" value="<%= j.status_jawatan || f.job_status_jawatan || '' %>" required placeholder="cth: Tetap / Kontrak" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Payslip Link</label>
-          <input type="text" name="job_payslip_link" value="<%= j.payslip_link || '' %>" placeholder="cth: https://..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_payslip_link" value="<%= j.payslip_link || f.job_payslip_link || '' %>" placeholder="cth: https://..." class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">ANM / Payslip Password</label>
-          <input type="text" name="job_payslip_password" value="<%= j.payslip_password || '' %>" autocapitalize="off" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_payslip_password" value="<%= j.payslip_password || f.job_payslip_password || '' %>" autocapitalize="off" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">HRMIS Password</label>
-          <input type="text" name="job_hrmis_password" value="<%= j.hrmis_password || '' %>" autocapitalize="off" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="job_hrmis_password" value="<%= j.hrmis_password || f.job_hrmis_password || '' %>" autocapitalize="off" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
       </div>
     </div>
@@ -258,23 +260,23 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nama</label>
-          <input type="text" name="ref_name" value="<%= r.name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="ref_name" value="<%= r.name || f.ref_name || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No IC</label>
-          <input type="text" name="ref_ic" value="<%= r.ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="ref_ic" value="<%= r.ic || f.ref_ic || '' %>" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div class="sm:col-span-2">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Alamat Tetap</label>
-          <textarea name="ref_address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= r.address || '' %></textarea>
+          <textarea name="ref_address" rows="2" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500"><%= r.address || f.ref_address || '' %></textarea>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">No Tel Bimbit</label>
-          <input type="tel" name="ref_phone" value="<%= r.phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="tel" name="ref_phone" value="<%= r.phone || f.ref_phone || '' %>" inputmode="numeric" required class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Pertalian</label>
-          <input type="text" name="ref_relationship" value="<%= r.relationship || '' %>" required placeholder="cth: Abang, Adik, Bapa" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
+          <input type="text" name="ref_relationship" value="<%= r.relationship || f.ref_relationship || '' %>" required placeholder="cth: Abang, Adik, Bapa" class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500">
         </div>
       </div>
     </div>
@@ -346,7 +348,7 @@
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Agent Message (Optional)</label>
       <textarea name="agent_message" rows="3" placeholder="Additional message for admin..."
-        class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+        class="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"><%= f.agent_message || '' %></textarea>
       <p class="text-xs text-gray-400 mt-1">Notes or message to admin regarding this application</p>
     </div>
 
